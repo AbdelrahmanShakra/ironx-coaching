@@ -1,8 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
 
 <title>IRONX | Online Coaching</title>
 
@@ -12,6 +17,32 @@
 />
 
 <style>
+
+/* =========================================================
+   IRONX LIQUID GLASS
+========================================================= */
+
+:root{
+  --red:#ff3b30;
+  --red-light:#ff6b63;
+  --red-dark:#c91f18;
+
+  --text:#f8f8fa;
+  --muted:#a5a7b0;
+  --muted2:#747780;
+
+  --glass:rgba(255,255,255,.075);
+  --glass-hover:rgba(255,255,255,.11);
+
+  --line:rgba(255,255,255,.14);
+  --line-soft:rgba(255,255,255,.075);
+
+  --shadow:
+    0 25px 80px rgba(0,0,0,.38);
+
+  --radius:30px;
+}
+
 
 /* =========================================================
    RESET
@@ -30,135 +61,22 @@ body{
   margin:0;
   min-height:100vh;
 
+  overflow-x:hidden;
+
+  color:var(--text);
+
   font-family:
     Inter,
     -apple-system,
     BlinkMacSystemFont,
     "SF Pro Display",
+    "SF Pro Text",
     "Segoe UI",
     Arial,
     sans-serif;
 
-  color:#fff;
-
-  background:
-    radial-gradient(
-      circle at 15% 10%,
-      rgba(255,59,48,.20),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 90% 30%,
-      rgba(255,255,255,.08),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(255,59,48,.10),
-      transparent 35%
-    ),
-    #050507;
-
-  overflow-x:hidden;
+  background:#050507;
 }
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:-20%;
-  pointer-events:none;
-
-  background:
-    radial-gradient(
-      circle at 30% 20%,
-      rgba(255,59,48,.10),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(255,255,255,.05),
-      transparent 25%
-    );
-
-  filter:blur(60px);
-  animation:
-    ambient 14s ease-in-out infinite alternate;
-
-  z-index:-2;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-
-  background:
-    linear-gradient(
-      rgba(255,255,255,.015) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,.015) 1px,
-      transparent 1px
-    );
-
-  background-size:45px 45px;
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      black,
-      transparent 80%
-    );
-
-  z-index:-1;
-}
-
-@keyframes ambient{
-  from{
-    transform:translate3d(-2%, -1%, 0) scale(1);
-  }
-
-  to{
-    transform:translate3d(2%, 2%, 0) scale(1.08);
-  }
-}
-
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-:root{
-  --red:#ff3b30;
-  --red2:#ff6258;
-
-  --glass:
-    rgba(255,255,255,.075);
-
-  --glass-strong:
-    rgba(255,255,255,.11);
-
-  --border:
-    rgba(255,255,255,.14);
-
-  --border-soft:
-    rgba(255,255,255,.08);
-
-  --muted:#a7a9b1;
-
-  --shadow:
-    0 20px 60px rgba(0,0,0,.35);
-
-  --radius:28px;
-}
-
-
-/* =========================================================
-   GLOBAL
-========================================================= */
 
 button,
 input,
@@ -186,30 +104,87 @@ a{
 
 
 /* =========================================================
-   GLASS
+   AURORA BACKGROUND
 ========================================================= */
 
-.glass{
+body::before{
+  content:"";
+
+  position:fixed;
+
+  inset:-35%;
+
+  z-index:-5;
+
+  pointer-events:none;
+
   background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.12),
-      rgba(255,255,255,.045)
+    radial-gradient(
+      circle at 18% 20%,
+      rgba(255,59,48,.25),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 82% 15%,
+      rgba(100,75,255,.16),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 75% 78%,
+      rgba(255,59,48,.14),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 18% 85%,
+      rgba(0,145,255,.11),
+      transparent 25%
     );
 
-  border:1px solid var(--border);
+  filter:blur(75px);
 
-  box-shadow:
-    0 20px 70px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.10);
+  animation:
+    auroraMove 18s ease-in-out infinite alternate;
+}
 
-  backdrop-filter:
-    blur(28px)
-    saturate(145%);
+body::after{
+  content:"";
 
-  -webkit-backdrop-filter:
-    blur(28px)
-    saturate(145%);
+  position:fixed;
+
+  inset:0;
+
+  z-index:-4;
+
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(0,0,0,.18) 55%,
+      rgba(0,0,0,.76) 100%
+    );
+}
+
+@keyframes auroraMove{
+
+  0%{
+    transform:
+      translate3d(-3%,-2%,0)
+      scale(1);
+  }
+
+  50%{
+    transform:
+      translate3d(2%,3%,0)
+      scale(1.06);
+  }
+
+  100%{
+    transform:
+      translate3d(-1%,5%,0)
+      scale(1.12);
+  }
 }
 
 
@@ -218,12 +193,107 @@ a{
 ========================================================= */
 
 .app{
+  position:relative;
+
   width:min(1180px,100%);
+
   margin:auto;
+
   padding:
     22px
     22px
     calc(120px + env(safe-area-inset-bottom));
+}
+
+
+/* =========================================================
+   GRAIN
+========================================================= */
+
+.app::before{
+  content:"";
+
+  position:fixed;
+
+  inset:0;
+
+  pointer-events:none;
+
+  z-index:999;
+
+  opacity:.025;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+
+  mix-blend-mode:screen;
+}
+
+
+/* =========================================================
+   GLASS
+========================================================= */
+
+.glass{
+  position:relative;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.11),
+      rgba(255,255,255,.045) 48%,
+      rgba(255,255,255,.025)
+    );
+
+  border:
+    1px solid var(--line);
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -1px 0 rgba(0,0,0,.15);
+
+  backdrop-filter:
+    blur(30px)
+    saturate(160%);
+
+  -webkit-backdrop-filter:
+    blur(30px)
+    saturate(160%);
+
+  isolation:isolate;
+}
+
+.glass::before{
+  content:"";
+
+  position:absolute;
+
+  left:-25%;
+  top:-65%;
+
+  width:150%;
+  height:95%;
+
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255,255,255,.11) 48%,
+      transparent 65%
+    );
+
+  transform:rotate(-7deg);
+
+  opacity:.55;
+
+  transition:
+    transform .7s ease,
+    opacity .4s ease;
 }
 
 
@@ -233,76 +303,113 @@ a{
 
 .top-nav{
   position:sticky;
-  top:16px;
+
+  top:14px;
+
   z-index:50;
 
-  height:68px;
+  height:70px;
 
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
 
-  padding:10px 12px 10px 20px;
+  padding:
+    10px
+    11px
+    10px
+    20px;
 
   border-radius:999px;
 
   background:
-    rgba(22,22,25,.62);
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.045)
+    );
 
-  border:1px solid rgba(255,255,255,.13);
+  border:
+    1px solid rgba(255,255,255,.16);
 
   box-shadow:
-    0 18px 50px rgba(0,0,0,.32),
-    inset 0 1px 0 rgba(255,255,255,.10);
+    0 20px 60px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.18);
 
   backdrop-filter:
-    blur(30px)
-    saturate(150%);
+    blur(32px)
+    saturate(180%);
 
   -webkit-backdrop-filter:
-    blur(30px)
-    saturate(150%);
+    blur(32px)
+    saturate(180%);
+
+  transition:
+    box-shadow .3s ease;
 }
+
+.top-nav:hover{
+  box-shadow:
+    0 25px 75px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.20);
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
 
 .brand{
   display:flex;
+
   align-items:center;
+
   gap:10px;
 
-  font-size:22px;
+  font-size:21px;
+
   font-weight:950;
+
   letter-spacing:3px;
 }
 
 .brand-mark{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
 
   display:grid;
+
   place-items:center;
 
-  border-radius:13px;
+  border-radius:14px;
+
+  color:#fff;
+
+  font-size:15px;
+
+  font-weight:950;
 
   background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255,255,255,.45),
+      transparent 30%
+    ),
     linear-gradient(
       145deg,
-      rgba(255,59,48,.95),
-      rgba(255,59,48,.35)
+      #ff5c54,
+      #d82018
     );
 
   box-shadow:
-    0 8px 30px rgba(255,59,48,.25),
-    inset 0 1px 0 rgba(255,255,255,.25);
+    0 10px 30px rgba(255,59,48,.32),
+    inset 0 1px 0 rgba(255,255,255,.35);
 }
 
 .brand span{
   color:var(--red);
-}
-
-.nav-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
 }
 
 
@@ -311,70 +418,137 @@ a{
 ========================================================= */
 
 .btn{
-  border:1px solid rgba(255,255,255,.12);
+  position:relative;
+
+  overflow:hidden;
+
+  border:
+    1px solid rgba(255,255,255,.13);
 
   color:#fff;
 
   border-radius:999px;
 
-  padding:13px 19px;
+  padding:
+    13px
+    19px;
 
-  font-weight:800;
+  font-weight:850;
+
+  letter-spacing:.2px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,.12),
+      rgba(255,255,255,.13),
       rgba(255,255,255,.055)
     );
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 8px 30px rgba(0,0,0,.18);
+    0 10px 30px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.16);
 
-  backdrop-filter:blur(18px);
+  backdrop-filter:
+    blur(20px)
+    saturate(150%);
+
+  -webkit-backdrop-filter:
+    blur(20px)
+    saturate(150%);
 
   transition:
-    transform .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
+    transform .22s cubic-bezier(.2,.8,.2,1),
+    background .22s ease,
+    box-shadow .22s ease,
+    border-color .22s ease;
+}
+
+.btn::before{
+  content:"";
+
+  position:absolute;
+
+  top:-100%;
+  left:-35%;
+
+  width:40%;
+  height:300%;
+
+  transform:rotate(25deg);
+
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(255,255,255,.28),
+      transparent
+    );
+
+  transition:
+    left .65s ease;
+}
+
+.btn:hover::before{
+  left:110%;
 }
 
 .btn:hover{
-  transform:translateY(-2px);
+  transform:
+    translateY(-2px)
+    scale(1.015);
 
   background:
     rgba(255,255,255,.15);
 
+  border-color:
+    rgba(255,255,255,.22);
+
   box-shadow:
-    0 12px 35px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.18);
+    0 15px 40px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.20);
 }
 
 .btn:active{
-  transform:scale(.97);
+  transform:scale(.95);
 }
 
 .btn.primary{
   background:
+    radial-gradient(
+      circle at 30% 0%,
+      rgba(255,255,255,.32),
+      transparent 30%
+    ),
     linear-gradient(
       145deg,
       #ff5148,
-      #e9271e
+      #d91f18
     );
 
   border-color:
-    rgba(255,255,255,.20);
+    rgba(255,255,255,.25);
 
   box-shadow:
-    0 12px 35px rgba(255,59,48,.30),
-    inset 0 1px 0 rgba(255,255,255,.30);
+    0 15px 45px rgba(255,59,48,.30),
+    inset 0 1px 0 rgba(255,255,255,.32);
 }
 
 .btn.primary:hover{
+  background:
+    radial-gradient(
+      circle at 30% 0%,
+      rgba(255,255,255,.40),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #ff6259,
+      #df241c
+    );
+
   box-shadow:
-    0 16px 45px rgba(255,59,48,.40),
-    inset 0 1px 0 rgba(255,255,255,.35);
+    0 18px 55px rgba(255,59,48,.42),
+    inset 0 1px 0 rgba(255,255,255,.38);
 }
 
 
@@ -387,6 +561,7 @@ a{
     calc(100vh - 120px);
 
   display:grid;
+
   place-items:center;
 
   text-align:center;
@@ -394,34 +569,71 @@ a{
   padding:
     90px
     0
-    100px;
+    110px;
 }
 
 .hero-content{
-  max-width:900px;
+  max-width:950px;
+
+  animation:
+    heroIn .9s cubic-bezier(.2,.8,.2,1) both;
 }
+
+@keyframes heroIn{
+
+  from{
+    opacity:0;
+
+    transform:
+      translateY(25px)
+      scale(.98);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
 
 .eyebrow{
   display:inline-flex;
-  align-items:center;
-  gap:8px;
 
-  padding:9px 14px;
+  align-items:center;
+
+  gap:9px;
+
+  padding:
+    9px
+    14px;
 
   border-radius:999px;
 
-  color:#c9cbd0;
+  color:#cdd0d8;
 
   background:
-    rgba(255,255,255,.055);
+    rgba(255,255,255,.065);
 
   border:
-    1px solid rgba(255,255,255,.10);
+    1px solid rgba(255,255,255,.11);
 
-  backdrop-filter:blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12);
 
-  font-size:12px;
-  font-weight:800;
+  backdrop-filter:
+    blur(20px);
+
+  font-size:11px;
+
+  font-weight:850;
+
   letter-spacing:1.5px;
 }
 
@@ -431,55 +643,112 @@ a{
 
   border-radius:50%;
 
-  background:var(--red);
+  background:#ff453a;
 
   box-shadow:
-    0 0 15px var(--red);
+    0 0 8px #ff453a,
+    0 0 20px rgba(255,59,48,.8);
+
+  animation:
+    pulseDot 2s ease-in-out infinite;
 }
 
+@keyframes pulseDot{
+
+  0%,100%{
+    transform:scale(1);
+
+    opacity:.8;
+  }
+
+  50%{
+    transform:scale(1.35);
+
+    opacity:1;
+  }
+}
+
+
+/* =========================================================
+   HERO TITLE
+========================================================= */
+
 .hero h1{
-  margin:28px 0 24px;
+  margin:
+    30px 0
+    25px;
 
   font-size:
-    clamp(58px,12vw,130px);
+    clamp(58px,12vw,132px);
 
-  line-height:.84;
+  line-height:.82;
 
-  letter-spacing:-6px;
+  letter-spacing:
+    clamp(-7px,-.6vw,-3px);
 
   font-weight:950;
+
+  text-shadow:
+    0 20px 60px rgba(0,0,0,.40);
 }
 
 .hero h1 .accent{
-  color:var(--red);
+  color:transparent;
 
-  text-shadow:
-    0 0 40px rgba(255,59,48,.20);
+  background:
+    linear-gradient(
+      110deg,
+      #ff2f27,
+      #ff756d,
+      #ff2f27
+    );
+
+  background-size:200% auto;
+
+  -webkit-background-clip:text;
+
+  background-clip:text;
+
+  animation:
+    redFlow 5s linear infinite;
+}
+
+@keyframes redFlow{
+
+  to{
+    background-position:
+      200% center;
+  }
 }
 
 .hero-description{
   max-width:650px;
 
-  margin:0 auto 32px;
+  margin:
+    0 auto
+    34px;
 
-  color:#a8abb3;
+  color:#aeb0b8;
 
   font-size:
     clamp(16px,2vw,20px);
 
-  line-height:1.6;
+  line-height:1.65;
 }
 
 .hero-actions{
   display:flex;
+
   justify-content:center;
+
   gap:12px;
+
   flex-wrap:wrap;
 }
 
 
 /* =========================================================
-   FEATURE CARDS
+   FEATURES
 ========================================================= */
 
 .features{
@@ -490,51 +759,89 @@ a{
 
   gap:16px;
 
-  margin-bottom:80px;
+  margin-bottom:100px;
 }
 
 .feature{
-  padding:26px;
+  min-height:210px;
+
+  padding:27px;
 
   border-radius:var(--radius);
 
-  position:relative;
-  overflow:hidden;
+  cursor:default;
 
   transition:
-    transform .25s ease,
-    border-color .25s ease;
+    transform .35s cubic-bezier(.2,.8,.2,1),
+    border-color .35s ease,
+    box-shadow .35s ease;
 }
 
 .feature:hover{
-  transform:translateY(-5px);
+  transform:
+    translateY(-8px)
+    scale(1.01);
 
   border-color:
-    rgba(255,255,255,.22);
+    rgba(255,255,255,.23);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.20);
+}
+
+.feature:hover::before{
+  transform:
+    translateX(25%)
+    rotate(-7deg);
 }
 
 .feature-icon{
-  width:48px;
-  height:48px;
+  width:50px;
+  height:50px;
 
   display:grid;
-  place-items:center;
 
-  border-radius:16px;
+  place-items:center;
 
   margin-bottom:20px;
 
+  border-radius:17px;
+
   background:
-    rgba(255,255,255,.08);
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.14),
+      rgba(255,255,255,.05)
+    );
 
   border:
-    1px solid rgba(255,255,255,.10);
+    1px solid rgba(255,255,255,.12);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    0 10px 25px rgba(0,0,0,.18);
 
   font-size:20px;
+
+  transition:
+    transform .3s ease,
+    background .3s ease;
+}
+
+.feature:hover .feature-icon{
+  transform:
+    translateY(-3px)
+    rotate(-4deg);
+
+  background:
+    rgba(255,59,48,.14);
 }
 
 .feature h3{
-  margin:0 0 8px;
+  margin:
+    0 0 9px;
+
   font-size:20px;
 }
 
@@ -543,7 +850,7 @@ a{
 
   color:var(--muted);
 
-  line-height:1.6;
+  line-height:1.65;
 }
 
 
@@ -554,34 +861,55 @@ a{
 .dashboard{
   display:none;
 
-  padding-top:50px;
+  padding-top:55px;
+
+  animation:
+    dashboardIn .55s cubic-bezier(.2,.8,.2,1);
 }
 
 .dashboard.active{
   display:block;
 }
 
+@keyframes dashboardIn{
+
+  from{
+    opacity:0;
+
+    transform:
+      translateY(18px);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+      translateY(0);
+  }
+}
+
 .dashboard-header{
   display:flex;
 
-  justify-content:
-    space-between;
+  justify-content:space-between;
 
-  align-items:
-    flex-end;
+  align-items:flex-end;
 
   gap:20px;
 
-  margin-bottom:28px;
+  margin-bottom:27px;
 }
 
 .dashboard-header h1{
-  margin:0 0 8px;
+  margin:
+    5px 0 8px;
 
   font-size:
-    clamp(32px,6vw,58px);
+    clamp(34px,6vw,60px);
 
-  letter-spacing:-2px;
+  letter-spacing:-3px;
+
+  line-height:.95;
 }
 
 .dashboard-header p{
@@ -592,7 +920,7 @@ a{
 
 
 /* =========================================================
-   DASH NAV
+   DASHBOARD NAV
 ========================================================= */
 
 .dashboard-nav{
@@ -609,6 +937,12 @@ a{
   overflow:auto;
 
   scrollbar-width:none;
+
+  position:sticky;
+
+  top:98px;
+
+  z-index:20;
 }
 
 .dashboard-nav::-webkit-scrollbar{
@@ -616,29 +950,47 @@ a{
 }
 
 .dash-tab{
+  position:relative;
+
   white-space:nowrap;
 
   border:0;
 
-  color:#a9abb2;
+  color:#9ea1aa;
 
-  padding:11px 17px;
+  padding:
+    11px
+    18px;
 
   border-radius:999px;
 
   background:transparent;
 
-  font-weight:800;
+  font-weight:850;
+
+  transition:
+    color .2s ease,
+    transform .2s ease,
+    background .2s ease;
+}
+
+.dash-tab:active{
+  transform:scale(.94);
 }
 
 .dash-tab.active{
   color:#fff;
 
   background:
-    rgba(255,255,255,.11);
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.15),
+      rgba(255,255,255,.065)
+    );
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10);
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 6px 18px rgba(0,0,0,.18);
 }
 
 
@@ -658,19 +1010,32 @@ a{
 }
 
 .stat-card{
-  padding:20px;
+  min-width:0;
 
-  border-radius:24px;
+  padding:21px;
+
+  border-radius:25px;
+
+  transition:
+    transform .3s ease,
+    border-color .3s ease;
+}
+
+.stat-card:hover{
+  transform:translateY(-4px);
+
+  border-color:
+    rgba(255,255,255,.20);
 }
 
 .stat-label{
-  color:#90939c;
+  color:#858892;
 
-  font-size:11px;
+  font-size:10px;
 
   font-weight:900;
 
-  letter-spacing:1.2px;
+  letter-spacing:1.4px;
 
   text-transform:uppercase;
 }
@@ -678,18 +1043,20 @@ a{
 .stat-value{
   margin-top:9px;
 
-  font-size:28px;
+  font-size:27px;
 
   font-weight:950;
 
   overflow:hidden;
+
   text-overflow:ellipsis;
+
   white-space:nowrap;
 }
 
 
 /* =========================================================
-   CONTENT GRID
+   CONTENT
 ========================================================= */
 
 .content-grid{
@@ -705,6 +1072,15 @@ a{
   padding:25px;
 
   border-radius:var(--radius);
+
+  transition:
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+.panel:hover{
+  border-color:
+    rgba(255,255,255,.17);
 }
 
 .panel.full{
@@ -716,23 +1092,30 @@ a{
   display:flex;
 
   align-items:center;
+
   justify-content:space-between;
 
   gap:12px;
 
-  margin-bottom:18px;
+  margin-bottom:19px;
 }
 
 .panel-title h2{
   margin:0;
 
   font-size:20px;
+
+  letter-spacing:-.4px;
 }
 
 .panel-title span{
-  color:#858892;
+  color:#7e818b;
 
-  font-size:12px;
+  font-size:10px;
+
+  font-weight:850;
+
+  letter-spacing:1px;
 }
 
 
@@ -741,9 +1124,9 @@ a{
 ========================================================= */
 
 .plan-content{
-  color:#c9cbd0;
+  color:#d0d2d8;
 
-  line-height:1.75;
+  line-height:1.8;
 
   white-space:pre-wrap;
 
@@ -751,7 +1134,7 @@ a{
 }
 
 .empty{
-  color:#777a83;
+  color:#747780;
 }
 
 
@@ -770,15 +1153,18 @@ a{
 
   color:#999ca5;
 
-  font-size:12px;
+  font-size:11px;
 
-  font-weight:800;
+  font-weight:850;
+
+  letter-spacing:.3px;
 }
 
 .input{
   width:100%;
 
-  border:1px solid rgba(255,255,255,.10);
+  border:
+    1px solid rgba(255,255,255,.10);
 
   outline:none;
 
@@ -787,31 +1173,41 @@ a{
   background:
     rgba(0,0,0,.22);
 
-  border-radius:17px;
+  border-radius:18px;
 
-  padding:14px 15px;
+  padding:
+    14px
+    15px;
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.04);
 
   transition:
-    border-color .2s,
-    background .2s;
+    border-color .25s ease,
+    background .25s ease,
+    box-shadow .25s ease,
+    transform .2s ease;
+}
+
+.input::placeholder{
+  color:#656872;
 }
 
 .input:focus{
   border-color:
-    rgba(255,59,48,.65);
+    rgba(255,59,48,.58);
 
   background:
     rgba(0,0,0,.30);
 
   box-shadow:
-    0 0 0 3px rgba(255,59,48,.08);
+    0 0 0 4px rgba(255,59,48,.075),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 textarea.input{
   min-height:120px;
+
   resize:vertical;
 }
 
@@ -829,15 +1225,38 @@ textarea.input{
 }
 
 .checkin-item{
-  padding:16px;
+  position:relative;
 
-  border-radius:20px;
+  overflow:hidden;
+
+  padding:17px;
+
+  border-radius:21px;
 
   background:
-    rgba(255,255,255,.045);
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.025)
+    );
 
   border:
-    1px solid rgba(255,255,255,.07);
+    1px solid rgba(255,255,255,.075);
+
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background .25s ease;
+}
+
+.checkin-item:hover{
+  transform:translateY(-2px);
+
+  border-color:
+    rgba(255,255,255,.14);
+
+  background:
+    rgba(255,255,255,.075);
 }
 
 .checkin-top{
@@ -851,9 +1270,9 @@ textarea.input{
 }
 
 .checkin-date{
-  color:#8d9098;
+  color:#858892;
 
-  font-size:12px;
+  font-size:11px;
 }
 
 .checkin-stats{
@@ -866,22 +1285,29 @@ textarea.input{
 }
 
 .checkin-stat{
-  padding:10px;
+  padding:11px;
 
-  border-radius:14px;
+  border-radius:15px;
 
   background:
     rgba(0,0,0,.18);
+
+  border:
+    1px solid rgba(255,255,255,.04);
 }
 
 .checkin-stat small{
   display:block;
 
-  color:#777a82;
+  color:#70737d;
 
-  font-size:10px;
+  font-size:9px;
 
   margin-bottom:3px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.6px;
 }
 
 .checkin-stat strong{
@@ -900,7 +1326,7 @@ textarea.input{
 
 
 /* =========================================================
-   COACH CLIENTS
+   CLIENTS
 ========================================================= */
 
 .client-list{
@@ -910,35 +1336,54 @@ textarea.input{
 }
 
 .client-card{
+  position:relative;
+
+  overflow:hidden;
+
   width:100%;
 
-  border:1px solid rgba(255,255,255,.08);
+  border:
+    1px solid rgba(255,255,255,.08);
 
   border-radius:21px;
 
-  padding:17px;
+  padding:18px;
 
   text-align:left;
 
   color:#fff;
 
   background:
-    rgba(255,255,255,.045);
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.025)
+    );
 
   transition:
-    transform .18s,
-    background .18s,
-    border-color .18s;
+    transform .25s cubic-bezier(.2,.8,.2,1),
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
 }
 
 .client-card:hover{
-  transform:translateY(-2px);
+  transform:
+    translateY(-3px)
+    scale(1.005);
 
   background:
-    rgba(255,255,255,.075);
+    rgba(255,255,255,.085);
 
   border-color:
-    rgba(255,255,255,.15);
+    rgba(255,255,255,.17);
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.22);
+}
+
+.client-card:active{
+  transform:scale(.98);
 }
 
 .client-name{
@@ -957,7 +1402,7 @@ textarea.input{
 
 
 /* =========================================================
-   COACH EDITOR
+   EDITOR
 ========================================================= */
 
 .editor{
@@ -985,6 +1430,7 @@ textarea.input{
   display:none;
 
   align-items:center;
+
   justify-content:center;
 
   padding:20px;
@@ -993,7 +1439,12 @@ textarea.input{
     rgba(0,0,0,.62);
 
   backdrop-filter:
-    blur(12px);
+    blur(18px)
+    saturate(120%);
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(120%);
 }
 
 .modal.show{
@@ -1001,6 +1452,8 @@ textarea.input{
 }
 
 .modal-box{
+  position:relative;
+
   width:min(470px,100%);
 
   max-height:
@@ -1008,37 +1461,60 @@ textarea.input{
 
   overflow:auto;
 
-  padding:25px;
+  padding:27px;
 
-  border-radius:32px;
+  border-radius:34px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(35,35,39,.82),
-      rgba(14,14,17,.88)
+      rgba(39,39,45,.86),
+      rgba(13,13,17,.90)
     );
 
   border:
-    1px solid rgba(255,255,255,.15);
+    1px solid rgba(255,255,255,.17);
 
   box-shadow:
-    0 35px 100px rgba(0,0,0,.60),
-    inset 0 1px 0 rgba(255,255,255,.10);
+    0 40px 120px rgba(0,0,0,.70),
+    inset 0 1px 0 rgba(255,255,255,.16);
 
   backdrop-filter:
-    blur(35px)
-    saturate(150%);
+    blur(38px)
+    saturate(170%);
 
   -webkit-backdrop-filter:
-    blur(35px)
-    saturate(150%);
+    blur(38px)
+    saturate(170%);
+
+  animation:
+    modalIn .38s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes modalIn{
+
+  from{
+    opacity:0;
+
+    transform:
+      translateY(18px)
+      scale(.96);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
 }
 
 .modal-header{
   display:flex;
 
   align-items:center;
+
   justify-content:space-between;
 
   margin-bottom:20px;
@@ -1048,15 +1524,22 @@ textarea.input{
   margin:0;
 
   font-size:25px;
+
+  letter-spacing:-.5px;
 }
 
 .close{
-  width:38px;
-  height:38px;
+  width:39px;
+  height:39px;
+
+  display:grid;
+
+  place-items:center;
 
   border-radius:50%;
 
-  border:1px solid rgba(255,255,255,.10);
+  border:
+    1px solid rgba(255,255,255,.10);
 
   color:#fff;
 
@@ -1064,6 +1547,17 @@ textarea.input{
     rgba(255,255,255,.07);
 
   font-size:18px;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.close:hover{
+  transform:rotate(90deg);
+
+  background:
+    rgba(255,255,255,.13);
 }
 
 
@@ -1074,7 +1568,8 @@ textarea.input{
 .auth-tabs{
   display:grid;
 
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:
+    1fr 1fr;
 
   gap:6px;
 
@@ -1082,16 +1577,19 @@ textarea.input{
 
   margin-bottom:20px;
 
-  border-radius:17px;
+  border-radius:18px;
 
   background:
     rgba(0,0,0,.25);
+
+  border:
+    1px solid rgba(255,255,255,.05);
 }
 
 .auth-tab{
   border:0;
 
-  border-radius:13px;
+  border-radius:14px;
 
   padding:11px;
 
@@ -1099,14 +1597,30 @@ textarea.input{
 
   background:transparent;
 
-  font-weight:800;
+  font-weight:850;
+
+  transition:
+    background .2s ease,
+    color .2s ease,
+    transform .2s ease;
+}
+
+.auth-tab:active{
+  transform:scale(.97);
 }
 
 .auth-tab.active{
   color:#fff;
 
   background:
-    rgba(255,255,255,.10);
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.14),
+      rgba(255,255,255,.06)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.13);
 }
 
 
@@ -1124,29 +1638,42 @@ textarea.input{
 
   z-index:500;
 
-  transform:
-    translate(-50%,120px);
+  width:min(
+    420px,
+    calc(100% - 30px)
+  );
 
-  width:min(420px,calc(100% - 30px));
+  padding:
+    15px
+    18px;
 
-  padding:15px 18px;
+  border-radius:20px;
 
-  border-radius:18px;
+  color:#fff;
 
   background:
     rgba(28,28,32,.82);
 
   border:
-    1px solid rgba(255,255,255,.13);
+    1px solid rgba(255,255,255,.14);
 
   box-shadow:
-    0 20px 60px rgba(0,0,0,.4);
+    0 20px 70px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.10);
 
   backdrop-filter:
-    blur(25px);
+    blur(28px)
+    saturate(150%);
+
+  -webkit-backdrop-filter:
+    blur(28px)
+    saturate(150%);
+
+  transform:
+    translate(-50%,130px);
 
   transition:
-    transform .3s ease;
+    transform .4s cubic-bezier(.2,.8,.2,1);
 }
 
 .toast.show{
@@ -1156,7 +1683,11 @@ textarea.input{
 
 .toast.error{
   border-color:
-    rgba(255,59,48,.35);
+    rgba(255,59,48,.40);
+
+  box-shadow:
+    0 20px 70px rgba(255,59,48,.12),
+    inset 0 1px 0 rgba(255,255,255,.10);
 }
 
 
@@ -1176,10 +1707,12 @@ textarea.input{
   width:15px;
   height:15px;
 
+  flex:none;
+
   border-radius:50%;
 
   border:
-    2px solid rgba(255,255,255,.25);
+    2px solid rgba(255,255,255,.22);
 
   border-top-color:#fff;
 
@@ -1188,6 +1721,7 @@ textarea.input{
 }
 
 @keyframes spin{
+
   to{
     transform:rotate(360deg);
   }
@@ -1203,9 +1737,12 @@ textarea.input{
 
   color:#555861;
 
-  padding:70px 0 20px;
+  padding:
+    75px
+    0
+    20px;
 
-  font-size:12px;
+  font-size:11px;
 
   letter-spacing:1px;
 }
@@ -1228,38 +1765,77 @@ textarea.input{
     top:10px;
 
     height:62px;
+
+    padding-left:14px;
   }
 
   .brand{
-    font-size:18px;
+    font-size:17px;
+
+    letter-spacing:2px;
   }
 
   .brand-mark{
-    width:34px;
-    height:34px;
+    width:35px;
+    height:35px;
+
+    border-radius:12px;
   }
 
   .top-nav .btn{
     padding:
-      10px 14px;
+      10px
+      14px;
 
     font-size:12px;
   }
 
   .hero{
     min-height:
-      calc(100vh - 100px);
+      calc(100svh - 100px);
 
     padding:
-      65px 0;
+      70px
+      0
+      80px;
   }
 
   .hero h1{
     letter-spacing:-4px;
+
+    font-size:
+      clamp(54px,15vw,95px);
+  }
+
+  .hero-description{
+    font-size:15px;
+
+    padding:
+      0 8px;
   }
 
   .features{
     grid-template-columns:1fr;
+
+    margin-bottom:70px;
+  }
+
+  .feature{
+    min-height:0;
+
+    padding:23px;
+  }
+
+  .dashboard{
+    padding-top:40px;
+  }
+
+  .dashboard-nav{
+    top:82px;
+
+    margin-left:-2px;
+
+    margin-right:-2px;
   }
 
   .stats{
@@ -1281,12 +1857,17 @@ textarea.input{
     flex-direction:column;
   }
 
+  .dashboard-header h1{
+    font-size:38px;
+  }
+
   .checkin-stats{
     grid-template-columns:
       repeat(3,1fr);
   }
 
 }
+
 
 @media(max-width:480px){
 
@@ -1304,14 +1885,61 @@ textarea.input{
 
   .stat-card{
     padding:16px;
+
+    border-radius:21px;
   }
 
   .stat-value{
-    font-size:22px;
+    font-size:21px;
   }
 
   .panel{
     padding:19px;
+
+    border-radius:24px;
+  }
+
+  .modal{
+    padding:12px;
+  }
+
+  .modal-box{
+    padding:21px;
+
+    border-radius:29px;
+  }
+
+  .checkin-stats{
+    gap:6px;
+  }
+
+  .checkin-stat{
+    padding:9px;
+  }
+
+}
+
+
+/* =========================================================
+   TOUCH
+========================================================= */
+
+@media(hover:none){
+
+  .btn:hover{
+    transform:none;
+  }
+
+  .feature:hover{
+    transform:none;
+  }
+
+  .client-card:hover{
+    transform:none;
+  }
+
+  .stat-card:hover{
+    transform:none;
   }
 
 }
@@ -1326,12 +1954,75 @@ textarea.input{
   *,
   *::before,
   *::after{
+
     animation-duration:.01ms!important;
+
     animation-iteration-count:1!important;
+
     scroll-behavior:auto!important;
+
     transition-duration:.01ms!important;
   }
 
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media(prefers-reduced-transparency:reduce){
+
+  .glass,
+  .top-nav,
+  .modal-box,
+  .toast{
+
+    backdrop-filter:none;
+
+    -webkit-backdrop-filter:none;
+
+    background:
+      rgba(25,25,29,.96);
+  }
+
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+  width:7px;
+}
+
+::-webkit-scrollbar-track{
+  background:#050507;
+}
+
+::-webkit-scrollbar-thumb{
+  background:
+    rgba(255,255,255,.15);
+
+  border-radius:999px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background:
+    rgba(255,255,255,.25);
+}
+
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+::selection{
+  background:
+    rgba(255,59,48,.35);
+
+  color:#fff;
 }
 
 </style>
@@ -1342,16 +2033,23 @@ textarea.input{
 
 <div class="app">
 
+
 <!-- =====================================================
-     TOP NAV
+     NAVBAR
 ===================================================== -->
 
 <nav class="top-nav">
 
   <div class="brand">
-    <div class="brand-mark">X</div>
+
+    <div class="brand-mark">
+      X
+    </div>
+
     IRON<span>X</span>
+
   </div>
+
 
   <div class="nav-actions">
 
@@ -1362,6 +2060,7 @@ textarea.input{
     >
       Login
     </button>
+
 
     <button
       id="navLogout"
@@ -1387,19 +2086,34 @@ textarea.input{
     <div class="hero-content">
 
       <div class="eyebrow">
+
         <span class="eyebrow-dot"></span>
+
         ONLINE COACHING • 2026
+
       </div>
 
+
       <h1>
-        FORGED<br>
-        <span class="accent">NOT FOUND.</span>
+
+        FORGED
+
+        <br>
+
+        <span class="accent">
+          NOT FOUND.
+        </span>
+
       </h1>
 
+
       <p class="hero-description">
+
         Personalized training, nutrition and progress tracking
         built around one thing: becoming stronger than yesterday.
+
       </p>
+
 
       <div class="hero-actions">
 
@@ -1409,6 +2123,7 @@ textarea.input{
         >
           START YOUR JOURNEY
         </button>
+
 
         <button
           class="btn"
@@ -1424,59 +2139,71 @@ textarea.input{
   </section>
 
 
-  <section class="features">
+<!-- =====================================================
+     FEATURES
+===================================================== -->
 
-    <div class="feature glass">
+<section class="features">
 
-      <div class="feature-icon">
-        ⚡
-      </div>
 
-      <h3>Training</h3>
+  <div class="feature glass">
 
-      <p>
-        Structured workouts, sets, reps,
-        rest and progression built around
-        your goal.
-      </p>
-
+    <div class="feature-icon">
+      ⚡
     </div>
 
+    <h3>
+      Training
+    </h3>
 
-    <div class="feature glass">
+    <p>
+      Structured workouts, sets, reps,
+      rest and progression built around
+      your goal.
+    </p>
 
-      <div class="feature-icon">
-        ◈
-      </div>
+  </div>
 
-      <h3>Nutrition</h3>
 
-      <p>
-        Practical nutrition plans designed
-        around your target and real-life
-        food choices.
-      </p>
+  <div class="feature glass">
 
+    <div class="feature-icon">
+      ◈
     </div>
 
+    <h3>
+      Nutrition
+    </h3>
 
-    <div class="feature glass">
+    <p>
+      Practical nutrition plans designed
+      around your target and real-life
+      food choices.
+    </p>
 
-      <div class="feature-icon">
-        ↗
-      </div>
+  </div>
 
-      <h3>Check-ins</h3>
 
-      <p>
-        Track weight, waist, energy and
-        notes so your progress doesn't
-        disappear into the void.
-      </p>
+  <div class="feature glass">
 
+    <div class="feature-icon">
+      ↗
     </div>
 
-  </section>
+    <h3>
+      Check-ins
+    </h3>
+
+    <p>
+      Track weight, waist, energy and
+      notes so your progress doesn't
+      disappear into the void.
+    </p>
+
+  </div>
+
+
+</section>
 
 </main>
 
@@ -1490,11 +2217,14 @@ textarea.input{
   class="dashboard"
 >
 
+
   <div class="dashboard-header">
 
     <div>
 
-      <p>CLIENT DASHBOARD</p>
+      <p>
+        CLIENT DASHBOARD
+      </p>
 
       <h1>
         Welcome,
@@ -1508,6 +2238,7 @@ textarea.input{
       </p>
 
     </div>
+
 
     <button
       class="btn"
@@ -1528,6 +2259,7 @@ textarea.input{
       Overview
     </button>
 
+
     <button
       class="dash-tab"
       onclick="showClientTab('trainingTab',this)"
@@ -1535,12 +2267,14 @@ textarea.input{
       Training
     </button>
 
+
     <button
       class="dash-tab"
       onclick="showClientTab('nutritionTab',this)"
     >
       Nutrition
     </button>
+
 
     <button
       class="dash-tab"
@@ -1552,160 +2286,105 @@ textarea.input{
   </div>
 
 
-  <!-- OVERVIEW -->
+<!-- =====================================================
+     OVERVIEW
+===================================================== -->
 
-  <div
-    id="overview"
-    class="client-tab"
-  >
+<div
+  id="overview"
+  class="client-tab"
+>
 
-    <div class="stats">
 
-      <div class="stat-card glass">
+  <div class="stats">
 
-        <div class="stat-label">
-          Goal
-        </div>
 
-        <div
-          id="clientGoal"
-          class="stat-value"
-        >
-          —
-        </div>
+    <div class="stat-card glass">
 
+      <div class="stat-label">
+        Goal
       </div>
 
-
-      <div class="stat-card glass">
-
-        <div class="stat-label">
-          Age
-        </div>
-
-        <div
-          id="clientAge"
-          class="stat-value"
-        >
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card glass">
-
-        <div class="stat-label">
-          Weight
-        </div>
-
-        <div
-          id="clientWeight"
-          class="stat-value"
-        >
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card glass">
-
-        <div class="stat-label">
-          Check-ins
-        </div>
-
-        <div
-          id="clientCheckinCount"
-          class="stat-value"
-        >
-          0
-        </div>
-
+      <div
+        id="clientGoal"
+        class="stat-value"
+      >
+        —
       </div>
 
     </div>
 
 
-    <div class="content-grid">
+    <div class="stat-card glass">
 
-      <div class="panel glass">
-
-        <div class="panel-title">
-
-          <h2>
-            Training Plan
-          </h2>
-
-          <span>
-            CURRENT
-          </span>
-
-        </div>
-
-        <div
-          id="overviewTraining"
-          class="plan-content empty"
-        >
-          Your coach hasn't added a training
-          plan yet.
-        </div>
-
+      <div class="stat-label">
+        Age
       </div>
 
-
-      <div class="panel glass">
-
-        <div class="panel-title">
-
-          <h2>
-            Nutrition Plan
-          </h2>
-
-          <span>
-            CURRENT
-          </span>
-
-        </div>
-
-        <div
-          id="overviewNutrition"
-          class="plan-content empty"
-        >
-          Your coach hasn't added a nutrition
-          plan yet.
-        </div>
-
+      <div
+        id="clientAge"
+        class="stat-value"
+      >
+        —
       </div>
 
     </div>
+
+
+    <div class="stat-card glass">
+
+      <div class="stat-label">
+        Weight
+      </div>
+
+      <div
+        id="clientWeight"
+        class="stat-value"
+      >
+        —
+      </div>
+
+    </div>
+
+
+    <div class="stat-card glass">
+
+      <div class="stat-label">
+        Check-ins
+      </div>
+
+      <div
+        id="clientCheckinCount"
+        class="stat-value"
+      >
+        0
+      </div>
+
+    </div>
+
 
   </div>
 
 
-  <!-- TRAINING -->
+  <div class="content-grid">
 
-  <div
-    id="trainingTab"
-    class="client-tab hidden"
-  >
 
     <div class="panel glass">
 
       <div class="panel-title">
 
         <h2>
-          Your Training Plan
+          Training Plan
         </h2>
 
         <span>
-          IRONX
+          CURRENT
         </span>
 
       </div>
 
       <div
-        id="trainingFull"
+        id="overviewTraining"
         class="plan-content empty"
       >
         Your coach hasn't added a training
@@ -1714,32 +2393,23 @@ textarea.input{
 
     </div>
 
-  </div>
-
-
-  <!-- NUTRITION -->
-
-  <div
-    id="nutritionTab"
-    class="client-tab hidden"
-  >
 
     <div class="panel glass">
 
       <div class="panel-title">
 
         <h2>
-          Your Nutrition Plan
+          Nutrition Plan
         </h2>
 
         <span>
-          IRONX
+          CURRENT
         </span>
 
       </div>
 
       <div
-        id="nutritionFull"
+        id="overviewNutrition"
         class="plan-content empty"
       >
         Your coach hasn't added a nutrition
@@ -1748,139 +2418,225 @@ textarea.input{
 
     </div>
 
+
   </div>
 
-
-  <!-- CHECKINS -->
-
-  <div
-    id="checkinsTab"
-    class="client-tab hidden"
-  >
-
-    <div class="content-grid">
-
-      <div class="panel glass">
-
-        <div class="panel-title">
-
-          <h2>
-            Weekly Check-in
-          </h2>
-
-          <span>
-            UPDATE
-          </span>
-
-        </div>
+</div>
 
 
-        <div class="input-group">
+<!-- =====================================================
+     TRAINING
+===================================================== -->
 
-          <label class="input-label">
-            Weight
-          </label>
+<div
+  id="trainingTab"
+  class="client-tab hidden"
+>
 
-          <input
-            id="weight"
-            class="input"
-            type="number"
-            step="0.1"
-            placeholder="kg"
-          >
+  <div class="panel glass">
 
-        </div>
+    <div class="panel-title">
 
+      <h2>
+        Your Training Plan
+      </h2>
 
-        <div class="input-group">
+      <span>
+        IRONX
+      </span>
 
-          <label class="input-label">
-            Waist
-          </label>
-
-          <input
-            id="waist"
-            class="input"
-            type="number"
-            step="0.1"
-            placeholder="cm"
-          >
-
-        </div>
+    </div>
 
 
-        <div class="input-group">
+    <div
+      id="trainingFull"
+      class="plan-content empty"
+    >
+      Your coach hasn't added a training
+      plan yet.
+    </div>
 
-          <label class="input-label">
-            Energy
-          </label>
+  </div>
 
-          <input
-            id="energy"
-            class="input"
-            type="number"
-            min="1"
-            max="10"
-            placeholder="1 - 10"
-          >
-
-        </div>
+</div>
 
 
-        <div class="input-group">
+<!-- =====================================================
+     NUTRITION
+===================================================== -->
 
-          <label class="input-label">
-            Notes
-          </label>
+<div
+  id="nutritionTab"
+  class="client-tab hidden"
+>
 
-          <textarea
-            id="notes"
-            class="input"
-            placeholder="How was your week?"
-          ></textarea>
+  <div class="panel glass">
 
-        </div>
+    <div class="panel-title">
+
+      <h2>
+        Your Nutrition Plan
+      </h2>
+
+      <span>
+        IRONX
+      </span>
+
+    </div>
 
 
-        <button
-          id="checkinButton"
-          class="btn primary"
-          onclick="submitCheckin()"
-        >
-          SUBMIT CHECK-IN
-        </button>
+    <div
+      id="nutritionFull"
+      class="plan-content empty"
+    >
+      Your coach hasn't added a nutrition
+      plan yet.
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     CHECKINS
+===================================================== -->
+
+<div
+  id="checkinsTab"
+  class="client-tab hidden"
+>
+
+
+  <div class="content-grid">
+
+
+    <div class="panel glass">
+
+      <div class="panel-title">
+
+        <h2>
+          Weekly Check-in
+        </h2>
+
+        <span>
+          UPDATE
+        </span>
 
       </div>
 
 
-      <div class="panel glass">
+      <div class="input-group">
 
-        <div class="panel-title">
+        <label class="input-label">
+          Weight
+        </label>
 
-          <h2>
-            History
-          </h2>
-
-          <span>
-            YOUR DATA
-          </span>
-
-        </div>
-
-        <div
-          id="clientCheckins"
-          class="checkin-list"
+        <input
+          id="weight"
+          class="input"
+          type="number"
+          step="0.1"
+          placeholder="kg"
         >
-          <div class="empty">
-            No check-ins yet.
-          </div>
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label class="input-label">
+          Waist
+        </label>
+
+        <input
+          id="waist"
+          class="input"
+          type="number"
+          step="0.1"
+          placeholder="cm"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label class="input-label">
+          Energy
+        </label>
+
+        <input
+          id="energy"
+          class="input"
+          type="number"
+          min="1"
+          max="10"
+          placeholder="1 - 10"
+        >
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label class="input-label">
+          Notes
+        </label>
+
+        <textarea
+          id="notes"
+          class="input"
+          placeholder="How was your week?"
+        ></textarea>
+
+      </div>
+
+
+      <button
+        id="checkinButton"
+        class="btn primary"
+        onclick="submitCheckin()"
+      >
+        SUBMIT CHECK-IN
+      </button>
+
+    </div>
+
+
+    <div class="panel glass">
+
+      <div class="panel-title">
+
+        <h2>
+          History
+        </h2>
+
+        <span>
+          YOUR DATA
+        </span>
+
+      </div>
+
+
+      <div
+        id="clientCheckins"
+        class="checkin-list"
+      >
+
+        <div class="empty">
+          No check-ins yet.
         </div>
 
       </div>
 
     </div>
 
+
   </div>
+
+</div>
+
 
 </section>
 
@@ -1894,11 +2650,14 @@ textarea.input{
   class="dashboard"
 >
 
+
   <div class="dashboard-header">
 
     <div>
 
-      <p>COACH DASHBOARD</p>
+      <p>
+        COACH DASHBOARD
+      </p>
 
       <h1>
         IRON<span style="color:#ff3b30">X</span>
@@ -1909,6 +2668,7 @@ textarea.input{
       </p>
 
     </div>
+
 
     <button
       class="btn"
@@ -1921,6 +2681,7 @@ textarea.input{
 
 
   <div class="stats">
+
 
     <div class="stat-card glass">
 
@@ -1976,12 +2737,12 @@ textarea.input{
 
     </div>
 
+
   </div>
 
 
   <div class="content-grid">
 
-    <!-- CLIENT LIST -->
 
     <div class="panel glass">
 
@@ -1997,19 +2758,20 @@ textarea.input{
 
       </div>
 
+
       <div
         id="coachClients"
         class="client-list"
       >
+
         <div class="empty">
           Loading clients...
         </div>
+
       </div>
 
     </div>
 
-
-    <!-- CLIENT EDITOR -->
 
     <div class="panel glass">
 
@@ -2083,8 +2845,6 @@ textarea.input{
     </div>
 
 
-    <!-- SELECTED CLIENT CHECKINS -->
-
     <div
       class="panel glass full"
     >
@@ -2101,16 +2861,20 @@ textarea.input{
 
       </div>
 
+
       <div
         id="coachCheckins"
         class="checkin-list"
       >
+
         <div class="empty">
           Select a client to view check-ins.
         </div>
+
       </div>
 
     </div>
+
 
   </div>
 
@@ -2125,6 +2889,7 @@ textarea.input{
   IRONX © 2026
 </footer>
 
+
 </div>
 
 
@@ -2137,13 +2902,16 @@ textarea.input{
   class="modal"
 >
 
+
   <div class="modal-box">
+
 
     <div class="modal-header">
 
       <h2>
         IRON<span style="color:#ff3b30">X</span>
       </h2>
+
 
       <button
         class="close"
@@ -2164,6 +2932,7 @@ textarea.input{
       >
         LOGIN
       </button>
+
 
       <button
         id="registerTab"
@@ -2198,6 +2967,7 @@ textarea.input{
 ===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -2238,7 +3008,7 @@ let selectedClientPlan = null;
 
 
 /* =========================================================
-   HELPERS
+   HELPER
 ========================================================= */
 
 function $(id){
@@ -2270,6 +3040,7 @@ function showToast(message,error=false){
       },
       3200
     );
+
 }
 
 
@@ -2281,6 +3052,7 @@ function escapeHTML(value){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+
 }
 
 
@@ -2298,6 +3070,7 @@ function formatDate(date){
         year:"numeric"
       }
     );
+
 }
 
 
@@ -2314,6 +3087,7 @@ function openAuth(mode="login"){
     .add("show");
 
   renderAuth();
+
 }
 
 
@@ -2322,6 +3096,7 @@ function closeAuth(){
   $("authModal")
     .classList
     .remove("show");
+
 }
 
 
@@ -2330,6 +3105,7 @@ function setAuthMode(mode){
   authMode = mode;
 
   renderAuth();
+
 }
 
 
@@ -2550,6 +3326,7 @@ async function register(){
       );
 
       return;
+
     }
 
 
@@ -2561,6 +3338,7 @@ async function register(){
       );
 
       return;
+
     }
 
 
@@ -2623,6 +3401,7 @@ async function register(){
 
     }
 
+
   }catch(error){
 
     console.error(error);
@@ -2633,10 +3412,15 @@ async function register(){
       true
     );
 
-    button.disabled = false;
+    if(button){
 
-    button.textContent =
-      "CREATE ACCOUNT";
+      button.disabled = false;
+
+      button.textContent =
+        "CREATE ACCOUNT";
+
+    }
+
   }
 
 }
@@ -2674,6 +3458,7 @@ async function login(){
       );
 
       return;
+
     }
 
 
@@ -2727,10 +3512,15 @@ async function login(){
       true
     );
 
-    button.disabled = false;
+    if(button){
 
-    button.textContent =
-      "LOGIN";
+      button.disabled = false;
+
+      button.textContent =
+        "LOGIN";
+
+    }
+
   }
 
 }
@@ -2761,6 +3551,7 @@ async function enterApp(user){
 
     await loadProfile();
 
+
     if(
       currentProfile &&
       currentProfile.role === "coach"
@@ -2778,6 +3569,7 @@ async function enterApp(user){
 
     }
 
+
   }catch(error){
 
     console.error(error);
@@ -2790,7 +3582,12 @@ async function enterApp(user){
 
     showClientDashboard();
 
-    await loadClientData();
+    try{
+      await loadClientData();
+    }catch(e){
+      console.error(e);
+    }
+
   }
 
 }
@@ -2827,10 +3624,14 @@ async function loadProfile(){
   currentProfile =
     data || {
 
-      id:currentUser.id,
+      id:
+        currentUser.id,
 
       name:
         currentUser.user_metadata?.name ||
+        currentUser.email,
+
+      email:
         currentUser.email,
 
       age:
@@ -2841,7 +3642,14 @@ async function loadProfile(){
         currentUser.user_metadata?.goal ||
         "",
 
-      role:"client"
+      role:
+        "client",
+
+      training_plan:
+        "",
+
+      nutrition_plan:
+        ""
 
     };
 
@@ -2869,6 +3677,10 @@ function showClientDashboard(){
 
 }
 
+
+/* =========================================================
+   SHOW COACH
+========================================================= */
 
 function showCoachDashboard(){
 
@@ -2898,9 +3710,7 @@ function showClientTab(tabId,button){
     .querySelectorAll(".client-tab")
     .forEach(
       tab =>
-        tab.classList.add(
-          "hidden"
-        )
+        tab.classList.add("hidden")
     );
 
 
@@ -2913,16 +3723,15 @@ function showClientTab(tabId,button){
     .querySelectorAll(".dash-tab")
     .forEach(
       btn =>
-        btn.classList.remove(
-          "active"
-        )
+        btn.classList.remove("active")
     );
 
 
-  if(button)
-    button.classList.add(
-      "active"
-    );
+  if(button){
+
+    button.classList.add("active");
+
+  }
 
 }
 
@@ -2946,6 +3755,7 @@ async function loadClientData(){
 
   $("clientEmail")
     .textContent =
+      currentProfile?.email ||
       currentUser.email ||
       "—";
 
@@ -3001,6 +3811,7 @@ async function loadClientPlan(){
     currentPlan?.training ||
     "Your coach hasn't added a training plan yet.";
 
+
   const nutrition =
     currentPlan?.nutrition ||
     "Your coach hasn't added a nutrition plan yet.";
@@ -3013,7 +3824,6 @@ async function loadClientPlan(){
   $("trainingFull")
     .textContent =
       training;
-
 
   $("overviewNutrition")
     .textContent =
@@ -3033,9 +3843,7 @@ async function loadClientPlan(){
   .forEach(
     element => {
 
-      if(
-        !element
-      )
+      if(!element)
         return;
 
       element.classList.toggle(
@@ -3093,7 +3901,7 @@ async function loadClientCheckins(){
 
   $("clientWeight")
     .textContent =
-      latest?.weight
+      latest?.weight != null
         ? `${latest.weight} kg`
         : "—";
 
@@ -3110,7 +3918,10 @@ async function loadClientCheckins(){
    RENDER CHECKINS
 ========================================================= */
 
-function renderCheckins(container,checkins){
+function renderCheckins(
+  container,
+  checkins
+){
 
   if(!container)
     return;
@@ -3128,6 +3939,7 @@ function renderCheckins(container,checkins){
     `;
 
     return;
+
   }
 
 
@@ -3145,13 +3957,16 @@ function renderCheckins(container,checkins){
               </strong>
 
               <span class="checkin-date">
-                ${formatDate(checkin.created_at)}
+                ${formatDate(
+                  checkin.created_at
+                )}
               </span>
 
             </div>
 
 
             <div class="checkin-stats">
+
 
               <div class="checkin-stat">
 
@@ -3161,8 +3976,10 @@ function renderCheckins(container,checkins){
 
                 <strong>
                   ${
-                    checkin.weight
-                      ? escapeHTML(checkin.weight) + " kg"
+                    checkin.weight != null
+                      ? escapeHTML(
+                          checkin.weight
+                        ) + " kg"
                       : "—"
                   }
                 </strong>
@@ -3178,8 +3995,10 @@ function renderCheckins(container,checkins){
 
                 <strong>
                   ${
-                    checkin.waist
-                      ? escapeHTML(checkin.waist) + " cm"
+                    checkin.waist != null
+                      ? escapeHTML(
+                          checkin.waist
+                        ) + " cm"
                       : "—"
                   }
                 </strong>
@@ -3195,13 +4014,16 @@ function renderCheckins(container,checkins){
 
                 <strong>
                   ${
-                    checkin.energy
-                      ? escapeHTML(checkin.energy) + "/10"
+                    checkin.energy != null
+                      ? escapeHTML(
+                          checkin.energy
+                        ) + "/10"
                       : "—"
                   }
                 </strong>
 
               </div>
+
 
             </div>
 
@@ -3210,11 +4032,14 @@ function renderCheckins(container,checkins){
               checkin.notes
                 ? `
                   <div class="checkin-notes">
-                    ${escapeHTML(checkin.notes)}
+                    ${escapeHTML(
+                      checkin.notes
+                    )}
                   </div>
                 `
                 : ""
             }
+
 
           </div>
 
@@ -3245,6 +4070,7 @@ async function submitCheckin(){
       );
 
       return;
+
     }
 
 
@@ -3282,6 +4108,7 @@ async function submitCheckin(){
       );
 
       return;
+
     }
 
 
@@ -3422,6 +4249,7 @@ async function loadCoachClients(){
     `;
 
     return;
+
   }
 
 
@@ -3436,25 +4264,32 @@ async function loadCoachClients(){
           >
 
             <div class="client-name">
+
               ${escapeHTML(
                 client.name ||
                 "Unnamed client"
               )}
+
             </div>
+
 
             <div class="client-meta">
 
               ${
                 client.age
-                  ? `Age ${escapeHTML(client.age)}`
+                  ? `Age ${escapeHTML(
+                      client.age
+                    )}`
                   : "Age —"
               }
 
-              • 
+              •
 
               ${
                 client.goal
-                  ? escapeHTML(client.goal)
+                  ? escapeHTML(
+                      client.goal
+                    )
                   : "No goal"
               }
 
@@ -3545,7 +4380,7 @@ async function selectClient(clientId){
 
 
 /* =========================================================
-   LOAD CLIENT PLAN
+   CLIENT PLAN
 ========================================================= */
 
 async function loadSelectedClientPlan(){
@@ -3687,7 +4522,7 @@ async function savePlan(){
 
 
 /* =========================================================
-   CLIENT CHECKINS FOR COACH
+   COACH CHECKINS
 ========================================================= */
 
 async function loadSelectedClientCheckins(){
@@ -3747,13 +4582,24 @@ async function loadSelectedClientCheckins(){
 
 async function logout(){
 
-  await sb.auth.signOut();
+  try{
+
+    await sb.auth.signOut();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
 
   currentUser = null;
 
   currentProfile = null;
 
   currentPlan = null;
+
+  currentCheckins = [];
 
   selectedClient = null;
 
@@ -3778,6 +4624,7 @@ async function logout(){
     .classList
     .remove("hidden");
 
+
   $("navLogout")
     .classList
     .add("hidden");
@@ -3789,6 +4636,187 @@ async function logout(){
   });
 
 }
+
+
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================================= */
+
+$("authModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        $("authModal")
+      ){
+
+        closeAuth();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   ESC KEY
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "Escape"
+    ){
+
+      closeAuth();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LIQUID LIGHT INTERACTION
+========================================================= */
+
+(function(){
+
+  const cards =
+    document.querySelectorAll(
+      ".glass, .btn, .client-card"
+    );
+
+
+  cards.forEach(card => {
+
+    card.addEventListener(
+      "pointermove",
+      event => {
+
+        const rect =
+          card.getBoundingClientRect();
+
+
+        const x =
+          (
+            (event.clientX - rect.left)
+            /
+            rect.width
+          ) * 100;
+
+
+        const y =
+          (
+            (event.clientY - rect.top)
+            /
+            rect.height
+          ) * 100;
+
+
+        card.style.setProperty(
+          "--mx",
+          `${x}%`
+        );
+
+
+        card.style.setProperty(
+          "--my",
+          `${y}%`
+        );
+
+      }
+    );
+
+
+    card.addEventListener(
+      "pointerleave",
+      () => {
+
+        card.style.removeProperty(
+          "--mx"
+        );
+
+        card.style.removeProperty(
+          "--my"
+        );
+
+      }
+    );
+
+  });
+
+})();
+
+
+/* =========================================================
+   DYNAMIC LIGHT
+========================================================= */
+
+(function(){
+
+  const style =
+    document.createElement("style");
+
+
+  style.textContent = `
+
+    .glass,
+    .btn,
+    .client-card{
+      --mx:50%;
+      --my:50%;
+    }
+
+    .glass::after,
+    .btn::after,
+    .client-card::after{
+      content:"";
+
+      position:absolute;
+
+      width:190px;
+      height:190px;
+
+      left:var(--mx);
+      top:var(--my);
+
+      transform:
+        translate(-50%,-50%);
+
+      pointer-events:none;
+
+      border-radius:50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,.09),
+          transparent 65%
+        );
+
+      opacity:0;
+
+      transition:
+        opacity .25s ease;
+    }
+
+    .glass:hover::after,
+    .btn:hover::after,
+    .client-card:hover::after{
+      opacity:1;
+    }
+
+  `;
+
+
+  document.head.appendChild(style);
+
+})();
 
 
 /* =========================================================
@@ -3837,7 +4865,10 @@ async function boot(){
 ========================================================= */
 
 sb.auth.onAuthStateChange(
-  async (event,session) => {
+  async (
+    event,
+    session
+  ) => {
 
     if(
       event === "SIGNED_IN" &&
