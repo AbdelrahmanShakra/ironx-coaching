@@ -15,8 +15,7 @@ const verify=(p,h)=>{try{const [s,x]=h.split(':');return crypto.timingSafeEqual(
 app.use(helmet({contentSecurityPolicy:false}));
 app.use(express.json({limit:'100kb'}));
 app.use(express.urlencoded({extended:true}));
-app.use(rateLimit({windowMs:15*60*1000,max:120,standardHeaders:true,legacyHeaders:false}));
-app.use(express.static(path.join(__dirname,'public')));
+app.use(rateLimit({windowMs:15*60*1000,max:120,standardHeaders:true,legacyHeaders:false}))app.use(express.static(__dirname));
 function auth(req,res,next){const t=(req.headers.authorization||'').replace('Bearer ','');const d=read();const uid=d.sessions[t];const u=d.users.find(x=>x.id===uid);if(!u)return res.status(401).json({error:'Unauthorized'});req.user=u;next()}
 app.post('/api/register',(req,res)=>{const {name,email,password,age,goal}=req.body||{};if(!name||!email||!password)return res.status(400).json({error:'Name, email and password are required'});if(password.length<6)return res.status(400).json({error:'Password must be at least 6 characters'});const d=read();if(d.users.some(u=>u.email.toLowerCase()===email.toLowerCase()))return res.status(409).json({error:'Email already registered'});const u={id:crypto.randomUUID(),name,email:email.toLowerCase(),password:hash(password),role:'client',age:age||'',goal:goal||'',createdAt:new Date().toISOString(),plan:{training:'Your training plan will appear here.',nutrition:'Your nutrition plan will appear here.'}};d.users.push(u);write(d);res.json({ok:true,message:'Account created'});});
 app.post('/api/login',(req,res)=>{const {email,password}=req.body||{};const d=read();const u=d.users.find(x=>x.email===String(email||'').toLowerCase());if(!u||!verify(password||'',u.password))return res.status(401).json({error:'Invalid email or password'});const token=crypto.randomBytes(32).toString('hex');d.sessions[token]=u.id;write(d);res.json({token,user:{id:u.id,name:u.name,email:u.email,role:u.role,age:u.age,goal:u.goal,plan:u.plan}});});
@@ -25,5 +24,5 @@ app.post('/api/checkin',auth,(req,res)=>{const {weight,waist,energy,notes}=req.b
 app.get('/api/checkins',auth,(req,res)=>res.json({checkins:read().checkins.filter(c=>c.userId===req.user.id).sort((a,b)=>b.date.localeCompare(a.date))}));
 app.get('/api/coach/clients',auth,(req,res)=>{if(req.user.role!=='coach')return res.status(403).json({error:'Forbidden'});const d=read();res.json({clients:d.users.filter(u=>u.role==='client').map(u=>({id:u.id,name:u.name,email:u.email,age:u.age,goal:u.goal,createdAt:u.createdAt}))});});
 app.post('/api/coach/seed',(req,res)=>{const key=req.headers['x-coach-key'];if(key!==process.env.COACH_PASSWORD)return res.status(403).json({error:'Forbidden'});const d=read();if(!d.users.some(u=>u.role==='coach')){d.users.push({id:crypto.randomUUID(),name:process.env.COACH_NAME||'IRONX Coach',email:process.env.COACH_EMAIL||'coach@ironx.local',password:hash(process.env.COACH_PASSWORD||'change-me'),role:'coach',age:'',goal:'',createdAt:new Date().toISOString(),plan:{}});write(d)}res.json({ok:true});});
-app.get('*',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')));
+app.get('*',(req,res)=>res.sendFile(path.join(__dirname,'index.html')));
 app.listen(PORT,()=>console.log(`IRONX running on ${PORT}`));
