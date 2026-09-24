@@ -1,5 +1,841 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IRONX | Online Coaching</title><meta name="description" content="IRONX online coaching platform"><style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#08090b;color:#f5f5f5}body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 10%,#ff3b3030,transparent 35%),radial-gradient(circle at 90% 80%,#ffffff12,transparent 30%);pointer-events:none}.wrap{max-width:1120px;margin:auto;padding:24px}.nav{display:flex;justify-content:space-between;align-items:center}.logo{font-size:28px;font-weight:900;letter-spacing:2px}.logo span{color:#ff3b30}.btn{border:0;border-radius:12px;padding:12px 18px;background:#ff3b30;color:#fff;font-weight:800;cursor:pointer}.btn.alt{background:#17191e;border:1px solid #30333a}.hero{min-height:72vh;display:grid;place-items:center;text-align:center;padding:70px 0}.hero h1{font-size:clamp(48px,9vw,100px);line-height:.9;margin:20px 0}.hero p{max-width:650px;margin:0 auto 28px;color:#a8abb2;font-size:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:35px 0}.card{background:#111318dd;border:1px solid #272a31;border-radius:18px;padding:24px;backdrop-filter:blur(12px)}.card h3{margin-top:0}.muted{color:#999da7}.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.box{width:min(460px,100%);background:#111318;border:1px solid #30333a;border-radius:20px;padding:25px}.tabs{display:flex;gap:8px;margin-bottom:18px}.tabs button{flex:1}.input{width:100%;margin:8px 0;padding:13px;border-radius:10px;border:1px solid #343740;background:#090a0d;color:#fff}.dash{display:none;padding:35px 0}.dash.show{display:block}.stat{font-size:32px;font-weight:900}.footer{text-align:center;color:#666;padding:50px 0}@media(max-width:750px){.grid{grid-template-columns:1fr}.hero{min-height:62vh;padding:45px 0}.wrap{padding:18px}}
-</style></head><body><div class="wrap"><nav class="nav"><div class="logo">IRON<span>X</span></div><button class="btn alt" onclick="openAuth()">Client Login</button></nav><main id="home"><section class="hero"><div><div class="muted">ONLINE COACHING • TRAIN HARD • BUILD BETTER</div><h1>FORGED<br><span style="color:#ff3b30">NOT FOUND.</span></h1><p>Personalized training, nutrition and weekly check-ins in one simple coaching platform.</p><button class="btn" onclick="openAuth('register')">START YOUR JOURNEY</button></div></section><section class="grid"><div class="card"><h3>Training</h3><p class="muted">Structured workouts, sets, reps, rest and progression.</p></div><div class="card"><h3>Nutrition</h3><p class="muted">A practical plan built around your goal and available foods.</p></div><div class="card"><h3>Check-ins</h3><p class="muted">Track weight, waist, energy and progress every week.</p></div></section></main><section id="dash" class="dash"><h1>Welcome, <span id="name"></span></h1><div class="grid"><div class="card"><div class="muted">GOAL</div><div class="stat" id="goal">-</div></div><div class="card"><div class="muted">AGE</div><div class="stat" id="age">-</div></div><div class="card"><div class="muted">STATUS</div><div class="stat">ACTIVE</div></div></div><div class="grid"><div class="card"><h3>Training Plan</h3><p id="training" class="muted"></p></div><div class="card"><h3>Nutrition Plan</h3><p id="nutrition" class="muted"></p></div><div class="card"><h3>Weekly Check-in</h3><input class="input" id="weight" placeholder="Weight (kg)"><input class="input" id="waist" placeholder="Waist (cm)"><input class="input" id="energy" placeholder="Energy 1-10"><textarea class="input" id="notes" placeholder="Notes"></textarea><button class="btn" onclick="checkin()">SUBMIT</button></div></div><button class="btn alt" onclick="logout()">Logout</button></section><div class="footer">IRONX © 2026</div></div>
-<div class="modal" id="modal"><div class="box"><div class="tabs"><button class="btn alt" onclick="mode='login';renderAuth()">LOGIN</button><button class="btn alt" onclick="mode='register';renderAuth()">REGISTER</button></div><div id="auth"></div><button class="btn alt" style="width:100%;margin-top:8px" onclick="closeAuth()">CLOSE</button></div></div>
-<script>let mode='login';let token=localStorage.getItem('ironx_token');function openAuth(m){mode=m||'login';document.getElementById('modal').classList.add('show');renderAuth()}function closeAuth(){document.getElementById('modal').classList.remove('show')}function renderAuth(){document.getElementById('auth').innerHTML=mode==='login'?`<h2>Client Login</h2><input class="input" id="email" placeholder="Email"><input class="input" id="password" type="password" placeholder="Password"><button class="btn" style="width:100%" onclick="login()">LOGIN</button>`:`<h2>Create Account</h2><input class="input" id="name2" placeholder="Full name"><input class="input" id="email" placeholder="Email"><input class="input" id="password" type="password" placeholder="Password (6+ chars)"><input class="input" id="age2" placeholder="Age"><input class="input" id="goal2" placeholder="Goal"><button class="btn" style="width:100%" onclick="register()">CREATE ACCOUNT</button>`}async function api(url,opt={}){opt.headers={...(opt.headers||{}),'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})};let r=await fetch(url,opt);let j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.error||'Request failed');return j}async function register(){try{await api('/api/register',{method:'POST',body:JSON.stringify({name:name2.value,email:email.value,password:password.value,age:age2.value,goal:goal2.value})});alert('Account created. Log in now.');mode='login';renderAuth()}catch(e){alert(e.message)}}async function login(){try{let j=await api('/api/login',{method:'POST',body:JSON.stringify({email:email.value,password:password.value})});token=j.token;localStorage.setItem('ironx_token',token);closeAuth();showDash(j.user)}catch(e){alert(e.message)}}async function showDash(u){home.style.display='none';dash.classList.add('show');name.textContent=u.name;goal.textContent=u.goal||'-';age.textContent=u.age||'-';training.textContent=u.plan?.training||'Your coach will add this soon.';nutrition.textContent=u.plan?.nutrition||'Your coach will add this soon.'}async function boot(){if(!token)return;try{let j=await api('/api/me');showDash(j.user)}catch{logout()}}async function checkin(){try{await api('/api/checkin',{method:'POST',body:JSON.stringify({weight:weight.value,waist:waist.value,energy:energy.value,notes:notes.value})});alert('Check-in submitted.')}catch(e){alert(e.message)}}function logout(){token=null;localStorage.removeItem('ironx_token');location.reload()}boot();</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IRONX | Online Coaching</title>
+<meta name="description" content="IRONX online coaching platform">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,Arial,sans-serif;
+  background:#08090b;
+  color:#f5f5f5
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 10%,#ff3b3030,transparent 35%),
+    radial-gradient(circle at 90% 80%,#ffffff12,transparent 30%);
+  pointer-events:none
+}
+.wrap{max-width:1120px;margin:auto;padding:24px}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:28px;font-weight:900;letter-spacing:2px}
+.logo span{color:#ff3b30}
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:12px 18px;
+  background:#ff3b30;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer
+}
+.btn.alt{
+  background:#17191e;
+  border:1px solid #30333a
+}
+.hero{
+  min-height:72vh;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:70px 0
+}
+.hero h1{
+  font-size:clamp(48px,9vw,100px);
+  line-height:.9;
+  margin:20px 0
+}
+.hero p{
+  max-width:650px;
+  margin:0 auto 28px;
+  color:#a8abb2;
+  font-size:18px
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin:35px 0
+}
+.card{
+  background:#111318dd;
+  border:1px solid #272a31;
+  border-radius:18px;
+  padding:24px;
+  backdrop-filter:blur(12px)
+}
+.card h3{margin-top:0}
+.muted{color:#999da7}
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100
+}
+.modal.show{display:flex}
+.box{
+  width:min(460px,100%);
+  background:#111318;
+  border:1px solid #30333a;
+  border-radius:20px;
+  padding:25px
+}
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tabs button{flex:1}
+.input{
+  width:100%;
+  margin:8px 0;
+  padding:13px;
+  border-radius:10px;
+  border:1px solid #343740;
+  background:#090a0d;
+  color:#fff
+}
+textarea.input{
+  min-height:100px;
+  resize:vertical
+}
+.dash{display:none;padding:35px 0}
+.dash.show{display:block}
+.stat{font-size:32px;font-weight:900}
+.footer{text-align:center;color:#666;padding:50px 0}
+
+@media(max-width:750px){
+  .grid{grid-template-columns:1fr}
+  .hero{min-height:62vh;padding:45px 0}
+  .wrap{padding:18px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<nav class="nav">
+  <div class="logo">IRON<span>X</span></div>
+  <button class="btn alt" onclick="openAuth('login')">
+    Client Login
+  </button>
+</nav>
+
+<main id="home">
+
+<section class="hero">
+  <div>
+    <div class="muted">
+      ONLINE COACHING • TRAIN HARD • BUILD BETTER
+    </div>
+
+    <h1>
+      FORGED<br>
+      <span style="color:#ff3b30">NOT FOUND.</span>
+    </h1>
+
+    <p>
+      Personalized training, nutrition and weekly check-ins
+      in one simple coaching platform.
+    </p>
+
+    <button class="btn" onclick="openAuth('register')">
+      START YOUR JOURNEY
+    </button>
+  </div>
+</section>
+
+<section class="grid">
+
+<div class="card">
+  <h3>Training</h3>
+  <p class="muted">
+    Structured workouts, sets, reps, rest and progression.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Nutrition</h3>
+  <p class="muted">
+    A practical plan built around your goal and available foods.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Check-ins</h3>
+  <p class="muted">
+    Track weight, waist, energy and progress every week.
+  </p>
+</div>
+
+</section>
+
+</main>
+
+
+<section id="dash" class="dash">
+
+<h1>
+  Welcome, <span id="name"></span>
+</h1>
+
+<div class="grid">
+
+<div class="card">
+  <div class="muted">GOAL</div>
+  <div class="stat" id="goal">-</div>
+</div>
+
+<div class="card">
+  <div class="muted">AGE</div>
+  <div class="stat" id="age">-</div>
+</div>
+
+<div class="card">
+  <div class="muted">STATUS</div>
+  <div class="stat">ACTIVE</div>
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<div class="card">
+  <h3>Training Plan</h3>
+  <p id="training" class="muted">
+    Your coach will add this soon.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Nutrition Plan</h3>
+  <p id="nutrition" class="muted">
+    Your coach will add this soon.
+  </p>
+</div>
+
+<div class="card">
+
+<h3>Weekly Check-in</h3>
+
+<input
+  class="input"
+  id="weight"
+  type="number"
+  step="0.1"
+  placeholder="Weight (kg)"
+>
+
+<input
+  class="input"
+  id="waist"
+  type="number"
+  step="0.1"
+  placeholder="Waist (cm)"
+>
+
+<input
+  class="input"
+  id="energy"
+  type="number"
+  min="1"
+  max="10"
+  placeholder="Energy 1-10"
+>
+
+<textarea
+  class="input"
+  id="notes"
+  placeholder="Notes"
+></textarea>
+
+<button class="btn" onclick="checkin()">
+  SUBMIT
+</button>
+
+</div>
+
+</div>
+
+<button class="btn alt" onclick="logout()">
+  Logout
+</button>
+
+</section>
+
+
+<div class="footer">
+  IRONX © 2026
+</div>
+
+</div>
+
+
+<div class="modal" id="modal">
+
+<div class="box">
+
+<div class="tabs">
+
+<button
+  class="btn alt"
+  onclick="mode='login';renderAuth()"
+>
+LOGIN
+</button>
+
+<button
+  class="btn alt"
+  onclick="mode='register';renderAuth()"
+>
+REGISTER
+</button>
+
+</div>
+
+<div id="auth"></div>
+
+<button
+  class="btn alt"
+  style="width:100%;margin-top:8px"
+  onclick="closeAuth()"
+>
+CLOSE
+</button>
+
+</div>
+
+</div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+  "https://uibzmqioeumuhczljolu.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_rSRn52GyErhIZbjGicxfYw_3myRbrbx";
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================
+   AUTH UI
+========================= */
+
+let mode = "login";
+
+
+function openAuth(m){
+
+  mode = m || "login";
+
+  document
+    .getElementById("modal")
+    .classList.add("show");
+
+  renderAuth();
+}
+
+
+function closeAuth(){
+
+  document
+    .getElementById("modal")
+    .classList.remove("show");
+}
+
+
+function renderAuth(){
+
+  const auth =
+    document.getElementById("auth");
+
+  if(mode === "login"){
+
+    auth.innerHTML = `
+
+      <h2>Client Login</h2>
+
+      <input
+        class="input"
+        id="email"
+        type="email"
+        placeholder="Email"
+      >
+
+      <input
+        class="input"
+        id="password"
+        type="password"
+        placeholder="Password"
+      >
+
+      <button
+        class="btn"
+        style="width:100%"
+        onclick="login()"
+      >
+        LOGIN
+      </button>
+
+    `;
+
+  }else{
+
+    auth.innerHTML = `
+
+      <h2>Create Account</h2>
+
+      <input
+        class="input"
+        id="name2"
+        placeholder="Full name"
+      >
+
+      <input
+        class="input"
+        id="email"
+        type="email"
+        placeholder="Email"
+      >
+
+      <input
+        class="input"
+        id="password"
+        type="password"
+        placeholder="Password (6+ chars)"
+      >
+
+      <input
+        class="input"
+        id="age2"
+        type="number"
+        placeholder="Age"
+      >
+
+      <input
+        class="input"
+        id="goal2"
+        placeholder="Goal"
+      >
+
+      <button
+        class="btn"
+        style="width:100%"
+        onclick="register()"
+      >
+        CREATE ACCOUNT
+      </button>
+
+    `;
+  }
+}
+
+
+/* =========================
+   REGISTER
+========================= */
+
+async function register(){
+
+  try{
+
+    const nameValue =
+      document.getElementById("name2").value.trim();
+
+    const emailValue =
+      document.getElementById("email").value.trim();
+
+    const passwordValue =
+      document.getElementById("password").value;
+
+    const ageValue =
+      document.getElementById("age2").value.trim();
+
+    const goalValue =
+      document.getElementById("goal2").value.trim();
+
+
+    if(!nameValue || !emailValue || !passwordValue){
+
+      alert(
+        "Please fill in name, email and password."
+      );
+
+      return;
+    }
+
+
+    if(passwordValue.length < 6){
+
+      alert(
+        "Password must be at least 6 characters."
+      );
+
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } = await sb.auth.signUp({
+
+      email: emailValue,
+
+      password: passwordValue,
+
+      options: {
+
+        data: {
+
+          name: nameValue,
+
+          age: ageValue,
+
+          goal: goalValue
+
+        }
+
+      }
+
+    });
+
+
+    if(error)
+      throw error;
+
+
+    if(data.session){
+
+      closeAuth();
+
+      showDash(data.user);
+
+    }else{
+
+      alert(
+        "Account created. Check your email to confirm your account, then login."
+      );
+
+      mode = "login";
+
+      renderAuth();
+    }
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Create account failed."
+    );
+  }
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function login(){
+
+  try{
+
+    const emailValue =
+      document.getElementById("email").value.trim();
+
+    const passwordValue =
+      document.getElementById("password").value;
+
+
+    if(!emailValue || !passwordValue){
+
+      alert(
+        "Enter your email and password."
+      );
+
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } = await sb.auth.signInWithPassword({
+
+      email: emailValue,
+
+      password: passwordValue
+
+    });
+
+
+    if(error)
+      throw error;
+
+
+    closeAuth();
+
+    showDash(data.user);
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Login failed."
+    );
+  }
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function showDash(user){
+
+  document
+    .getElementById("home")
+    .style.display = "none";
+
+
+  document
+    .getElementById("dash")
+    .classList.add("show");
+
+
+  const metadata =
+    user.user_metadata || {};
+
+
+  document
+    .getElementById("name")
+    .textContent =
+      metadata.name ||
+      user.email ||
+      "Client";
+
+
+  document
+    .getElementById("goal")
+    .textContent =
+      metadata.goal || "-";
+
+
+  document
+    .getElementById("age")
+    .textContent =
+      metadata.age || "-";
+
+
+  document
+    .getElementById("training")
+    .textContent =
+      "Your coach will add this soon.";
+
+
+  document
+    .getElementById("nutrition")
+    .textContent =
+      "Your coach will add this soon.";
+}
+
+
+/* =========================
+   CHECK-IN
+========================= */
+
+async function checkin(){
+
+  try{
+
+    const {
+      data: {
+        user
+      }
+    } = await sb.auth.getUser();
+
+
+    if(!user){
+
+      alert(
+        "Please login first."
+      );
+
+      return;
+    }
+
+
+    const weightValue =
+      document
+        .getElementById("weight")
+        .value;
+
+
+    const waistValue =
+      document
+        .getElementById("waist")
+        .value;
+
+
+    const energyValue =
+      document
+        .getElementById("energy")
+        .value;
+
+
+    const notesValue =
+      document
+        .getElementById("notes")
+        .value;
+
+
+    const {
+      error
+    } = await sb
+      .from("checkins")
+      .insert({
+
+        user_id: user.id,
+
+        weight:
+          weightValue || null,
+
+        waist:
+          waistValue || null,
+
+        energy:
+          energyValue || null,
+
+        notes:
+          notesValue || null
+
+      });
+
+
+    if(error)
+      throw error;
+
+
+    alert(
+      "Check-in submitted."
+    );
+
+
+    document
+      .getElementById("weight")
+      .value = "";
+
+    document
+      .getElementById("waist")
+      .value = "";
+
+    document
+      .getElementById("energy")
+      .value = "";
+
+    document
+      .getElementById("notes")
+      .value = "";
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Check-in failed."
+    );
+  }
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+  await sb.auth.signOut();
+
+  location.reload();
+}
+
+
+/* =========================
+   AUTO LOGIN
+========================= */
+
+async function boot(){
+
+  const {
+    data: {
+      session
+    }
+  } = await sb.auth.getSession();
+
+
+  if(session){
+
+    showDash(session.user);
+
+  }
+}
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+sb.auth.onAuthStateChange(
+  (event, session) => {
+
+    if(
+      event === "SIGNED_IN" &&
+      session
+    ){
+
+      showDash(session.user);
+
+    }
+
+  }
+);
+
+
+boot();
+
+</script>
+
+</body>
+</html>
