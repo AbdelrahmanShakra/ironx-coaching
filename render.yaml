@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ironx-coaching
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: COACH_NAME
+        sync: false
+      - key: COACH_EMAIL
+        sync: false
+      - key: COACH_PASSWORD
+        sync: false

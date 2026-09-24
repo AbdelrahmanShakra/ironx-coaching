@@ -1,0 +1,10 @@
+{
+  "name":"ironx-coaching",
+  "version":"1.0.0",
+  "private":true,
+  "description":"IRONX Online Coaching MVP",
+  "main":"server.js",
+  "scripts":{"start":"node server.js"},
+  "engines":{"node":">=18"},
+  "dependencies":{"express":"^4.21.2","helmet":"^8.0.0","express-rate-limit":"^7.5.0"}
+}
