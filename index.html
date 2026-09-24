@@ -1,4908 +1,3515 @@
 <!doctype html>
 <html lang="en">
 <head>
-
-<meta charset="utf-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover"
->
-
-<title>IRONX | Online Coaching</title>
-
-<meta
-  name="description"
-  content="IRONX online coaching platform"
-/>
-
-<style>
-
-/* =========================================================
-   IRONX LIQUID GLASS
-========================================================= */
-
-:root{
-  --red:#ff3b30;
-  --red-light:#ff6b63;
-  --red-dark:#c91f18;
-
-  --text:#f8f8fa;
-  --muted:#a5a7b0;
-  --muted2:#747780;
-
-  --glass:rgba(255,255,255,.075);
-  --glass-hover:rgba(255,255,255,.11);
-
-  --line:rgba(255,255,255,.14);
-  --line-soft:rgba(255,255,255,.075);
-
-  --shadow:
-    0 25px 80px rgba(0,0,0,.38);
-
-  --radius:30px;
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  min-height:100vh;
-
-  overflow-x:hidden;
-
-  color:var(--text);
-
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "SF Pro Text",
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  background:#050507;
-}
-
-button,
-input,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.hidden{
-  display:none!important;
-}
-
-
-/* =========================================================
-   AURORA BACKGROUND
-========================================================= */
-
-body::before{
-  content:"";
-
-  position:fixed;
-
-  inset:-35%;
-
-  z-index:-5;
-
-  pointer-events:none;
-
-  background:
-    radial-gradient(
-      circle at 18% 20%,
-      rgba(255,59,48,.25),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 82% 15%,
-      rgba(100,75,255,.16),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 75% 78%,
-      rgba(255,59,48,.14),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 18% 85%,
-      rgba(0,145,255,.11),
-      transparent 25%
-    );
-
-  filter:blur(75px);
-
-  animation:
-    auroraMove 18s ease-in-out infinite alternate;
-}
-
-body::after{
-  content:"";
-
-  position:fixed;
-
-  inset:0;
-
-  z-index:-4;
-
-  pointer-events:none;
-
-  background:
-    radial-gradient(
-      circle at center,
-      transparent 0%,
-      rgba(0,0,0,.18) 55%,
-      rgba(0,0,0,.76) 100%
-    );
-}
-
-@keyframes auroraMove{
-
-  0%{
-    transform:
-      translate3d(-3%,-2%,0)
-      scale(1);
-  }
-
-  50%{
-    transform:
-      translate3d(2%,3%,0)
-      scale(1.06);
-  }
-
-  100%{
-    transform:
-      translate3d(-1%,5%,0)
-      scale(1.12);
-  }
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.app{
-  position:relative;
-
-  width:min(1180px,100%);
-
-  margin:auto;
-
-  padding:
-    22px
-    22px
-    calc(120px + env(safe-area-inset-bottom));
-}
-
-
-/* =========================================================
-   GRAIN
-========================================================= */
-
-.app::before{
-  content:"";
-
-  position:fixed;
-
-  inset:0;
-
-  pointer-events:none;
-
-  z-index:999;
-
-  opacity:.025;
-
-  background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
-
-  mix-blend-mode:screen;
-}
-
-
-/* =========================================================
-   GLASS
-========================================================= */
-
-.glass{
-  position:relative;
-
-  overflow:hidden;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.11),
-      rgba(255,255,255,.045) 48%,
-      rgba(255,255,255,.025)
-    );
-
-  border:
-    1px solid var(--line);
-
-  box-shadow:
-    0 25px 70px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.16),
-    inset 0 -1px 0 rgba(0,0,0,.15);
-
-  backdrop-filter:
-    blur(30px)
-    saturate(160%);
-
-  -webkit-backdrop-filter:
-    blur(30px)
-    saturate(160%);
-
-  isolation:isolate;
-}
-
-.glass::before{
-  content:"";
-
-  position:absolute;
-
-  left:-25%;
-  top:-65%;
-
-  width:150%;
-  height:95%;
-
-  pointer-events:none;
-
-  background:
-    linear-gradient(
-      115deg,
-      transparent 30%,
-      rgba(255,255,255,.11) 48%,
-      transparent 65%
-    );
-
-  transform:rotate(-7deg);
-
-  opacity:.55;
-
-  transition:
-    transform .7s ease,
-    opacity .4s ease;
-}
-
-
-/* =========================================================
-   TOP NAV
-========================================================= */
-
-.top-nav{
-  position:sticky;
-
-  top:14px;
-
-  z-index:50;
-
-  height:70px;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  padding:
-    10px
-    11px
-    10px
-    20px;
-
-  border-radius:999px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.12),
-      rgba(255,255,255,.045)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.16);
-
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.18);
-
-  backdrop-filter:
-    blur(32px)
-    saturate(180%);
-
-  -webkit-backdrop-filter:
-    blur(32px)
-    saturate(180%);
-
-  transition:
-    box-shadow .3s ease;
-}
-
-.top-nav:hover{
-  box-shadow:
-    0 25px 75px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.20);
-}
-
-
-/* =========================================================
-   BRAND
-========================================================= */
-
-.brand{
-  display:flex;
-
-  align-items:center;
-
-  gap:10px;
-
-  font-size:21px;
-
-  font-weight:950;
-
-  letter-spacing:3px;
-}
-
-.brand-mark{
-  width:40px;
-  height:40px;
-
-  display:grid;
-
-  place-items:center;
-
-  border-radius:14px;
-
-  color:#fff;
-
-  font-size:15px;
-
-  font-weight:950;
-
-  background:
-    radial-gradient(
-      circle at 30% 20%,
-      rgba(255,255,255,.45),
-      transparent 30%
-    ),
-    linear-gradient(
-      145deg,
-      #ff5c54,
-      #d82018
-    );
-
-  box-shadow:
-    0 10px 30px rgba(255,59,48,.32),
-    inset 0 1px 0 rgba(255,255,255,.35);
-}
-
-.brand span{
-  color:var(--red);
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.btn{
-  position:relative;
-
-  overflow:hidden;
-
-  border:
-    1px solid rgba(255,255,255,.13);
-
-  color:#fff;
-
-  border-radius:999px;
-
-  padding:
-    13px
-    19px;
-
-  font-weight:850;
-
-  letter-spacing:.2px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.13),
-      rgba(255,255,255,.055)
-    );
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.16);
-
-  backdrop-filter:
-    blur(20px)
-    saturate(150%);
-
-  -webkit-backdrop-filter:
-    blur(20px)
-    saturate(150%);
-
-  transition:
-    transform .22s cubic-bezier(.2,.8,.2,1),
-    background .22s ease,
-    box-shadow .22s ease,
-    border-color .22s ease;
-}
-
-.btn::before{
-  content:"";
-
-  position:absolute;
-
-  top:-100%;
-  left:-35%;
-
-  width:40%;
-  height:300%;
-
-  transform:rotate(25deg);
-
-  background:
-    linear-gradient(
-      to right,
-      transparent,
-      rgba(255,255,255,.28),
-      transparent
-    );
-
-  transition:
-    left .65s ease;
-}
-
-.btn:hover::before{
-  left:110%;
-}
-
-.btn:hover{
-  transform:
-    translateY(-2px)
-    scale(1.015);
-
-  background:
-    rgba(255,255,255,.15);
-
-  border-color:
-    rgba(255,255,255,.22);
-
-  box-shadow:
-    0 15px 40px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.20);
-}
-
-.btn:active{
-  transform:scale(.95);
-}
-
-.btn.primary{
-  background:
-    radial-gradient(
-      circle at 30% 0%,
-      rgba(255,255,255,.32),
-      transparent 30%
-    ),
-    linear-gradient(
-      145deg,
-      #ff5148,
-      #d91f18
-    );
-
-  border-color:
-    rgba(255,255,255,.25);
-
-  box-shadow:
-    0 15px 45px rgba(255,59,48,.30),
-    inset 0 1px 0 rgba(255,255,255,.32);
-}
-
-.btn.primary:hover{
-  background:
-    radial-gradient(
-      circle at 30% 0%,
-      rgba(255,255,255,.40),
-      transparent 30%
-    ),
-    linear-gradient(
-      145deg,
-      #ff6259,
-      #df241c
-    );
-
-  box-shadow:
-    0 18px 55px rgba(255,59,48,.42),
-    inset 0 1px 0 rgba(255,255,255,.38);
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero{
-  min-height:
-    calc(100vh - 120px);
-
-  display:grid;
-
-  place-items:center;
-
-  text-align:center;
-
-  padding:
-    90px
-    0
-    110px;
-}
-
-.hero-content{
-  max-width:950px;
-
-  animation:
-    heroIn .9s cubic-bezier(.2,.8,.2,1) both;
-}
-
-@keyframes heroIn{
-
-  from{
-    opacity:0;
-
-    transform:
-      translateY(25px)
-      scale(.98);
-  }
-
-  to{
-    opacity:1;
-
-    transform:
-      translateY(0)
-      scale(1);
-  }
-}
-
-
-/* =========================================================
-   EYEBROW
-========================================================= */
-
-.eyebrow{
-  display:inline-flex;
-
-  align-items:center;
-
-  gap:9px;
-
-  padding:
-    9px
-    14px;
-
-  border-radius:999px;
-
-  color:#cdd0d8;
-
-  background:
-    rgba(255,255,255,.065);
-
-  border:
-    1px solid rgba(255,255,255,.11);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12);
-
-  backdrop-filter:
-    blur(20px);
-
-  font-size:11px;
-
-  font-weight:850;
-
-  letter-spacing:1.5px;
-}
-
-.eyebrow-dot{
-  width:7px;
-  height:7px;
-
-  border-radius:50%;
-
-  background:#ff453a;
-
-  box-shadow:
-    0 0 8px #ff453a,
-    0 0 20px rgba(255,59,48,.8);
-
-  animation:
-    pulseDot 2s ease-in-out infinite;
-}
-
-@keyframes pulseDot{
-
-  0%,100%{
-    transform:scale(1);
-
-    opacity:.8;
-  }
-
-  50%{
-    transform:scale(1.35);
-
-    opacity:1;
-  }
-}
-
-
-/* =========================================================
-   HERO TITLE
-========================================================= */
-
-.hero h1{
-  margin:
-    30px 0
-    25px;
-
-  font-size:
-    clamp(58px,12vw,132px);
-
-  line-height:.82;
-
-  letter-spacing:
-    clamp(-7px,-.6vw,-3px);
-
-  font-weight:950;
-
-  text-shadow:
-    0 20px 60px rgba(0,0,0,.40);
-}
-
-.hero h1 .accent{
-  color:transparent;
-
-  background:
-    linear-gradient(
-      110deg,
-      #ff2f27,
-      #ff756d,
-      #ff2f27
-    );
-
-  background-size:200% auto;
-
-  -webkit-background-clip:text;
-
-  background-clip:text;
-
-  animation:
-    redFlow 5s linear infinite;
-}
-
-@keyframes redFlow{
-
-  to{
-    background-position:
-      200% center;
-  }
-}
-
-.hero-description{
-  max-width:650px;
-
-  margin:
-    0 auto
-    34px;
-
-  color:#aeb0b8;
-
-  font-size:
-    clamp(16px,2vw,20px);
-
-  line-height:1.65;
-}
-
-.hero-actions{
-  display:flex;
-
-  justify-content:center;
-
-  gap:12px;
-
-  flex-wrap:wrap;
-}
-
-
-/* =========================================================
-   FEATURES
-========================================================= */
-
-.features{
-  display:grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
-  gap:16px;
-
-  margin-bottom:100px;
-}
-
-.feature{
-  min-height:210px;
-
-  padding:27px;
-
-  border-radius:var(--radius);
-
-  cursor:default;
-
-  transition:
-    transform .35s cubic-bezier(.2,.8,.2,1),
-    border-color .35s ease,
-    box-shadow .35s ease;
-}
-
-.feature:hover{
-  transform:
-    translateY(-8px)
-    scale(1.01);
-
-  border-color:
-    rgba(255,255,255,.23);
-
-  box-shadow:
-    0 30px 80px rgba(0,0,0,.40),
-    inset 0 1px 0 rgba(255,255,255,.20);
-}
-
-.feature:hover::before{
-  transform:
-    translateX(25%)
-    rotate(-7deg);
-}
-
-.feature-icon{
-  width:50px;
-  height:50px;
-
-  display:grid;
-
-  place-items:center;
-
-  margin-bottom:20px;
-
-  border-radius:17px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.14),
-      rgba(255,255,255,.05)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.12);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    0 10px 25px rgba(0,0,0,.18);
-
-  font-size:20px;
-
-  transition:
-    transform .3s ease,
-    background .3s ease;
-}
-
-.feature:hover .feature-icon{
-  transform:
-    translateY(-3px)
-    rotate(-4deg);
-
-  background:
-    rgba(255,59,48,.14);
-}
-
-.feature h3{
-  margin:
-    0 0 9px;
-
-  font-size:20px;
-}
-
-.feature p{
-  margin:0;
-
-  color:var(--muted);
-
-  line-height:1.65;
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-.dashboard{
-  display:none;
-
-  padding-top:55px;
-
-  animation:
-    dashboardIn .55s cubic-bezier(.2,.8,.2,1);
-}
-
-.dashboard.active{
-  display:block;
-}
-
-@keyframes dashboardIn{
-
-  from{
-    opacity:0;
-
-    transform:
-      translateY(18px);
-  }
-
-  to{
-    opacity:1;
-
-    transform:
-      translateY(0);
-  }
-}
-
-.dashboard-header{
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:flex-end;
-
-  gap:20px;
-
-  margin-bottom:27px;
-}
-
-.dashboard-header h1{
-  margin:
-    5px 0 8px;
-
-  font-size:
-    clamp(34px,6vw,60px);
-
-  letter-spacing:-3px;
-
-  line-height:.95;
-}
-
-.dashboard-header p{
-  margin:0;
-
-  color:var(--muted);
-}
-
-
-/* =========================================================
-   DASHBOARD NAV
-========================================================= */
-
-.dashboard-nav{
-  display:flex;
-
-  gap:7px;
-
-  padding:7px;
-
-  margin-bottom:22px;
-
-  border-radius:999px;
-
-  overflow:auto;
-
-  scrollbar-width:none;
-
-  position:sticky;
-
-  top:98px;
-
-  z-index:20;
-}
-
-.dashboard-nav::-webkit-scrollbar{
-  display:none;
-}
-
-.dash-tab{
-  position:relative;
-
-  white-space:nowrap;
-
-  border:0;
-
-  color:#9ea1aa;
-
-  padding:
-    11px
-    18px;
-
-  border-radius:999px;
-
-  background:transparent;
-
-  font-weight:850;
-
-  transition:
-    color .2s ease,
-    transform .2s ease,
-    background .2s ease;
-}
-
-.dash-tab:active{
-  transform:scale(.94);
-}
-
-.dash-tab.active{
-  color:#fff;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.15),
-      rgba(255,255,255,.065)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 6px 18px rgba(0,0,0,.18);
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-.stats{
-  display:grid;
-
-  grid-template-columns:
-    repeat(4,1fr);
-
-  gap:14px;
-
-  margin-bottom:18px;
-}
-
-.stat-card{
-  min-width:0;
-
-  padding:21px;
-
-  border-radius:25px;
-
-  transition:
-    transform .3s ease,
-    border-color .3s ease;
-}
-
-.stat-card:hover{
-  transform:translateY(-4px);
-
-  border-color:
-    rgba(255,255,255,.20);
-}
-
-.stat-label{
-  color:#858892;
-
-  font-size:10px;
-
-  font-weight:900;
-
-  letter-spacing:1.4px;
-
-  text-transform:uppercase;
-}
-
-.stat-value{
-  margin-top:9px;
-
-  font-size:27px;
-
-  font-weight:950;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-
-  white-space:nowrap;
-}
-
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.content-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(2,1fr);
-
-  gap:16px;
-}
-
-.panel{
-  padding:25px;
-
-  border-radius:var(--radius);
-
-  transition:
-    border-color .3s ease,
-    box-shadow .3s ease;
-}
-
-.panel:hover{
-  border-color:
-    rgba(255,255,255,.17);
-}
-
-.panel.full{
-  grid-column:
-    1 / -1;
-}
-
-.panel-title{
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:12px;
-
-  margin-bottom:19px;
-}
-
-.panel-title h2{
-  margin:0;
-
-  font-size:20px;
-
-  letter-spacing:-.4px;
-}
-
-.panel-title span{
-  color:#7e818b;
-
-  font-size:10px;
-
-  font-weight:850;
-
-  letter-spacing:1px;
-}
-
-
-/* =========================================================
-   PLAN
-========================================================= */
-
-.plan-content{
-  color:#d0d2d8;
-
-  line-height:1.8;
-
-  white-space:pre-wrap;
-
-  min-height:90px;
-}
-
-.empty{
-  color:#747780;
-}
-
-
-/* =========================================================
-   INPUTS
-========================================================= */
-
-.input-group{
-  margin-bottom:14px;
-}
-
-.input-label{
-  display:block;
-
-  margin-bottom:7px;
-
-  color:#999ca5;
-
-  font-size:11px;
-
-  font-weight:850;
-
-  letter-spacing:.3px;
-}
-
-.input{
-  width:100%;
-
-  border:
-    1px solid rgba(255,255,255,.10);
-
-  outline:none;
-
-  color:#fff;
-
-  background:
-    rgba(0,0,0,.22);
-
-  border-radius:18px;
-
-  padding:
-    14px
-    15px;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.04);
-
-  transition:
-    border-color .25s ease,
-    background .25s ease,
-    box-shadow .25s ease,
-    transform .2s ease;
-}
-
-.input::placeholder{
-  color:#656872;
-}
-
-.input:focus{
-  border-color:
-    rgba(255,59,48,.58);
-
-  background:
-    rgba(0,0,0,.30);
-
-  box-shadow:
-    0 0 0 4px rgba(255,59,48,.075),
-    inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-textarea.input{
-  min-height:120px;
-
-  resize:vertical;
-}
-
-
-/* =========================================================
-   CHECKINS
-========================================================= */
-
-.checkin-list{
-  display:flex;
-
-  flex-direction:column;
-
-  gap:10px;
-}
-
-.checkin-item{
-  position:relative;
-
-  overflow:hidden;
-
-  padding:17px;
-
-  border-radius:21px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.065),
-      rgba(255,255,255,.025)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.075);
-
-  transition:
-    transform .25s ease,
-    border-color .25s ease,
-    background .25s ease;
-}
-
-.checkin-item:hover{
-  transform:translateY(-2px);
-
-  border-color:
-    rgba(255,255,255,.14);
-
-  background:
-    rgba(255,255,255,.075);
-}
-
-.checkin-top{
-  display:flex;
-
-  justify-content:space-between;
-
-  gap:10px;
-
-  margin-bottom:12px;
-}
-
-.checkin-date{
-  color:#858892;
-
-  font-size:11px;
-}
-
-.checkin-stats{
-  display:grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
-  gap:8px;
-}
-
-.checkin-stat{
-  padding:11px;
-
-  border-radius:15px;
-
-  background:
-    rgba(0,0,0,.18);
-
-  border:
-    1px solid rgba(255,255,255,.04);
-}
-
-.checkin-stat small{
-  display:block;
-
-  color:#70737d;
-
-  font-size:9px;
-
-  margin-bottom:3px;
-
-  text-transform:uppercase;
-
-  letter-spacing:.6px;
-}
-
-.checkin-stat strong{
-  font-size:15px;
-}
-
-.checkin-notes{
-  color:#aeb1b9;
-
-  margin-top:12px;
-
-  line-height:1.5;
-
-  white-space:pre-wrap;
-}
-
-
-/* =========================================================
-   CLIENTS
-========================================================= */
-
-.client-list{
-  display:grid;
-
-  gap:10px;
-}
-
-.client-card{
-  position:relative;
-
-  overflow:hidden;
-
-  width:100%;
-
-  border:
-    1px solid rgba(255,255,255,.08);
-
-  border-radius:21px;
-
-  padding:18px;
-
-  text-align:left;
-
-  color:#fff;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.065),
-      rgba(255,255,255,.025)
-    );
-
-  transition:
-    transform .25s cubic-bezier(.2,.8,.2,1),
-    background .25s ease,
-    border-color .25s ease,
-    box-shadow .25s ease;
-}
-
-.client-card:hover{
-  transform:
-    translateY(-3px)
-    scale(1.005);
-
-  background:
-    rgba(255,255,255,.085);
-
-  border-color:
-    rgba(255,255,255,.17);
-
-  box-shadow:
-    0 15px 40px rgba(0,0,0,.22);
-}
-
-.client-card:active{
-  transform:scale(.98);
-}
-
-.client-name{
-  font-weight:900;
-
-  font-size:17px;
-
-  margin-bottom:5px;
-}
-
-.client-meta{
-  color:#858892;
-
-  font-size:12px;
-}
-
-
-/* =========================================================
-   EDITOR
-========================================================= */
-
-.editor{
-  display:grid;
-
-  gap:13px;
-}
-
-.editor textarea{
-  min-height:170px;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal{
-  position:fixed;
-
-  inset:0;
-
-  z-index:200;
-
-  display:none;
-
-  align-items:center;
-
-  justify-content:center;
-
-  padding:20px;
-
-  background:
-    rgba(0,0,0,.62);
-
-  backdrop-filter:
-    blur(18px)
-    saturate(120%);
-
-  -webkit-backdrop-filter:
-    blur(18px)
-    saturate(120%);
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-box{
-  position:relative;
-
-  width:min(470px,100%);
-
-  max-height:
-    calc(100vh - 40px);
-
-  overflow:auto;
-
-  padding:27px;
-
-  border-radius:34px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(39,39,45,.86),
-      rgba(13,13,17,.90)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.17);
-
-  box-shadow:
-    0 40px 120px rgba(0,0,0,.70),
-    inset 0 1px 0 rgba(255,255,255,.16);
-
-  backdrop-filter:
-    blur(38px)
-    saturate(170%);
-
-  -webkit-backdrop-filter:
-    blur(38px)
-    saturate(170%);
-
-  animation:
-    modalIn .38s cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes modalIn{
-
-  from{
-    opacity:0;
-
-    transform:
-      translateY(18px)
-      scale(.96);
-  }
-
-  to{
-    opacity:1;
-
-    transform:
-      translateY(0)
-      scale(1);
-  }
-}
-
-.modal-header{
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  margin-bottom:20px;
-}
-
-.modal-header h2{
-  margin:0;
-
-  font-size:25px;
-
-  letter-spacing:-.5px;
-}
-
-.close{
-  width:39px;
-  height:39px;
-
-  display:grid;
-
-  place-items:center;
-
-  border-radius:50%;
-
-  border:
-    1px solid rgba(255,255,255,.10);
-
-  color:#fff;
-
-  background:
-    rgba(255,255,255,.07);
-
-  font-size:18px;
-
-  transition:
-    transform .2s ease,
-    background .2s ease;
-}
-
-.close:hover{
-  transform:rotate(90deg);
-
-  background:
-    rgba(255,255,255,.13);
-}
-
-
-/* =========================================================
-   AUTH TABS
-========================================================= */
-
-.auth-tabs{
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:6px;
-
-  padding:5px;
-
-  margin-bottom:20px;
-
-  border-radius:18px;
-
-  background:
-    rgba(0,0,0,.25);
-
-  border:
-    1px solid rgba(255,255,255,.05);
-}
-
-.auth-tab{
-  border:0;
-
-  border-radius:14px;
-
-  padding:11px;
-
-  color:#8e919a;
-
-  background:transparent;
-
-  font-weight:850;
-
-  transition:
-    background .2s ease,
-    color .2s ease,
-    transform .2s ease;
-}
-
-.auth-tab:active{
-  transform:scale(.97);
-}
-
-.auth-tab.active{
-  color:#fff;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.14),
-      rgba(255,255,255,.06)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.13);
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-  position:fixed;
-
-  left:50%;
-
-  bottom:
-    calc(25px + env(safe-area-inset-bottom));
-
-  z-index:500;
-
-  width:min(
-    420px,
-    calc(100% - 30px)
-  );
-
-  padding:
-    15px
-    18px;
-
-  border-radius:20px;
-
-  color:#fff;
-
-  background:
-    rgba(28,28,32,.82);
-
-  border:
-    1px solid rgba(255,255,255,.14);
-
-  box-shadow:
-    0 20px 70px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.10);
-
-  backdrop-filter:
-    blur(28px)
-    saturate(150%);
-
-  -webkit-backdrop-filter:
-    blur(28px)
-    saturate(150%);
-
-  transform:
-    translate(-50%,130px);
-
-  transition:
-    transform .4s cubic-bezier(.2,.8,.2,1);
-}
-
-.toast.show{
-  transform:
-    translate(-50%,0);
-}
-
-.toast.error{
-  border-color:
-    rgba(255,59,48,.40);
-
-  box-shadow:
-    0 20px 70px rgba(255,59,48,.12),
-    inset 0 1px 0 rgba(255,255,255,.10);
-}
-
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-.loading{
-  display:inline-flex;
-
-  align-items:center;
-
-  gap:8px;
-}
-
-.spinner{
-  width:15px;
-  height:15px;
-
-  flex:none;
-
-  border-radius:50%;
-
-  border:
-    2px solid rgba(255,255,255,.22);
-
-  border-top-color:#fff;
-
-  animation:
-    spin .7s linear infinite;
-}
-
-@keyframes spin{
-
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-  text-align:center;
-
-  color:#555861;
-
-  padding:
-    75px
-    0
-    20px;
-
-  font-size:11px;
-
-  letter-spacing:1px;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:800px){
-
-  .app{
-    padding:
-      14px
-      14px
-      110px;
-  }
-
-  .top-nav{
-    top:10px;
-
-    height:62px;
-
-    padding-left:14px;
-  }
-
-  .brand{
-    font-size:17px;
-
-    letter-spacing:2px;
-  }
-
-  .brand-mark{
-    width:35px;
-    height:35px;
-
-    border-radius:12px;
-  }
-
-  .top-nav .btn{
-    padding:
-      10px
-      14px;
-
-    font-size:12px;
-  }
-
-  .hero{
-    min-height:
-      calc(100svh - 100px);
-
-    padding:
-      70px
-      0
-      80px;
-  }
-
-  .hero h1{
-    letter-spacing:-4px;
-
-    font-size:
-      clamp(54px,15vw,95px);
-  }
-
-  .hero-description{
-    font-size:15px;
-
-    padding:
-      0 8px;
-  }
-
-  .features{
-    grid-template-columns:1fr;
-
-    margin-bottom:70px;
-  }
-
-  .feature{
-    min-height:0;
-
-    padding:23px;
-  }
-
-  .dashboard{
-    padding-top:40px;
-  }
-
-  .dashboard-nav{
-    top:82px;
-
-    margin-left:-2px;
-
-    margin-right:-2px;
-  }
-
-  .stats{
-    grid-template-columns:
-      repeat(2,1fr);
-  }
-
-  .content-grid{
-    grid-template-columns:1fr;
-  }
-
-  .panel.full{
-    grid-column:auto;
-  }
-
-  .dashboard-header{
-    align-items:flex-start;
-
-    flex-direction:column;
-  }
-
-  .dashboard-header h1{
-    font-size:38px;
-  }
-
-  .checkin-stats{
-    grid-template-columns:
-      repeat(3,1fr);
-  }
-
-}
-
-
-@media(max-width:480px){
-
-  .hero-actions{
-    flex-direction:column;
-  }
-
-  .hero-actions .btn{
-    width:100%;
-  }
-
-  .stats{
-    gap:9px;
-  }
-
-  .stat-card{
-    padding:16px;
-
-    border-radius:21px;
-  }
-
-  .stat-value{
-    font-size:21px;
-  }
-
-  .panel{
-    padding:19px;
-
-    border-radius:24px;
-  }
-
-  .modal{
-    padding:12px;
-  }
-
-  .modal-box{
-    padding:21px;
-
-    border-radius:29px;
-  }
-
-  .checkin-stats{
-    gap:6px;
-  }
-
-  .checkin-stat{
-    padding:9px;
-  }
-
-}
-
-
-/* =========================================================
-   TOUCH
-========================================================= */
-
-@media(hover:none){
-
-  .btn:hover{
-    transform:none;
-  }
-
-  .feature:hover{
-    transform:none;
-  }
-
-  .client-card:hover{
-    transform:none;
-  }
-
-  .stat-card:hover{
-    transform:none;
-  }
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media(prefers-reduced-motion:reduce){
-
-  *,
-  *::before,
-  *::after{
-
-    animation-duration:.01ms!important;
-
-    animation-iteration-count:1!important;
-
-    scroll-behavior:auto!important;
-
-    transition-duration:.01ms!important;
-  }
-
-}
-
-
-/* =========================================================
-   ACCESSIBILITY
-========================================================= */
-
-@media(prefers-reduced-transparency:reduce){
-
-  .glass,
-  .top-nav,
-  .modal-box,
-  .toast{
-
-    backdrop-filter:none;
-
-    -webkit-backdrop-filter:none;
-
-    background:
-      rgba(25,25,29,.96);
-  }
-
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar{
-  width:7px;
-}
-
-::-webkit-scrollbar-track{
-  background:#050507;
-}
-
-::-webkit-scrollbar-thumb{
-  background:
-    rgba(255,255,255,.15);
-
-  border-radius:999px;
-}
-
-::-webkit-scrollbar-thumb:hover{
-  background:
-    rgba(255,255,255,.25);
-}
-
-
-/* =========================================================
-   SELECTION
-========================================================= */
-
-::selection{
-  background:
-    rgba(255,59,48,.35);
-
-  color:#fff;
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090c">
+  <meta name="description" content="IRONX Coaching - Structured training, nutrition and progress tracking.">
+
+  <title>IRONX Coaching</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #07080b;
+      --bg-soft: #0c0e13;
+      --panel: rgba(20, 22, 29, .58);
+      --panel-strong: rgba(24, 27, 35, .78);
+      --line: rgba(255,255,255,.09);
+      --line-bright: rgba(255,255,255,.16);
+      --text: #f5f5f7;
+      --muted: #989ca7;
+      --muted-2: #6f737d;
+      --accent: #ff2638;
+      --accent-2: #ff5967;
+      --accent-soft: rgba(255,38,56,.13);
+      --green: #47e6a1;
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --shadow: 0 30px 100px rgba(0,0,0,.42);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255,38,56,.12), transparent 35%),
+        radial-gradient(circle at 10% 45%, rgba(96,78,255,.07), transparent 30%),
+        var(--bg);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      opacity: .035;
+      background-image:
+        linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    ::selection {
+      background: rgba(255,38,56,.35);
+      color: white;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: min(1180px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    .orb {
+      position: fixed;
+      width: 430px;
+      height: 430px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .11;
+      pointer-events: none;
+      z-index: -1;
+      animation: floatOrb 13s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      background: #ff2037;
+      top: 5%;
+      left: -220px;
+    }
+
+    .orb.two {
+      background: #5542ff;
+      right: -240px;
+      top: 45%;
+      animation-delay: -4s;
+    }
+
+    @keyframes floatOrb {
+      from {
+        transform: translate3d(0,0,0) scale(1);
+      }
+      to {
+        transform: translate3d(40px,35px,0) scale(1.12);
+      }
+    }
+
+    /* NAV */
+
+    .nav-wrap {
+      position: fixed;
+      z-index: 50;
+      top: 18px;
+      left: 0;
+      right: 0;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .nav {
+      pointer-events: auto;
+      width: min(1120px, 100%);
+      margin: auto;
+      min-height: 68px;
+      padding: 9px 10px 9px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      border: 1px solid var(--line);
+      background: rgba(12,14,19,.66);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      border-radius: 999px;
+      box-shadow:
+        0 18px 60px rgba(0,0,0,.3),
+        inset 0 1px rgba(255,255,255,.04);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      font-size: 14px;
+    }
+
+    .brand-mark {
+      width: 37px;
+      height: 37px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.02)),
+        var(--accent);
+      box-shadow: 0 8px 25px rgba(255,38,56,.25);
+      transform: rotate(-7deg);
+    }
+
+    .brand-mark svg {
+      width: 20px;
+      height: 20px;
+      transform: rotate(7deg);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 13px rgba(71,230,161,.7);
+    }
+
+    .nav-btn,
+    .ghost-btn,
+    .primary-btn {
+      border: 0;
+      border-radius: 999px;
+      transition: .25s ease;
+    }
+
+    .nav-btn {
+      padding: 11px 18px;
+      color: white;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--line);
+    }
+
+    .nav-btn:hover {
+      background: rgba(255,255,255,.12);
+      transform: translateY(-1px);
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 52px;
+      padding: 0 22px;
+      color: white;
+      background: linear-gradient(135deg, #ff1f34, #c90d20);
+      box-shadow:
+        0 14px 35px rgba(255,38,56,.22),
+        inset 0 1px rgba(255,255,255,.2);
+      font-weight: 800;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 20px 45px rgba(255,38,56,.3),
+        inset 0 1px rgba(255,255,255,.2);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0) scale(.98);
+    }
+
+    .ghost-btn {
+      min-height: 52px;
+      padding: 0 22px;
+      color: white;
+      background: rgba(255,255,255,.045);
+      border: 1px solid var(--line-bright);
+      backdrop-filter: blur(12px);
+    }
+
+    .ghost-btn:hover {
+      background: rgba(255,255,255,.08);
+      transform: translateY(-2px);
+    }
+
+    /* HERO */
+
+    .hero {
+      min-height: 100vh;
+      padding-top: 150px;
+      padding-bottom: 100px;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .hero-inner {
+      width: 100%;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.045);
+      border-radius: 999px;
+      color: #c8cad0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(16px);
+      animation: fadeUp .7s ease both;
+    }
+
+    .hero-badge span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    .hero h1 {
+      max-width: 950px;
+      margin: 25px auto 0;
+      font-size: clamp(58px, 10vw, 124px);
+      line-height: .83;
+      letter-spacing: -.075em;
+      font-weight: 950;
+      animation: fadeUp .8s .08s ease both;
+    }
+
+    .hero h1 .outline {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,.45);
+    }
+
+    .hero h1 .red {
+      color: var(--accent);
+    }
+
+    .hero-copy {
+      max-width: 610px;
+      margin: 29px auto 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      animation: fadeUp .8s .16s ease both;
+    }
+
+    .hero-actions {
+      margin-top: 31px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      animation: fadeUp .8s .24s ease both;
+    }
+
+    .hero-ring {
+      position: absolute;
+      width: 620px;
+      height: 620px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -44%);
+      border: 1px solid rgba(255,255,255,.045);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-ring::before,
+    .hero-ring::after {
+      content: "";
+      position: absolute;
+      inset: 45px;
+      border: 1px solid rgba(255,38,56,.05);
+      border-radius: 50%;
+    }
+
+    .hero-ring::after {
+      inset: 105px;
+    }
+
+    .hero-float {
+      position: absolute;
+      padding: 15px 17px;
+      min-width: 155px;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: rgba(20,22,29,.55);
+      backdrop-filter: blur(18px);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      animation: floatCard 5s ease-in-out infinite;
+    }
+
+    .hero-float strong {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 4px;
+    }
+
+    .hero-float small {
+      color: var(--muted);
+    }
+
+    .float-left {
+      left: 3%;
+      top: 54%;
+    }
+
+    .float-right {
+      right: 3%;
+      top: 28%;
+      animation-delay: -2s;
+    }
+
+    @keyframes floatCard {
+      0%,100% {
+        transform: translateY(0) rotate(0);
+      }
+      50% {
+        transform: translateY(-12px) rotate(1deg);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* SECTIONS */
+
+    section {
+      padding: 110px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 38px;
+    }
+
+    .eyebrow {
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: .95;
+      letter-spacing: -.055em;
+      font-weight: 900;
+    }
+
+    .section-copy {
+      max-width: 440px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* SERVICE CARDS */
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .service-card {
+      min-height: 330px;
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        var(--panel);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: var(--radius-xl);
+      transition: .35s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .service-card::after {
+      content: "";
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      right: -90px;
+      bottom: -90px;
+      border-radius: 50%;
+      background: var(--accent);
+      filter: blur(65px);
+      opacity: .1;
+      transition: .35s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255,255,255,.17);
+      box-shadow: 0 30px 70px rgba(0,0,0,.3);
+    }
+
+    .service-card:hover::after {
+      opacity: .22;
+    }
+
+    .service-number {
+      color: var(--muted-2);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+    }
+
+    .service-icon {
+      width: 52px;
+      height: 52px;
+      margin-top: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      background: var(--accent-soft);
+      color: var(--accent-2);
+      border: 1px solid rgba(255,38,56,.16);
+    }
+
+    .service-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .service-card h3 {
+      margin-top: 24px;
+      font-size: 25px;
+      letter-spacing: -.035em;
+    }
+
+    .service-card p {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    /* HOW */
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 15px;
+      align-items: stretch;
+    }
+
+    .how-visual {
+      min-height: 560px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 40%, rgba(255,38,56,.18), transparent 27%),
+        linear-gradient(145deg, #171920, #0c0d11);
+      box-shadow: var(--shadow);
+    }
+
+    .how-visual::before {
+      content: "IRONX";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: clamp(70px, 11vw, 150px);
+      font-weight: 950;
+      letter-spacing: -.09em;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,.09);
+      transform: rotate(-10deg);
+    }
+
+    .how-orb {
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle at 35% 30%, #ff7580, #e3162d 40%, #56030b 80%);
+      box-shadow:
+        0 0 90px rgba(255,38,56,.32),
+        inset -30px -30px 70px rgba(0,0,0,.4);
+      animation: pulseOrb 5s ease-in-out infinite;
+    }
+
+    @keyframes pulseOrb {
+      0%,100% {
+        transform: translate(-50%,-50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%,-50%) scale(1.06);
+      }
+    }
+
+    .how-tag {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(10,11,15,.58);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .how-tag strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .how-tag span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.035);
+      transition: .25s ease;
+    }
+
+    .step:hover {
+      background: rgba(255,255,255,.06);
+      transform: translateX(5px);
+    }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(255,255,255,.055);
+      color: var(--accent-2);
+      font-weight: 900;
+      border: 1px solid var(--line);
+    }
+
+    .step h3 {
+      font-size: 20px;
+    }
+
+    .step p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    /* DASHBOARD PREVIEW */
+
+    .dashboard-preview {
+      position: relative;
+      overflow: hidden;
+      padding: 15px;
+      border-radius: 38px;
+      border: 1px solid var(--line-bright);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.025)),
+        rgba(13,15,20,.75);
+      box-shadow: var(--shadow);
+    }
+
+    .dashboard-preview::before {
+      content: "";
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: var(--accent);
+      filter: blur(130px);
+      opacity: .07;
+      top: -180px;
+      right: -120px;
+    }
+
+    .dash-top {
+      min-height: 55px;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dash-title {
+      font-weight: 850;
+    }
+
+    .dash-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dash-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+    }
+
+    .dash-body {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .dash-sidebar {
+      padding: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--line);
+    }
+
+    .mini-brand {
+      padding: 12px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      margin-bottom: 25px;
+    }
+
+    .mini-nav {
+      display: grid;
+      gap: 7px;
+    }
+
+    .mini-nav div {
+      padding: 11px 12px;
+      color: var(--muted);
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .mini-nav div.active {
+      color: white;
+      background: var(--accent-soft);
+      border: 1px solid rgba(255,38,56,.14);
+    }
+
+    .dash-main {
+      display: grid;
+      gap: 14px;
+    }
+
+    .dash-welcome {
+      padding: 24px;
+      min-height: 150px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 85% 30%, rgba(255,38,56,.22), transparent 25%),
+        rgba(255,255,255,.035);
+      border: 1px solid var(--line);
+    }
+
+    .dash-welcome small {
+      color: var(--muted);
+    }
+
+    .dash-welcome h3 {
+      margin-top: 6px;
+      font-size: 30px;
+      letter-spacing: -.04em;
+    }
+
+    .dash-stat {
+      text-align: right;
+    }
+
+    .dash-stat strong {
+      display: block;
+      font-size: 34px;
+    }
+
+    .dash-stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .dash-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .mini-card {
+      min-height: 140px;
+      padding: 19px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+    }
+
+    .mini-card .mini-label {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-top: 20px;
+      font-size: 25px;
+    }
+
+    .mini-line {
+      margin-top: 12px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .mini-line span {
+      display: block;
+      height: 100%;
+      width: 74%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+
+    /* CTA */
+
+    .cta {
+      padding: 120px 0 140px;
+    }
+
+    .cta-box {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 85px 30px;
+      border-radius: 40px;
+      border: 1px solid var(--line-bright);
+      background:
+        radial-gradient(circle at 50% 100%, rgba(255,38,56,.2), transparent 45%),
+        linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+      box-shadow: var(--shadow);
+    }
+
+    .cta-box::before {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border: 1px solid rgba(255,255,255,.05);
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    .cta-box > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-box h2 {
+      max-width: 760px;
+      margin: auto;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: .9;
+      letter-spacing: -.065em;
+    }
+
+    .cta-box p {
+      max-width: 540px;
+      margin: 24px auto 30px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 30px 0 45px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      color: white;
+      font-weight: 900;
+      letter-spacing: .1em;
+    }
+
+    .footer-note {
+      font-size: 12px;
+    }
+
+    /* APP */
+
+    #app {
+      display: none;
+      min-height: 100vh;
+      padding-top: 125px;
+      padding-bottom: 60px;
+    }
+
+    .app-shell {
+      display: grid;
+      gap: 16px;
+    }
+
+    .app-header {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 90% 0%, rgba(255,38,56,.13), transparent 30%),
+        var(--panel);
+      backdrop-filter: blur(22px);
+    }
+
+    .app-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+    }
+
+    .app-header h1 {
+      font-size: clamp(35px, 6vw, 58px);
+      letter-spacing: -.055em;
+      line-height: .95;
+    }
+
+    .app-header p {
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 15px;
+    }
+
+    .app-tabs {
+      height: fit-content;
+      position: sticky;
+      top: 105px;
+      padding: 10px;
+      display: grid;
+      gap: 5px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+    }
+
+    .tab {
+      border: 0;
+      color: var(--muted);
+      text-align: left;
+      padding: 13px;
+      border-radius: 14px;
+      background: transparent;
+      transition: .2s ease;
+    }
+
+    .tab:hover {
+      color: white;
+      background: rgba(255,255,255,.05);
+    }
+
+    .tab.active {
+      color: white;
+      background: var(--accent-soft);
+      border: 1px solid rgba(255,38,56,.15);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeUp .3s ease;
+    }
+
+    .glass-card {
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat-card {
+      padding: 23px;
+      min-height: 145px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 30px;
+      margin-top: 22px;
+    }
+
+    .plan-box {
+      margin-top: 14px;
+    }
+
+    .plan-box h3 {
+      font-size: 22px;
+    }
+
+    .plan-text {
+      margin-top: 13px;
+      color: #c5c8cf;
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .checkin-form {
+      display: grid;
+      gap: 13px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field input,
+    .field textarea,
+    .search-input {
+      width: 100%;
+      color: white;
+      outline: none;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.2);
+      border-radius: 14px;
+      padding: 13px 14px;
+      transition: .2s ease;
+    }
+
+    .field textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .search-input:focus {
+      border-color: rgba(255,38,56,.5);
+      box-shadow: 0 0 0 4px rgba(255,38,56,.07);
+    }
+
+    .checkin-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .checkin-item {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .checkin-item strong {
+      display: block;
+    }
+
+    .checkin-item small {
+      color: var(--muted);
+    }
+
+    /* COACH */
+
+    .coach-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 14px;
+    }
+
+    .client-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 13px;
+      max-height: 600px;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .client-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      color: white;
+      padding: 15px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.03);
+      transition: .2s ease;
+    }
+
+    .client-item:hover,
+    .client-item.active {
+      background: var(--accent-soft);
+      border-color: rgba(255,38,56,.2);
+    }
+
+    .client-item strong {
+      display: block;
+    }
+
+    .client-item span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .coach-empty {
+      min-height: 400px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line-bright);
+      border-radius: 25px;
+    }
+
+    .coach-empty strong {
+      color: white;
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .coach-editor {
+      display: none;
+    }
+
+    .coach-editor.visible {
+      display: block;
+      animation: fadeUp .3s ease;
+    }
+
+    .editor-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .editor-head h2 {
+      font-size: 30px;
+      letter-spacing: -.04em;
+    }
+
+    .editor-head p {
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .editor-grid {
+      display: grid;
+      gap: 13px;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0,0,0,.67);
+      backdrop-filter: blur(14px);
+    }
+
+    .modal.show {
+      display: grid;
+      animation: modalIn .2s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .auth-card {
+      width: min(450px, 100%);
+      position: relative;
+      padding: 30px;
+      border: 1px solid var(--line-bright);
+      border-radius: 30px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
+        rgba(12,14,19,.9);
+      box-shadow: 0 40px 120px rgba(0,0,0,.55);
+      animation: cardIn .3s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: white;
+    }
+
+    .auth-card h2 {
+      font-size: 32px;
+      letter-spacing: -.05em;
+    }
+
+    .auth-card > p {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .auth-form {
+      margin-top: 25px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .auth-switch {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .auth-switch button {
+      border: 0;
+      background: transparent;
+      color: var(--accent-2);
+      font-weight: 800;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 55px;
+    }
+
+    .show-pass {
+      position: absolute;
+      right: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    /* TOAST */
+
+    #toast {
+      position: fixed;
+      z-index: 200;
+      right: 20px;
+      bottom: 20px;
+      max-width: min(380px, calc(100% - 40px));
+      padding: 14px 17px;
+      border-radius: 16px;
+      color: white;
+      background: rgba(20,22,28,.9);
+      border: 1px solid var(--line-bright);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      transform: translateY(30px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s ease;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    #toast.error {
+      border-color: rgba(255,38,56,.35);
+    }
+
+    /* LOADER */
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: grid;
+      place-items: center;
+      background: #07080b;
+      transition: .4s ease;
+    }
+
+    #loader.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-inner {
+      text-align: center;
+    }
+
+    .loader-mark {
+      width: 55px;
+      height: 55px;
+      margin: auto;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      box-shadow: 0 0 45px rgba(255,38,56,.25);
+      animation: loaderPulse 1s ease-in-out infinite alternate;
+    }
+
+    .loader-inner p {
+      margin-top: 15px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .15em;
+    }
+
+    @keyframes loaderPulse {
+      from { transform: scale(.94) rotate(-4deg); }
+      to { transform: scale(1.05) rotate(4deg); }
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .services {
+        grid-template-columns: 1fr;
+      }
+
+      .service-card {
+        min-height: 250px;
+      }
+
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .how-visual {
+        min-height: 390px;
+      }
+
+      .dash-body {
+        grid-template-columns: 1fr;
+      }
+
+      .dash-sidebar {
+        display: none;
+      }
+
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .app-tabs {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+      }
+
+      .tab {
+        min-width: max-content;
+        text-align: center;
+      }
+
+      .coach-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .client-list {
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .page {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .nav-wrap {
+        top: 10px;
+        padding: 0 10px;
+      }
+
+      .nav {
+        min-height: 61px;
+        padding-left: 13px;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .brand {
+        font-size: 12px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-btn {
+        padding: 9px 14px;
+        font-size: 12px;
+      }
+
+      .hero {
+        padding-top: 125px;
+        min-height: 850px;
+      }
+
+      .hero h1 {
+        font-size: clamp(56px, 17vw, 95px);
+      }
+
+      .hero-copy {
+        font-size: 15px;
+      }
+
+      .hero-float,
+      .hero-ring {
+        display: none;
+      }
+
+      section {
+        padding: 80px 0;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-copy {
+        margin-top: 17px;
+      }
+
+      .services {
+        gap: 10px;
+      }
+
+      .service-card {
+        padding: 23px;
+      }
+
+      .dash-cards,
+      .stats-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-preview {
+        border-radius: 25px;
+      }
+
+      .dash-welcome {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .dash-stat {
+        text-align: left;
+      }
+
+      .cta-box {
+        padding: 65px 20px;
+        border-radius: 28px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .app-header {
+        padding: 22px;
+      }
+
+      .app-header-top {
+        display: block;
+      }
+
+      .app-header-top .nav-btn {
+        margin-top: 18px;
+      }
+
+      .glass-card {
+        padding: 19px;
+      }
+
+      .editor-head {
+        display: block;
+      }
+
+      .auth-card {
+        padding: 25px 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
-<div class="app">
-
-
-<!-- =====================================================
-     NAVBAR
-===================================================== -->
-
-<nav class="top-nav">
-
-  <div class="brand">
-
-    <div class="brand-mark">
-      X
-    </div>
-
-    IRON<span>X</span>
-
-  </div>
-
-
-  <div class="nav-actions">
-
-    <button
-      id="navLogin"
-      class="btn"
-      onclick="openAuth('login')"
-    >
-      Login
-    </button>
-
-
-    <button
-      id="navLogout"
-      class="btn hidden"
-      onclick="logout()"
-    >
-      Logout
-    </button>
-
-  </div>
-
-</nav>
-
-
-<!-- =====================================================
-     HOME
-===================================================== -->
-
-<main id="home">
-
-  <section class="hero">
-
-    <div class="hero-content">
-
-      <div class="eyebrow">
-
-        <span class="eyebrow-dot"></span>
-
-        ONLINE COACHING • 2026
-
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-mark">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+          <path d="M7 4h4l-1.3 6H14l-5 10 1.5-7H6L7 4Z"
+                fill="white"/>
+        </svg>
       </div>
+      <p>IRONX</p>
+    </div>
+  </div>
 
+  <div class="orb one"></div>
+  <div class="orb two"></div>
 
-      <h1>
-
-        FORGED
-
-        <br>
-
-        <span class="accent">
-          NOT FOUND.
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <nav class="nav">
+      <a href="#" class="brand" onclick="showHome(); return false;">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 4h4l-1.3 6H14l-5 10 1.5-7H6L7 4Z"
+                  fill="white"/>
+          </svg>
         </span>
-
-      </h1>
-
-
-      <p class="hero-description">
-
-        Personalized training, nutrition and progress tracking
-        built around one thing: becoming stronger than yesterday.
-
-      </p>
-
-
-      <div class="hero-actions">
-
-        <button
-          class="btn primary"
-          onclick="openAuth('register')"
-        >
-          START YOUR JOURNEY
-        </button>
-
-
-        <button
-          class="btn"
-          onclick="openAuth('login')"
-        >
-          CLIENT LOGIN
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-<!-- =====================================================
-     FEATURES
-===================================================== -->
-
-<section class="features">
-
-
-  <div class="feature glass">
-
-    <div class="feature-icon">
-      ⚡
-    </div>
-
-    <h3>
-      Training
-    </h3>
-
-    <p>
-      Structured workouts, sets, reps,
-      rest and progression built around
-      your goal.
-    </p>
-
-  </div>
-
-
-  <div class="feature glass">
-
-    <div class="feature-icon">
-      ◈
-    </div>
-
-    <h3>
-      Nutrition
-    </h3>
-
-    <p>
-      Practical nutrition plans designed
-      around your target and real-life
-      food choices.
-    </p>
-
-  </div>
-
-
-  <div class="feature glass">
-
-    <div class="feature-icon">
-      ↗
-    </div>
-
-    <h3>
-      Check-ins
-    </h3>
-
-    <p>
-      Track weight, waist, energy and
-      notes so your progress doesn't
-      disappear into the void.
-    </p>
-
-  </div>
-
-
-</section>
-
-</main>
-
-
-<!-- =====================================================
-     CLIENT DASHBOARD
-===================================================== -->
-
-<section
-  id="clientDashboard"
-  class="dashboard"
->
-
-
-  <div class="dashboard-header">
-
-    <div>
-
-      <p>
-        CLIENT DASHBOARD
-      </p>
-
-      <h1>
-        Welcome,
-        <span id="clientName">
-          Athlete
-        </span>
-      </h1>
-
-      <p id="clientEmail">
-        —
-      </p>
-
-    </div>
-
-
-    <button
-      class="btn"
-      onclick="logout()"
-    >
-      Logout
-    </button>
-
-  </div>
-
-
-  <div class="dashboard-nav glass">
-
-    <button
-      class="dash-tab active"
-      onclick="showClientTab('overview',this)"
-    >
-      Overview
-    </button>
-
-
-    <button
-      class="dash-tab"
-      onclick="showClientTab('trainingTab',this)"
-    >
-      Training
-    </button>
-
-
-    <button
-      class="dash-tab"
-      onclick="showClientTab('nutritionTab',this)"
-    >
-      Nutrition
-    </button>
-
-
-    <button
-      class="dash-tab"
-      onclick="showClientTab('checkinsTab',this)"
-    >
-      Check-ins
-    </button>
-
-  </div>
-
-
-<!-- =====================================================
-     OVERVIEW
-===================================================== -->
-
-<div
-  id="overview"
-  class="client-tab"
->
-
-
-  <div class="stats">
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Goal
-      </div>
-
-      <div
-        id="clientGoal"
-        class="stat-value"
-      >
-        —
-      </div>
-
-    </div>
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Age
-      </div>
-
-      <div
-        id="clientAge"
-        class="stat-value"
-      >
-        —
-      </div>
-
-    </div>
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Weight
-      </div>
-
-      <div
-        id="clientWeight"
-        class="stat-value"
-      >
-        —
-      </div>
-
-    </div>
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Check-ins
-      </div>
-
-      <div
-        id="clientCheckinCount"
-        class="stat-value"
-      >
-        0
-      </div>
-
-    </div>
-
-
-  </div>
-
-
-  <div class="content-grid">
-
-
-    <div class="panel glass">
-
-      <div class="panel-title">
-
-        <h2>
-          Training Plan
-        </h2>
-
-        <span>
-          CURRENT
-        </span>
-
-      </div>
-
-      <div
-        id="overviewTraining"
-        class="plan-content empty"
-      >
-        Your coach hasn't added a training
-        plan yet.
-      </div>
-
-    </div>
-
-
-    <div class="panel glass">
-
-      <div class="panel-title">
-
-        <h2>
-          Nutrition Plan
-        </h2>
-
-        <span>
-          CURRENT
-        </span>
-
-      </div>
-
-      <div
-        id="overviewNutrition"
-        class="plan-content empty"
-      >
-        Your coach hasn't added a nutrition
-        plan yet.
-      </div>
-
-    </div>
-
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     TRAINING
-===================================================== -->
-
-<div
-  id="trainingTab"
-  class="client-tab hidden"
->
-
-  <div class="panel glass">
-
-    <div class="panel-title">
-
-      <h2>
-        Your Training Plan
-      </h2>
-
-      <span>
         IRONX
-      </span>
+      </a>
 
-    </div>
-
-
-    <div
-      id="trainingFull"
-      class="plan-content empty"
-    >
-      Your coach hasn't added a training
-      plan yet.
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     NUTRITION
-===================================================== -->
-
-<div
-  id="nutritionTab"
-  class="client-tab hidden"
->
-
-  <div class="panel glass">
-
-    <div class="panel-title">
-
-      <h2>
-        Your Nutrition Plan
-      </h2>
-
-      <span>
-        IRONX
-      </span>
-
-    </div>
-
-
-    <div
-      id="nutritionFull"
-      class="plan-content empty"
-    >
-      Your coach hasn't added a nutrition
-      plan yet.
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     CHECKINS
-===================================================== -->
-
-<div
-  id="checkinsTab"
-  class="client-tab hidden"
->
-
-
-  <div class="content-grid">
-
-
-    <div class="panel glass">
-
-      <div class="panel-title">
-
-        <h2>
-          Weekly Check-in
-        </h2>
-
-        <span>
-          UPDATE
-        </span>
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Weight
-        </label>
-
-        <input
-          id="weight"
-          class="input"
-          type="number"
-          step="0.1"
-          placeholder="kg"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Waist
-        </label>
-
-        <input
-          id="waist"
-          class="input"
-          type="number"
-          step="0.1"
-          placeholder="cm"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Energy
-        </label>
-
-        <input
-          id="energy"
-          class="input"
-          type="number"
-          min="1"
-          max="10"
-          placeholder="1 - 10"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Notes
-        </label>
-
-        <textarea
-          id="notes"
-          class="input"
-          placeholder="How was your week?"
-        ></textarea>
-
-      </div>
-
-
-      <button
-        id="checkinButton"
-        class="btn primary"
-        onclick="submitCheckin()"
-      >
-        SUBMIT CHECK-IN
-      </button>
-
-    </div>
-
-
-    <div class="panel glass">
-
-      <div class="panel-title">
-
-        <h2>
-          History
-        </h2>
-
-        <span>
-          YOUR DATA
-        </span>
-
-      </div>
-
-
-      <div
-        id="clientCheckins"
-        class="checkin-list"
-      >
-
-        <div class="empty">
-          No check-ins yet.
+      <div class="nav-right">
+        <div class="status">
+          <span class="status-dot"></span>
+          System online
         </div>
 
+        <button id="navAuthBtn" class="nav-btn" onclick="openAuth()">
+          Sign in
+        </button>
       </div>
-
-    </div>
-
-
+    </nav>
   </div>
 
-</div>
+  <!-- LANDING -->
+  <main id="home">
 
+    <section class="hero">
+      <div class="page">
+        <div class="hero-inner">
 
-</section>
+          <div class="hero-ring"></div>
 
-
-<!-- =====================================================
-     COACH DASHBOARD
-===================================================== -->
-
-<section
-  id="coachDashboard"
-  class="dashboard"
->
-
-
-  <div class="dashboard-header">
-
-    <div>
-
-      <p>
-        COACH DASHBOARD
-      </p>
-
-      <h1>
-        IRON<span style="color:#ff3b30">X</span>
-      </h1>
-
-      <p>
-        Manage athletes, plans and progress.
-      </p>
-
-    </div>
-
-
-    <button
-      class="btn"
-      onclick="logout()"
-    >
-      Logout
-    </button>
-
-  </div>
-
-
-  <div class="stats">
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Clients
-      </div>
-
-      <div
-        id="coachClientCount"
-        class="stat-value"
-      >
-        0
-      </div>
-
-    </div>
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Active
-      </div>
-
-      <div class="stat-value">
-        ACTIVE
-      </div>
-
-    </div>
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Platform
-      </div>
-
-      <div class="stat-value">
-        IRONX
-      </div>
-
-    </div>
-
-
-    <div class="stat-card glass">
-
-      <div class="stat-label">
-        Status
-      </div>
-
-      <div class="stat-value">
-        LIVE
-      </div>
-
-    </div>
-
-
-  </div>
-
-
-  <div class="content-grid">
-
-
-    <div class="panel glass">
-
-      <div class="panel-title">
-
-        <h2>
-          Clients
-        </h2>
-
-        <span>
-          SELECT ATHLETE
-        </span>
-
-      </div>
-
-
-      <div
-        id="coachClients"
-        class="client-list"
-      >
-
-        <div class="empty">
-          Loading clients...
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="panel glass">
-
-      <div class="panel-title">
-
-        <h2>
-          Athlete Plan
-        </h2>
-
-        <span id="selectedClientLabel">
-          NONE SELECTED
-        </span>
-
-      </div>
-
-
-      <div
-        id="coachEditorEmpty"
-        class="empty"
-      >
-        Select a client to manage their
-        training and nutrition plan.
-      </div>
-
-
-      <div
-        id="coachEditor"
-        class="editor hidden"
-      >
-
-        <div>
-
-          <div class="input-label">
-            Training Plan
+          <div class="hero-float float-left">
+            <strong>01 / Training</strong>
+            <small>Built around your goal.</small>
           </div>
 
-          <textarea
-            id="coachTraining"
-            class="input"
-            placeholder="Write the training plan..."
-          ></textarea>
-
-        </div>
-
-
-        <div>
-
-          <div class="input-label">
-            Nutrition Plan
+          <div class="hero-float float-right">
+            <strong>Progress</strong>
+            <small>Track. Adjust. Improve.</small>
           </div>
 
-          <textarea
-            id="coachNutrition"
-            class="input"
-            placeholder="Write the nutrition plan..."
-          ></textarea>
+          <div class="hero-badge">
+            <span></span>
+            Personal coaching system
+          </div>
+
+          <h1>
+            BUILD<br>
+            <span class="outline">YOUR</span>
+            <span class="red">IRON.</span>
+          </h1>
+
+          <p class="hero-copy">
+            A focused coaching system for structured training,
+            nutrition and measurable progress. No random workouts.
+            No guessing. Just a system built around you.
+          </p>
+
+          <div class="hero-actions">
+            <button class="primary-btn" onclick="openAuth('register')">
+              Start your journey
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h13M13 6l6 6-6 6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <a href="#system" class="ghost-btn">
+              See the system
+            </a>
+          </div>
 
         </div>
-
-
-        <button
-          id="savePlanButton"
-          class="btn primary"
-          onclick="savePlan()"
-        >
-          SAVE PLAN
-        </button>
-
       </div>
+    </section>
 
-    </div>
+    <!-- SERVICES -->
+    <section id="system">
+      <div class="page">
 
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">The system</div>
+            <h2 class="section-title">
+              Everything<br>
+              with a purpose.
+            </h2>
+          </div>
 
-    <div
-      class="panel glass full"
-    >
+          <p class="section-copy">
+            The goal isn't to throw more information at you.
+            It's to give you the right information, organized
+            around the result you're actually chasing.
+          </p>
+        </div>
 
-      <div class="panel-title">
+        <div class="services">
 
-        <h2>
-          Athlete Check-ins
-        </h2>
+          <article class="service-card">
+            <span class="service-number">01 / TRAINING</span>
 
-        <span id="coachCheckinLabel">
-          SELECT A CLIENT
-        </span>
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 9v6M9 7v10M15 7v10M18 9v6M3 12h18"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
 
+            <h3>Structured Training</h3>
+
+            <p>
+              A clear training plan with exercises, sets, reps,
+              rest and progression instead of walking into the gym
+              and negotiating with a cable machine.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <span class="service-number">02 / NUTRITION</span>
+
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M7 3v7M5 3v4c0 1.1.9 2 2 2s2-.9 2-2V3M7 9v12M16 3v18M16 3c2 2 3 4 3 7h-3"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <h3>Practical Nutrition</h3>
+
+            <p>
+              Food choices and targets designed around your actual
+              routine, preferences and goal. Because surviving on
+              chicken and sadness isn't a nutrition strategy.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <span class="service-number">03 / PROGRESS</span>
+
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 17l5-5 4 3 7-8"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                <path d="M17 7h3v3"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <h3>Real Progress</h3>
+
+            <p>
+              Check-ins keep the process measurable. Weight,
+              measurements, energy and notes give the system enough
+              information to make useful adjustments.
+            </p>
+          </article>
+
+        </div>
       </div>
+    </section>
 
+    <!-- HOW IT WORKS -->
+    <section>
+      <div class="page">
 
-      <div
-        id="coachCheckins"
-        class="checkin-list"
-      >
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">How it works</div>
+            <h2 class="section-title">
+              Simple system.<br>
+              Serious execution.
+            </h2>
+          </div>
 
-        <div class="empty">
-          Select a client to view check-ins.
+          <p class="section-copy">
+            Your account becomes the center of the coaching process.
+            Your plan lives there, your check-ins live there, and
+            changes can be made without turning the whole process
+            into a WhatsApp archaeology project.
+          </p>
+        </div>
+
+        <div class="how-grid">
+
+          <div class="how-visual">
+            <div class="how-orb"></div>
+
+            <div class="how-tag">
+              <strong>IRONX METHOD</strong>
+              <span>Train with intention.</span>
+            </div>
+          </div>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-num">01</div>
+              <div>
+                <h3>Create your account</h3>
+                <p>
+                  Tell us who you are, what you're trying to achieve
+                  and the basics needed to build your starting point.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-num">02</div>
+              <div>
+                <h3>Get your plan</h3>
+                <p>
+                  Your training and nutrition information appears
+                  directly inside your personal dashboard.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-num">03</div>
+              <div>
+                <h3>Execute & check in</h3>
+                <p>
+                  Follow the plan and submit regular check-ins so
+                  progress can actually be measured.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-num">04</div>
+              <div>
+                <h3>Adjust intelligently</h3>
+                <p>
+                  The information from your check-ins becomes the
+                  basis for future adjustments.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section>
+      <div class="page">
+
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Your dashboard</div>
+            <h2 class="section-title">
+              Your plan.<br>
+              One place.
+            </h2>
+          </div>
+
+          <p class="section-copy">
+            No hunting through messages, screenshots or forgotten
+            notes. Your coaching information stays inside your account.
+          </p>
+        </div>
+
+        <div class="dashboard-preview">
+
+          <div class="dash-top">
+            <div class="dash-title">IRONX / Dashboard</div>
+
+            <div class="dash-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div class="dash-body">
+
+            <aside class="dash-sidebar">
+              <div class="mini-brand">IRONX</div>
+
+              <div class="mini-nav">
+                <div class="active">Overview</div>
+                <div>Training</div>
+                <div>Nutrition</div>
+                <div>Check-ins</div>
+              </div>
+            </aside>
+
+            <div class="dash-main">
+
+              <div class="dash-welcome">
+                <div>
+                  <small>CLIENT DASHBOARD</small>
+                  <h3>Stay consistent.</h3>
+                </div>
+
+                <div class="dash-stat">
+                  <strong>74%</strong>
+                  <span>example progress</span>
+                </div>
+              </div>
+
+              <div class="dash-cards">
+
+                <div class="mini-card">
+                  <span class="mini-label">TRAINING</span>
+                  <strong>Active</strong>
+                  <div class="mini-line">
+                    <span></span>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <span class="mini-label">NUTRITION</span>
+                  <strong>On plan</strong>
+                  <div class="mini-line">
+                    <span style="width:82%"></span>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <span class="mini-label">CHECK-INS</span>
+                  <strong>Tracked</strong>
+                  <div class="mini-line">
+                    <span style="width:65%"></span>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
         </div>
 
       </div>
+    </section>
 
+    <!-- CTA -->
+    <section class="cta">
+      <div class="page">
+
+        <div class="cta-box">
+
+          <div class="eyebrow">Ready when you are</div>
+
+          <h2>
+            STOP GUESSING.<br>
+            START BUILDING.
+          </h2>
+
+          <p>
+            Create your IRONX account and put your training,
+            nutrition and progress into one system.
+          </p>
+
+          <button class="primary-btn" onclick="openAuth('register')">
+            Create account
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h13M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- APP -->
+  <main id="app">
+    <div class="page">
+
+      <div class="app-shell">
+
+        <div class="app-header">
+          <div class="app-header-top">
+            <div>
+              <div class="eyebrow">IRONX / PRIVATE AREA</div>
+              <h1 id="appGreeting">Welcome back.</h1>
+              <p id="appSubtext">Your coaching dashboard.</p>
+            </div>
+
+            <button class="nav-btn" onclick="logout()">
+              Log out
+            </button>
+          </div>
+        </div>
+
+        <div class="app-grid">
+
+          <nav class="app-tabs">
+
+            <button class="tab active"
+                    data-tab="overview"
+                    onclick="switchTab('overview')">
+              Overview
+            </button>
+
+            <button class="tab"
+                    data-tab="training"
+                    onclick="switchTab('training')">
+              Training
+            </button>
+
+            <button class="tab"
+                    data-tab="nutrition"
+                    onclick="switchTab('nutrition')">
+              Nutrition
+            </button>
+
+            <button class="tab"
+                    data-tab="checkins"
+                    onclick="switchTab('checkins')">
+              Check-ins
+            </button>
+
+          </nav>
+
+          <div>
+
+            <!-- OVERVIEW -->
+            <section id="tab-overview" class="tab-content active">
+
+              <div class="stats-grid">
+
+                <div class="stat-card">
+                  <span>ACCOUNT</span>
+                  <strong id="statAccount">Active</strong>
+                </div>
+
+                <div class="stat-card">
+                  <span>CHECK-INS</span>
+                  <strong id="statCheckins">0</strong>
+                </div>
+
+                <div class="stat-card">
+                  <span>GOAL</span>
+                  <strong id="statGoal">—</strong>
+                </div>
+
+              </div>
+
+              <div class="glass-card plan-box">
+                <h3>Current focus</h3>
+                <div id="overviewPlan" class="plan-text">
+                  Your coach plan will appear here.
+                </div>
+              </div>
+
+            </section>
+
+            <!-- TRAINING -->
+            <section id="tab-training" class="tab-content">
+
+              <div class="glass-card">
+                <div class="eyebrow">Your plan</div>
+                <h2>Training</h2>
+
+                <div id="trainingPlan" class="plan-text">
+                  No training plan has been added yet.
+                </div>
+              </div>
+
+            </section>
+
+            <!-- NUTRITION -->
+            <section id="tab-nutrition" class="tab-content">
+
+              <div class="glass-card">
+                <div class="eyebrow">Your plan</div>
+                <h2>Nutrition</h2>
+
+                <div id="nutritionPlan" class="plan-text">
+                  No nutrition plan has been added yet.
+                </div>
+              </div>
+
+            </section>
+
+            <!-- CHECKINS -->
+            <section id="tab-checkins" class="tab-content">
+
+              <div class="glass-card">
+
+                <div class="eyebrow">Progress tracking</div>
+                <h2>New check-in</h2>
+
+                <form class="checkin-form"
+                      onsubmit="submitCheckin(event)">
+
+                  <div class="form-grid">
+
+                    <div class="field">
+                      <label>Weight</label>
+                      <input id="checkWeight"
+                             type="number"
+                             step="0.1"
+                             placeholder="kg">
+                    </div>
+
+                    <div class="field">
+                      <label>Waist</label>
+                      <input id="checkWaist"
+                             type="number"
+                             step="0.1"
+                             placeholder="cm">
+                    </div>
+
+                    <div class="field">
+                      <label>Energy</label>
+                      <input id="checkEnergy"
+                             type="number"
+                             min="1"
+                             max="10"
+                             placeholder="1 - 10">
+                    </div>
+
+                  </div>
+
+                  <div class="field">
+                    <label>Notes</label>
+                    <textarea id="checkNotes"
+                              placeholder="How did training, recovery and nutrition feel?"></textarea>
+                  </div>
+
+                  <button class="primary-btn" type="submit">
+                    Submit check-in
+                  </button>
+
+                </form>
+
+              </div>
+
+              <div class="glass-card" style="margin-top:14px;">
+                <div class="eyebrow">History</div>
+                <h2>Your check-ins</h2>
+
+                <div id="checkinList"
+                     class="checkin-list">
+                  No check-ins yet.
+                </div>
+              </div>
+
+            </section>
+
+          </div>
+        </div>
+
+      </div>
     </div>
+  </main>
 
+  <!-- COACH APP -->
+  <main id="coachApp" style="display:none; min-height:100vh; padding-top:125px; padding-bottom:60px;">
+    <div class="page">
 
-  </div>
+      <div class="app-shell">
 
-</section>
+        <div class="app-header">
+          <div class="app-header-top">
+            <div>
+              <div class="eyebrow">IRONX / COACH AREA</div>
+              <h1>Coach Dashboard</h1>
+              <p>Manage clients, plans and check-ins.</p>
+            </div>
 
+            <button class="nav-btn" onclick="logout()">
+              Log out
+            </button>
+          </div>
+        </div>
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
+        <div class="coach-layout">
 
-<footer class="footer">
-  IRONX © 2026
-</footer>
+          <aside class="glass-card">
 
+            <div class="eyebrow">Clients</div>
 
-</div>
+            <input
+              id="clientSearch"
+              class="search-input"
+              placeholder="Search clients..."
+              oninput="filterClients()"
+            >
 
+            <div id="clientList" class="client-list">
+              Loading clients...
+            </div>
 
-<!-- =====================================================
-     AUTH MODAL
-===================================================== -->
+          </aside>
 
-<div
-  id="authModal"
-  class="modal"
->
+          <section>
 
+            <div id="coachEmpty" class="coach-empty">
+              <div>
+                <strong>Select a client</strong>
+                Choose a client from the list to manage their coaching plan.
+              </div>
+            </div>
 
-  <div class="modal-box">
+            <div id="coachEditor"
+                 class="coach-editor">
 
+              <div class="glass-card">
 
-    <div class="modal-header">
+                <div class="editor-head">
 
-      <h2>
-        IRON<span style="color:#ff3b30">X</span>
-      </h2>
+                  <div>
+                    <div class="eyebrow">Client profile</div>
+                    <h2 id="selectedClientName">
+                      Client
+                    </h2>
+                    <p id="selectedClientMeta">
+                      —
+                    </p>
+                  </div>
 
+                  <button class="nav-btn"
+                          onclick="loadSelectedClientCheckins()">
+                    Refresh
+                  </button>
 
-      <button
-        class="close"
-        onclick="closeAuth()"
-      >
+                </div>
+
+                <div class="editor-grid">
+
+                  <div class="field">
+                    <label>Training plan</label>
+                    <textarea id="coachTraining"
+                              placeholder="Exercises, sets, reps, rest, progression..."></textarea>
+                  </div>
+
+                  <div class="field">
+                    <label>Nutrition plan</label>
+                    <textarea id="coachNutrition"
+                              placeholder="Calories, protein target, meals, notes..."></textarea>
+                  </div>
+
+                  <button class="primary-btn"
+                          onclick="savePlan()">
+                    Save client plan
+                  </button>
+
+                </div>
+
+              </div>
+
+              <div class="glass-card" style="margin-top:14px;">
+
+                <div class="eyebrow">Client progress</div>
+                <h2>Check-ins</h2>
+
+                <div id="coachCheckins"
+                     class="checkin-list">
+                  No check-ins.
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal"
+       class="modal"
+       onclick="modalBackdrop(event)">
+
+    <div class="auth-card">
+
+      <button class="modal-close"
+              onclick="closeAuth()">
         ×
       </button>
 
-    </div>
-
-
-    <div class="auth-tabs">
-
-      <button
-        id="loginTab"
-        class="auth-tab active"
-        onclick="setAuthMode('login')"
-      >
-        LOGIN
-      </button>
-
-
-      <button
-        id="registerTab"
-        class="auth-tab"
-        onclick="setAuthMode('register')"
-      >
-        REGISTER
-      </button>
-
-    </div>
-
-
-    <div id="authForm"></div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     TOAST
-===================================================== -->
-
-<div
-  id="toast"
-  class="toast"
-></div>
-
-
-<!-- =====================================================
-     SUPABASE
-===================================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<script>
-
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SUPABASE_URL =
-  "https://uibzmqioeumuhczljolu.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_rSRn52GyErhIZbjGicxfYw_3myRbrbx";
-
-const sb =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let authMode = "login";
-
-let currentUser = null;
-
-let currentProfile = null;
-
-let currentPlan = null;
-
-let currentCheckins = [];
-
-let selectedClient = null;
-
-let selectedClientPlan = null;
-
-
-/* =========================================================
-   HELPER
-========================================================= */
-
-function $(id){
-  return document.getElementById(id);
-}
-
-
-function showToast(message,error=false){
-
-  const toast = $("toast");
-
-  toast.textContent = message;
-
-  toast.classList.toggle(
-    "error",
-    error
-  );
-
-  toast.classList.add("show");
-
-  clearTimeout(
-    window.__toastTimer
-  );
-
-  window.__toastTimer =
-    setTimeout(
-      () => {
-        toast.classList.remove("show");
-      },
-      3200
-    );
-
-}
-
-
-function escapeHTML(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
-function formatDate(date){
-
-  if(!date)
-    return "—";
-
-  return new Date(date)
-    .toLocaleDateString(
-      undefined,
-      {
-        day:"numeric",
-        month:"short",
-        year:"numeric"
-      }
-    );
-
-}
-
-
-/* =========================================================
-   AUTH MODAL
-========================================================= */
-
-function openAuth(mode="login"){
-
-  authMode = mode;
-
-  $("authModal")
-    .classList
-    .add("show");
-
-  renderAuth();
-
-}
-
-
-function closeAuth(){
-
-  $("authModal")
-    .classList
-    .remove("show");
-
-}
-
-
-function setAuthMode(mode){
-
-  authMode = mode;
-
-  renderAuth();
-
-}
-
-
-function renderAuth(){
-
-  $("loginTab")
-    .classList
-    .toggle(
-      "active",
-      authMode === "login"
-    );
-
-  $("registerTab")
-    .classList
-    .toggle(
-      "active",
-      authMode === "register"
-    );
-
-
-  if(authMode === "login"){
-
-    $("authForm").innerHTML = `
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Email
-        </label>
-
-        <input
-          id="authEmail"
-          class="input"
-          type="email"
-          autocomplete="email"
-          placeholder="you@example.com"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Password
-        </label>
-
-        <input
-          id="authPassword"
-          class="input"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Password"
-        >
-
-      </div>
-
-
-      <button
-        id="authSubmit"
-        class="btn primary"
-        style="width:100%"
-        onclick="login()"
-      >
-        LOGIN
-      </button>
-
-    `;
-
-  }else{
-
-    $("authForm").innerHTML = `
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Full name
-        </label>
-
-        <input
-          id="authName"
-          class="input"
-          autocomplete="name"
-          placeholder="Your name"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Email
-        </label>
-
-        <input
-          id="authEmail"
-          class="input"
-          type="email"
-          autocomplete="email"
-          placeholder="you@example.com"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Password
-        </label>
-
-        <input
-          id="authPassword"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="At least 6 characters"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Age
-        </label>
-
-        <input
-          id="authAge"
-          class="input"
-          type="number"
-          min="1"
-          max="100"
-          placeholder="Age"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label class="input-label">
-          Goal
-        </label>
-
-        <input
-          id="authGoal"
-          class="input"
-          placeholder="Muscle gain, fat loss..."
-        >
-
-      </div>
-
-
-      <button
-        id="authSubmit"
-        class="btn primary"
-        style="width:100%"
-        onclick="register()"
-      >
-        CREATE ACCOUNT
-      </button>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================================================
-   REGISTER
-========================================================= */
-
-async function register(){
-
-  const button =
-    $("authSubmit");
-
-  try{
-
-    const name =
-      $("authName")
-        .value
-        .trim();
-
-    const email =
-      $("authEmail")
-        .value
-        .trim();
-
-    const password =
-      $("authPassword")
-        .value;
-
-    const age =
-      $("authAge")
-        .value
-        .trim();
-
-    const goal =
-      $("authGoal")
-        .value
-        .trim();
-
-
-    if(
-      !name ||
-      !email ||
-      !password
-    ){
-
-      showToast(
-        "Please fill in name, email and password.",
-        true
-      );
-
-      return;
-
-    }
-
-
-    if(password.length < 6){
-
-      showToast(
-        "Password must be at least 6 characters.",
-        true
-      );
-
-      return;
-
-    }
-
-
-    button.disabled = true;
-
-    button.innerHTML = `
-      <span class="loading">
-        <span class="spinner"></span>
-        Creating...
-      </span>
-    `;
-
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth.signUp({
-
-        email,
-
-        password,
-
-        options:{
-          data:{
-            name,
-            age,
-            goal
-          }
-        }
-
-      });
-
-
-    if(error)
-      throw error;
-
-
-    if(data.session){
-
-      closeAuth();
-
-      await enterApp(
-        data.user
-      );
-
-      showToast(
-        "Account created."
-      );
-
-    }else{
-
-      authMode = "login";
-
-      renderAuth();
-
-      showToast(
-        "Account created. You can now log in."
-      );
-
-    }
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      error.message ||
-      "Create account failed.",
-      true
-    );
-
-    if(button){
-
-      button.disabled = false;
-
-      button.textContent =
-        "CREATE ACCOUNT";
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login(){
-
-  const button =
-    $("authSubmit");
-
-  try{
-
-    const email =
-      $("authEmail")
-        .value
-        .trim();
-
-    const password =
-      $("authPassword")
-        .value;
-
-
-    if(
-      !email ||
-      !password
-    ){
-
-      showToast(
-        "Enter your email and password.",
-        true
-      );
-
-      return;
-
-    }
-
-
-    button.disabled = true;
-
-    button.innerHTML = `
-      <span class="loading">
-        <span class="spinner"></span>
-        Signing in...
-      </span>
-    `;
-
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth
-        .signInWithPassword({
-
-          email,
-
-          password
-
-        });
-
-
-    if(error)
-      throw error;
-
-
-    closeAuth();
-
-    await enterApp(
-      data.user
-    );
-
-
-    showToast(
-      "Welcome back."
-    );
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      error.message ||
-      "Login failed.",
-      true
-    );
-
-    if(button){
-
-      button.disabled = false;
-
-      button.textContent =
-        "LOGIN";
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   ENTER APP
-========================================================= */
-
-async function enterApp(user){
-
-  currentUser = user;
-
-  $("home")
-    .classList
-    .add("hidden");
-
-  $("navLogin")
-    .classList
-    .add("hidden");
-
-  $("navLogout")
-    .classList
-    .remove("hidden");
-
-
-  try{
-
-    await loadProfile();
-
-
-    if(
-      currentProfile &&
-      currentProfile.role === "coach"
-    ){
-
-      showCoachDashboard();
-
-      await loadCoachClients();
-
-    }else{
-
-      showClientDashboard();
-
-      await loadClientData();
-
-    }
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      error.message ||
-      "Could not load your profile.",
-      true
-    );
-
-    showClientDashboard();
-
-    try{
-      await loadClientData();
-    }catch(e){
-      console.error(e);
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-async function loadProfile(){
-
-  if(!currentUser)
-    return;
-
-
-  const {
-    data,
-    error
-  } =
-    await sb
-      .from("profiles")
-      .select("*")
-      .eq(
-        "id",
-        currentUser.id
-      )
-      .maybeSingle();
-
-
-  if(error)
-    throw error;
-
-
-  currentProfile =
-    data || {
-
-      id:
-        currentUser.id,
-
-      name:
-        currentUser.user_metadata?.name ||
-        currentUser.email,
-
-      email:
-        currentUser.email,
-
-      age:
-        currentUser.user_metadata?.age ||
-        null,
-
-      goal:
-        currentUser.user_metadata?.goal ||
-        "",
-
-      role:
-        "client",
-
-      training_plan:
-        "",
-
-      nutrition_plan:
-        ""
-
-    };
-
-}
-
-
-/* =========================================================
-   SHOW CLIENT
-========================================================= */
-
-function showClientDashboard(){
-
-  $("clientDashboard")
-    .classList
-    .add("active");
-
-  $("coachDashboard")
-    .classList
-    .remove("active");
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================================================
-   SHOW COACH
-========================================================= */
-
-function showCoachDashboard(){
-
-  $("coachDashboard")
-    .classList
-    .add("active");
-
-  $("clientDashboard")
-    .classList
-    .remove("active");
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================================================
-   CLIENT TABS
-========================================================= */
-
-function showClientTab(tabId,button){
-
-  document
-    .querySelectorAll(".client-tab")
-    .forEach(
-      tab =>
-        tab.classList.add("hidden")
-    );
-
-
-  $(tabId)
-    .classList
-    .remove("hidden");
-
-
-  document
-    .querySelectorAll(".dash-tab")
-    .forEach(
-      btn =>
-        btn.classList.remove("active")
-    );
-
-
-  if(button){
-
-    button.classList.add("active");
-
-  }
-
-}
-
-
-/* =========================================================
-   CLIENT DATA
-========================================================= */
-
-async function loadClientData(){
-
-  if(!currentUser)
-    return;
-
-
-  $("clientName")
-    .textContent =
-      currentProfile?.name ||
-      currentUser.email ||
-      "Athlete";
-
-
-  $("clientEmail")
-    .textContent =
-      currentProfile?.email ||
-      currentUser.email ||
-      "—";
-
-
-  $("clientGoal")
-    .textContent =
-      currentProfile?.goal ||
-      "—";
-
-
-  $("clientAge")
-    .textContent =
-      currentProfile?.age ||
-      "—";
-
-
-  await loadClientPlan();
-
-  await loadClientCheckins();
-
-}
-
-
-/* =========================================================
-   CLIENT PLAN
-========================================================= */
-
-async function loadClientPlan(){
-
-  const {
-    data,
-    error
-  } =
-    await sb
-      .from("plans")
-      .select("*")
-      .eq(
-        "client_id",
-        currentUser.id
-      )
-      .maybeSingle();
-
-
-  if(error)
-    throw error;
-
-
-  currentPlan =
-    data || null;
-
-
-  const training =
-    currentPlan?.training ||
-    "Your coach hasn't added a training plan yet.";
-
-
-  const nutrition =
-    currentPlan?.nutrition ||
-    "Your coach hasn't added a nutrition plan yet.";
-
-
-  $("overviewTraining")
-    .textContent =
-      training;
-
-  $("trainingFull")
-    .textContent =
-      training;
-
-  $("overviewNutrition")
-    .textContent =
-      nutrition;
-
-  $("nutritionFull")
-    .textContent =
-      nutrition;
-
-
-  [
-    $("overviewTraining"),
-    $("trainingFull"),
-    $("overviewNutrition"),
-    $("nutritionFull")
-  ]
-  .forEach(
-    element => {
-
-      if(!element)
-        return;
-
-      element.classList.toggle(
-        "empty",
-        !currentPlan
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   CLIENT CHECKINS
-========================================================= */
-
-async function loadClientCheckins(){
-
-  const {
-    data,
-    error
-  } =
-    await sb
-      .from("checkins")
-      .select("*")
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error)
-    throw error;
-
-
-  currentCheckins =
-    data || [];
-
-
-  $("clientCheckinCount")
-    .textContent =
-      currentCheckins.length;
-
-
-  const latest =
-    currentCheckins[0];
-
-
-  $("clientWeight")
-    .textContent =
-      latest?.weight != null
-        ? `${latest.weight} kg`
-        : "—";
-
-
-  renderCheckins(
-    $("clientCheckins"),
-    currentCheckins
-  );
-
-}
-
-
-/* =========================================================
-   RENDER CHECKINS
-========================================================= */
-
-function renderCheckins(
-  container,
-  checkins
-){
-
-  if(!container)
-    return;
-
-
-  if(
-    !checkins ||
-    checkins.length === 0
-  ){
-
-    container.innerHTML = `
-      <div class="empty">
-        No check-ins yet.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-    checkins
-      .map(
-        checkin => `
-
-          <div class="checkin-item">
-
-            <div class="checkin-top">
-
-              <strong>
-                Weekly Check-in
-              </strong>
-
-              <span class="checkin-date">
-                ${formatDate(
-                  checkin.created_at
-                )}
-              </span>
-
+      <div class="eyebrow">IRONX ACCOUNT</div>
+
+      <h2 id="authTitle">Welcome back.</h2>
+
+      <p id="authSubtitle">
+        Sign in to access your dashboard.
+      </p>
+
+      <form id="authForm"
+            class="auth-form"
+            onsubmit="submitAuth(event)">
+
+        <div id="nameField" class="field" style="display:none;">
+          <label>Name</label>
+          <input id="authName"
+                 type="text"
+                 autocomplete="name"
+                 placeholder="Your name">
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="authEmail"
+                 type="email"
+                 autocomplete="email"
+                 placeholder="you@example.com"
+                 required>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+
+          <div class="password-wrap">
+            <input id="authPassword"
+                   type="password"
+                   autocomplete="current-password"
+                   placeholder="••••••••"
+                   minlength="6"
+                   required>
+
+            <button type="button"
+                    class="show-pass"
+                    onclick="togglePassword()">
+              ◉
+            </button>
+          </div>
+        </div>
+
+        <div id="extraFields"
+             style="display:none;">
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label>Age</label>
+              <input id="authAge"
+                     type="number"
+                     min="10"
+                     max="100"
+                     placeholder="Age">
             </div>
 
-
-            <div class="checkin-stats">
-
-
-              <div class="checkin-stat">
-
-                <small>
-                  Weight
-                </small>
-
-                <strong>
-                  ${
-                    checkin.weight != null
-                      ? escapeHTML(
-                          checkin.weight
-                        ) + " kg"
-                      : "—"
-                  }
-                </strong>
-
-              </div>
-
-
-              <div class="checkin-stat">
-
-                <small>
-                  Waist
-                </small>
-
-                <strong>
-                  ${
-                    checkin.waist != null
-                      ? escapeHTML(
-                          checkin.waist
-                        ) + " cm"
-                      : "—"
-                  }
-                </strong>
-
-              </div>
-
-
-              <div class="checkin-stat">
-
-                <small>
-                  Energy
-                </small>
-
-                <strong>
-                  ${
-                    checkin.energy != null
-                      ? escapeHTML(
-                          checkin.energy
-                        ) + "/10"
-                      : "—"
-                  }
-                </strong>
-
-              </div>
-
-
+            <div class="field">
+              <label>Goal</label>
+              <input id="authGoal"
+                     type="text"
+                     placeholder="Muscle / Fat loss...">
             </div>
-
-
-            ${
-              checkin.notes
-                ? `
-                  <div class="checkin-notes">
-                    ${escapeHTML(
-                      checkin.notes
-                    )}
-                  </div>
-                `
-                : ""
-            }
-
 
           </div>
 
-        `
-      )
-      .join("");
-
-}
-
-
-/* =========================================================
-   SUBMIT CHECKIN
-========================================================= */
-
-async function submitCheckin(){
-
-  const button =
-    $("checkinButton");
-
-
-  try{
-
-    if(!currentUser){
-
-      showToast(
-        "Please login first.",
-        true
-      );
-
-      return;
-
-    }
-
-
-    const weight =
-      $("weight")
-        .value
-        .trim();
-
-    const waist =
-      $("waist")
-        .value
-        .trim();
-
-    const energy =
-      $("energy")
-        .value
-        .trim();
-
-    const notes =
-      $("notes")
-        .value
-        .trim();
-
-
-    if(
-      !weight &&
-      !waist &&
-      !energy &&
-      !notes
-    ){
-
-      showToast(
-        "Enter at least one check-in value.",
-        true
-      );
-
-      return;
-
-    }
-
-
-    button.disabled = true;
-
-    button.innerHTML = `
-      <span class="loading">
-        <span class="spinner"></span>
-        Saving...
-      </span>
-    `;
-
-
-    const {
-      error
-    } =
-      await sb
-        .from("checkins")
-        .insert({
-
-          user_id:
-            currentUser.id,
-
-          weight:
-            weight || null,
-
-          waist:
-            waist || null,
-
-          energy:
-            energy || null,
-
-          notes:
-            notes || null
-
-        });
-
-
-    if(error)
-      throw error;
-
-
-    $("weight").value = "";
-
-    $("waist").value = "";
-
-    $("energy").value = "";
-
-    $("notes").value = "";
-
-
-    await loadClientCheckins();
-
-
-    showToast(
-      "Check-in saved."
-    );
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      error.message ||
-      "Check-in failed.",
-      true
-    );
-
-  }finally{
-
-    button.disabled = false;
-
-    button.textContent =
-      "SUBMIT CHECK-IN";
-
-  }
-
-}
-
-
-/* =========================================================
-   COACH CLIENTS
-========================================================= */
-
-async function loadCoachClients(){
-
-  const container =
-    $("coachClients");
-
-
-  container.innerHTML = `
-    <div class="loading">
-      <span class="spinner"></span>
-      Loading clients...
-    </div>
-  `;
-
-
-  const {
-    data,
-    error
-  } =
-    await sb
-      .from("profiles")
-      .select("*")
-      .eq(
-        "role",
-        "client"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error)
-    throw error;
-
-
-  const clients =
-    data || [];
-
-
-  $("coachClientCount")
-    .textContent =
-      clients.length;
-
-
-  if(clients.length === 0){
-
-    container.innerHTML = `
-      <div class="empty">
-        No clients yet.
+        </div>
+
+        <button id="authSubmit"
+                class="primary-btn"
+                type="submit">
+          Sign in
+        </button>
+
+      </form>
+
+      <div class="auth-switch">
+        <span id="switchText">Don't have an account?</span>
+
+        <button id="switchBtn"
+                onclick="toggleAuthMode()">
+          Create one
+        </button>
       </div>
-    `;
 
-    return;
-
-  }
-
-
-  container.innerHTML =
-    clients
-      .map(
-        client => `
-
-          <button
-            class="client-card"
-            onclick="selectClient('${client.id}')"
-          >
-
-            <div class="client-name">
-
-              ${escapeHTML(
-                client.name ||
-                "Unnamed client"
-              )}
-
-            </div>
-
-
-            <div class="client-meta">
-
-              ${
-                client.age
-                  ? `Age ${escapeHTML(
-                      client.age
-                    )}`
-                  : "Age —"
-              }
-
-              •
-
-              ${
-                client.goal
-                  ? escapeHTML(
-                      client.goal
-                    )
-                  : "No goal"
-              }
-
-            </div>
-
-          </button>
-
-        `
-      )
-      .join("");
-
-}
-
-
-/* =========================================================
-   SELECT CLIENT
-========================================================= */
-
-async function selectClient(clientId){
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await sb
-        .from("profiles")
-        .select("*")
-        .eq(
-          "id",
-          clientId
-        )
-        .single();
-
-
-    if(error)
-      throw error;
-
-
-    selectedClient =
-      data;
-
-
-    $("selectedClientLabel")
-      .textContent =
-        selectedClient.name ||
-        "CLIENT";
-
-
-    $("coachEditorEmpty")
-      .classList
-      .add("hidden");
-
-
-    $("coachEditor")
-      .classList
-      .remove("hidden");
-
-
-    await loadSelectedClientPlan();
-
-    await loadSelectedClientCheckins();
-
-
-    window.scrollTo({
-      top:
-        $("coachDashboard")
-          .offsetTop - 20,
-
-      behavior:"smooth"
-    });
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      error.message ||
-      "Could not load client.",
-      true
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   CLIENT PLAN
-========================================================= */
-
-async function loadSelectedClientPlan(){
-
-  const {
-    data,
-    error
-  } =
-    await sb
-      .from("plans")
-      .select("*")
-      .eq(
-        "client_id",
-        selectedClient.id
-      )
-      .maybeSingle();
-
-
-  if(error)
-    throw error;
-
-
-  selectedClientPlan =
-    data || null;
-
-
-  $("coachTraining")
-    .value =
-      selectedClientPlan?.training ||
-      "";
-
-
-  $("coachNutrition")
-    .value =
-      selectedClientPlan?.nutrition ||
-      "";
-
-}
-
-
-/* =========================================================
-   SAVE PLAN
-========================================================= */
-
-async function savePlan(){
-
-  if(!selectedClient)
-    return;
-
-
-  const button =
-    $("savePlanButton");
-
-
-  try{
-
-    const training =
-      $("coachTraining")
-        .value
-        .trim();
-
-    const nutrition =
-      $("coachNutrition")
-        .value
-        .trim();
-
-
-    button.disabled = true;
-
-    button.innerHTML = `
-      <span class="loading">
-        <span class="spinner"></span>
-        Saving...
-      </span>
-    `;
-
-
-    const {
-      error
-    } =
-      await sb
-        .from("plans")
-        .upsert(
-
-          {
-
-            client_id:
-              selectedClient.id,
-
-            training,
-
-            nutrition,
-
-            updated_by:
-              currentUser.id
-
-          },
-
-          {
-            onConflict:
-              "client_id"
-          }
-
-        );
-
-
-    if(error)
-      throw error;
-
-
-    showToast(
-      "Client plan saved."
-    );
-
-
-    await loadSelectedClientPlan();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      error.message ||
-      "Could not save plan.",
-      true
-    );
-
-  }finally{
-
-    button.disabled = false;
-
-    button.textContent =
-      "SAVE PLAN";
-
-  }
-
-}
-
-
-/* =========================================================
-   COACH CHECKINS
-========================================================= */
-
-async function loadSelectedClientCheckins(){
-
-  const container =
-    $("coachCheckins");
-
-
-  $("coachCheckinLabel")
-    .textContent =
-      selectedClient.name ||
-      "CLIENT";
-
-
-  container.innerHTML = `
-    <div class="loading">
-      <span class="spinner"></span>
-      Loading check-ins...
     </div>
-  `;
+  </div>
 
+  <div id="toast"></div>
 
-  const {
-    data,
-    error
-  } =
-    await sb
-      .from("checkins")
-      .select("*")
-      .eq(
-        "user_id",
-        selectedClient.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
+  <script>
+    /* =========================================================
+       SUPABASE
+    ========================================================= */
+
+    const SUPABASE_URL =
+      "https://uibzmqioeumuhczljolu.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_rSRn52GyErhIZbjGicxfYw_3myRbrbx";
+
+    const sb = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
         }
-      );
+      }
+    );
 
+    /* =========================================================
+       STATE
+    ========================================================= */
 
-  if(error)
-    throw error;
+    let currentUser = null;
+    let currentProfile = null;
+    let authMode = "login";
+    let enteringApp = false;
 
+    let allClients = [];
+    let selectedClient = null;
 
-  renderCheckins(
-    container,
-    data || []
-  );
+    /* =========================================================
+       HELPERS
+    ========================================================= */
 
-}
+    function $(id) {
+      return document.getElementById(id);
+    }
 
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+    function showToast(message, error = false) {
+      const toast = $("toast");
 
-async function logout(){
+      toast.textContent = message;
+      toast.className = error ? "show error" : "show";
 
-  try{
+      clearTimeout(window.toastTimer);
 
-    await sb.auth.signOut();
+      window.toastTimer = setTimeout(() => {
+        toast.className = "";
+      }, 3500);
+    }
 
-  }catch(error){
+    function showLoader() {
+      $("loader").classList.remove("hide");
+    }
 
-    console.error(error);
+    function hideLoader() {
+      setTimeout(() => {
+        $("loader").classList.add("hide");
+      }, 250);
+    }
 
-  }
+    /* =========================================================
+       HOME / APP
+    ========================================================= */
 
+    function showHome() {
+      $("home").style.display = "block";
+      $("app").style.display = "none";
+      $("coachApp").style.display = "none";
 
-  currentUser = null;
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
 
-  currentProfile = null;
+    function showClientApp() {
+      $("home").style.display = "none";
+      $("coachApp").style.display = "none";
+      $("app").style.display = "block";
 
-  currentPlan = null;
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
 
-  currentCheckins = [];
+    function showCoachApp() {
+      $("home").style.display = "none";
+      $("app").style.display = "none";
+      $("coachApp").style.display = "block";
 
-  selectedClient = null;
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
 
-  selectedClientPlan = null;
+    /* =========================================================
+       AUTH MODAL
+    ========================================================= */
 
+    function openAuth(mode = "login") {
+      authMode = mode;
+      renderAuthMode();
 
-  $("clientDashboard")
-    .classList
-    .remove("active");
+      $("authModal").classList.add("show");
 
-  $("coachDashboard")
-    .classList
-    .remove("active");
+      setTimeout(() => {
+        $("authEmail").focus();
+      }, 100);
+    }
 
+    function closeAuth() {
+      $("authModal").classList.remove("show");
+    }
 
-  $("home")
-    .classList
-    .remove("hidden");
-
-
-  $("navLogin")
-    .classList
-    .remove("hidden");
-
-
-  $("navLogout")
-    .classList
-    .add("hidden");
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================================================
-   CLOSE MODAL WHEN CLICKING OUTSIDE
-========================================================= */
-
-$("authModal")
-  .addEventListener(
-    "click",
-    event => {
-
-      if(
-        event.target ===
-        $("authModal")
-      ){
-
+    function modalBackdrop(event) {
+      if (event.target === $("authModal")) {
         closeAuth();
+      }
+    }
 
+    function toggleAuthMode() {
+      authMode =
+        authMode === "login"
+          ? "register"
+          : "login";
+
+      renderAuthMode();
+    }
+
+    function renderAuthMode() {
+      const register = authMode === "register";
+
+      $("authTitle").textContent =
+        register
+          ? "Build your account."
+          : "Welcome back.";
+
+      $("authSubtitle").textContent =
+        register
+          ? "Create your IRONX coaching account."
+          : "Sign in to access your dashboard.";
+
+      $("nameField").style.display =
+        register ? "grid" : "none";
+
+      $("extraFields").style.display =
+        register ? "block" : "none";
+
+      $("authSubmit").textContent =
+        register
+          ? "Create account"
+          : "Sign in";
+
+      $("switchText").textContent =
+        register
+          ? "Already have an account?"
+          : "Don't have an account?";
+
+      $("switchBtn").textContent =
+        register
+          ? "Sign in"
+          : "Create one";
+    }
+
+    function togglePassword() {
+      const input = $("authPassword");
+
+      input.type =
+        input.type === "password"
+          ? "text"
+          : "password";
+    }
+
+    async function submitAuth(event) {
+      event.preventDefault();
+
+      if (authMode === "register") {
+        await register();
+      } else {
+        await login();
+      }
+    }
+
+    /* =========================================================
+       REGISTER
+    ========================================================= */
+
+    async function register() {
+      const name =
+        $("authName").value.trim();
+
+      const email =
+        $("authEmail").value.trim().toLowerCase();
+
+      const password =
+        $("authPassword").value;
+
+      const age =
+        $("authAge").value
+          ? Number($("authAge").value)
+          : null;
+
+      const goal =
+        $("authGoal").value.trim();
+
+      if (!name) {
+        showToast("Enter your name.", true);
+        return;
       }
 
+      if (password.length < 6) {
+        showToast(
+          "Password must be at least 6 characters.",
+          true
+        );
+        return;
+      }
+
+      const button = $("authSubmit");
+      button.disabled = true;
+      button.textContent = "Creating...";
+
+      const { data, error } =
+        await sb.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name,
+              age,
+              goal
+            }
+          }
+        });
+
+      button.disabled = false;
+      button.textContent = "Create account";
+
+      if (error) {
+        showToast(error.message, true);
+        return;
+      }
+
+      if (data.session && data.user) {
+        closeAuth();
+        await enterApp(data.user);
+        return;
+      }
+
+      showToast(
+        "Account created. Check your email to confirm your account."
+      );
+
+      closeAuth();
     }
-  );
 
+    /* =========================================================
+       LOGIN
+    ========================================================= */
 
-/* =========================================================
-   ESC KEY
-========================================================= */
+    async function login() {
+      const email =
+        $("authEmail").value.trim().toLowerCase();
 
-document.addEventListener(
-  "keydown",
-  event => {
+      const password =
+        $("authPassword").value;
 
-    if(
-      event.key === "Escape"
-    ){
+      const button = $("authSubmit");
+      button.disabled = true;
+      button.textContent = "Signing in...";
+
+      const { data, error } =
+        await sb.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      button.disabled = false;
+      button.textContent = "Sign in";
+
+      if (error) {
+        showToast(
+          "Invalid email or password.",
+          true
+        );
+        return;
+      }
 
       closeAuth();
 
-    }
-
-  }
-);
-
-
-/* =========================================================
-   LIQUID LIGHT INTERACTION
-========================================================= */
-
-(function(){
-
-  const cards =
-    document.querySelectorAll(
-      ".glass, .btn, .client-card"
-    );
-
-
-  cards.forEach(card => {
-
-    card.addEventListener(
-      "pointermove",
-      event => {
-
-        const rect =
-          card.getBoundingClientRect();
-
-
-        const x =
-          (
-            (event.clientX - rect.left)
-            /
-            rect.width
-          ) * 100;
-
-
-        const y =
-          (
-            (event.clientY - rect.top)
-            /
-            rect.height
-          ) * 100;
-
-
-        card.style.setProperty(
-          "--mx",
-          `${x}%`
-        );
-
-
-        card.style.setProperty(
-          "--my",
-          `${y}%`
-        );
-
+      if (data.user) {
+        await enterApp(data.user);
       }
-    );
+    }
 
+    /* =========================================================
+       PROFILE
+    ========================================================= */
 
-    card.addEventListener(
-      "pointerleave",
-      () => {
-
-        card.style.removeProperty(
-          "--mx"
-        );
-
-        card.style.removeProperty(
-          "--my"
-        );
-
+    async function loadProfile() {
+      if (!currentUser) {
+        return null;
       }
-    );
 
-  });
+      let { data, error } =
+        await sb
+          .from("profiles")
+          .select("*")
+          .eq("id", currentUser.id)
+          .maybeSingle();
 
-})();
+      if (error) {
+        throw error;
+      }
 
+      /*
+        If the profile does not exist yet, create it here.
 
-/* =========================================================
-   DYNAMIC LIGHT
-========================================================= */
+        This makes the app more forgiving even if the database
+        trigger has not been created.
+      */
 
-(function(){
+      if (!data) {
+        const meta =
+          currentUser.user_metadata || {};
 
-  const style =
-    document.createElement("style");
+        const age =
+          meta.age !== null &&
+          meta.age !== undefined &&
+          meta.age !== ""
+            ? Number(meta.age)
+            : null;
 
+        const payload = {
+          id: currentUser.id,
+          name: meta.name || "",
+          email: currentUser.email || "",
+          age: Number.isFinite(age) ? age : null,
+          goal: meta.goal || "",
+          role: "client",
+          training_plan: "",
+          nutrition_plan: ""
+        };
 
-  style.textContent = `
+        const created =
+          await sb
+            .from("profiles")
+            .insert(payload)
+            .select("*")
+            .single();
 
-    .glass,
-    .btn,
-    .client-card{
-      --mx:50%;
-      --my:50%;
+        if (created.error) {
+
+          /*
+            Another process may have created it between
+            SELECT and INSERT. In that case, simply fetch again.
+          */
+
+          const retry =
+            await sb
+              .from("profiles")
+              .select("*")
+              .eq("id", currentUser.id)
+              .maybeSingle();
+
+          if (retry.error) {
+            throw created.error;
+          }
+
+          data = retry.data;
+        } else {
+          data = created.data;
+        }
+      }
+
+      return data;
     }
 
-    .glass::after,
-    .btn::after,
-    .client-card::after{
-      content:"";
+    /* =========================================================
+       ENTER APP
+    ========================================================= */
 
-      position:absolute;
+    async function enterApp(user) {
+      if (!user || enteringApp) {
+        return;
+      }
 
-      width:190px;
-      height:190px;
+      enteringApp = true;
 
-      left:var(--mx);
-      top:var(--my);
+      try {
+        currentUser = user;
 
-      transform:
-        translate(-50%,-50%);
+        currentProfile =
+          await loadProfile();
 
-      pointer-events:none;
+        if (!currentProfile) {
+          throw new Error(
+            "Profile could not be loaded."
+          );
+        }
 
-      border-radius:50%;
+        $("navAuthBtn").textContent =
+          "Dashboard";
 
-      background:
-        radial-gradient(
-          circle,
-          rgba(255,255,255,.09),
-          transparent 65%
+        if (currentProfile.role === "coach") {
+
+          showCoachApp();
+
+          await loadCoachClients();
+
+        } else {
+
+          showClientApp();
+
+          updateClientUI();
+
+          await loadClientCheckins();
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        showToast(
+          error.message ||
+          "Something went wrong.",
+          true
         );
 
-      opacity:0;
-
-      transition:
-        opacity .25s ease;
+      } finally {
+        enteringApp = false;
+      }
     }
 
-    .glass:hover::after,
-    .btn:hover::after,
-    .client-card:hover::after{
-      opacity:1;
+    /* =========================================================
+       CLIENT UI
+    ========================================================= */
+
+    function updateClientUI() {
+      const name =
+        currentProfile?.name ||
+        currentUser?.user_metadata?.name ||
+        "Athlete";
+
+      $("appGreeting").textContent =
+        `Welcome back, ${name}.`;
+
+      $("appSubtext").textContent =
+        currentProfile?.goal
+          ? `Current goal: ${currentProfile.goal}`
+          : "Your coaching dashboard.";
+
+      $("statGoal").textContent =
+        currentProfile?.goal || "—";
+
+      const training =
+        currentProfile?.training_plan ||
+        "Your training plan will appear here once your coach adds it.";
+
+      const nutrition =
+        currentProfile?.nutrition_plan ||
+        "Your nutrition plan will appear here once your coach adds it.";
+
+      $("trainingPlan").textContent =
+        training;
+
+      $("nutritionPlan").textContent =
+        nutrition;
+
+      $("overviewPlan").textContent =
+        training;
     }
 
-  `;
+    /* =========================================================
+       TABS
+    ========================================================= */
 
+    function switchTab(name) {
+      document
+        .querySelectorAll(".tab")
+        .forEach(tab => {
+          tab.classList.toggle(
+            "active",
+            tab.dataset.tab === name
+          );
+        });
 
-  document.head.appendChild(style);
+      document
+        .querySelectorAll(".tab-content")
+        .forEach(section => {
+          section.classList.toggle(
+            "active",
+            section.id === `tab-${name}`
+          );
+        });
+    }
 
-})();
+    /* =========================================================
+       CHECKINS
+    ========================================================= */
 
+    async function submitCheckin(event) {
+      event.preventDefault();
 
-/* =========================================================
-   BOOT
-========================================================= */
+      if (!currentUser) {
+        return;
+      }
 
-async function boot(){
+      const weight =
+        $("checkWeight").value
+          ? Number($("checkWeight").value)
+          : null;
 
-  try{
+      const waist =
+        $("checkWaist").value
+          ? Number($("checkWaist").value)
+          : null;
 
-    const {
-      data,
-      error
-    } =
-      await sb.auth.getSession();
+      const energy =
+        $("checkEnergy").value
+          ? Number($("checkEnergy").value)
+          : null;
 
+      const notes =
+        $("checkNotes").value.trim();
 
-    if(error)
-      throw error;
+      const button =
+        event.submitter;
 
+      button.disabled = true;
+      button.textContent = "Saving...";
 
-    if(data.session){
+      const { error } =
+        await sb
+          .from("checkins")
+          .insert({
+            user_id: currentUser.id,
+            weight,
+            waist,
+            energy,
+            notes
+          });
 
-      await enterApp(
-        data.session.user
+      button.disabled = false;
+      button.textContent = "Submit check-in";
+
+      if (error) {
+        console.error(error);
+
+        showToast(
+          error.message ||
+          "Could not save check-in.",
+          true
+        );
+
+        return;
+      }
+
+      $("checkWeight").value = "";
+      $("checkWaist").value = "";
+      $("checkEnergy").value = "";
+      $("checkNotes").value = "";
+
+      showToast("Check-in saved.");
+
+      await loadClientCheckins();
+    }
+
+    async function loadClientCheckins() {
+      if (!currentUser) {
+        return;
+      }
+
+      const { data, error } =
+        await sb
+          .from("checkins")
+          .select("*")
+          .eq("user_id", currentUser.id)
+          .order("created_at", {
+            ascending: false
+          });
+
+      if (error) {
+        console.error(error);
+
+        showToast(
+          error.message,
+          true
+        );
+
+        return;
+      }
+
+      const checkins =
+        data || [];
+
+      $("statCheckins").textContent =
+        checkins.length;
+
+      renderCheckins(
+        $("checkinList"),
+        checkins
+      );
+    }
+
+    function renderCheckins(container, checkins) {
+      if (!checkins.length) {
+        container.innerHTML =
+          `<div class="checkin-item">
+             <div>
+               <strong>No check-ins yet.</strong>
+               <small>Your progress history will appear here.</small>
+             </div>
+           </div>`;
+
+        return;
+      }
+
+      container.innerHTML =
+        checkins
+          .map(checkin => {
+
+            const date =
+              new Date(
+                checkin.created_at
+              ).toLocaleDateString(
+                undefined,
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric"
+                }
+              );
+
+            const metrics = [];
+
+            if (checkin.weight !== null) {
+              metrics.push(
+                `${checkin.weight} kg`
+              );
+            }
+
+            if (checkin.waist !== null) {
+              metrics.push(
+                `${checkin.waist} cm waist`
+              );
+            }
+
+            if (checkin.energy !== null) {
+              metrics.push(
+                `Energy ${checkin.energy}/10`
+              );
+            }
+
+            return `
+              <div class="checkin-item">
+                <div>
+                  <strong>${escapeHTML(
+                    metrics.join(" · ") ||
+                    "Check-in"
+                  )}</strong>
+
+                  <small>
+                    ${escapeHTML(date)}
+                  </small>
+                </div>
+
+                <div style="max-width:45%; color:var(--muted); font-size:12px;">
+                  ${escapeHTML(
+                    checkin.notes || ""
+                  )}
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+    }
+
+    /* =========================================================
+       COACH
+    ========================================================= */
+
+    async function loadCoachClients() {
+      const { data, error } =
+        await sb
+          .from("profiles")
+          .select(`
+            id,
+            name,
+            email,
+            age,
+            goal,
+            training_plan,
+            nutrition_plan,
+            created_at
+          `)
+          .eq("role", "client")
+          .order("created_at", {
+            ascending: false
+          });
+
+      if (error) {
+        console.error(error);
+
+        showToast(
+          error.message ||
+          "Could not load clients.",
+          true
+        );
+
+        return;
+      }
+
+      allClients =
+        data || [];
+
+      renderClients(allClients);
+    }
+
+    function renderClients(clients) {
+      const list =
+        $("clientList");
+
+      if (!clients.length) {
+        list.innerHTML =
+          `<div style="color:var(--muted); font-size:13px; padding:15px;">
+             No clients found.
+           </div>`;
+
+        return;
+      }
+
+      list.innerHTML =
+        clients
+          .map(client => {
+
+            const active =
+              selectedClient?.id === client.id
+                ? "active"
+                : "";
+
+            return `
+              <button
+                class="client-item ${active}"
+                data-client-id="${escapeHTML(client.id)}"
+                onclick="selectClientById(this.dataset.clientId)"
+              >
+                <strong>
+                  ${escapeHTML(
+                    client.name || "Unnamed client"
+                  )}
+                </strong>
+
+                <span>
+                  ${escapeHTML(
+                    client.goal ||
+                    client.email ||
+                    "No goal set"
+                  )}
+                </span>
+              </button>
+            `;
+          })
+          .join("");
+    }
+
+    function filterClients() {
+      const query =
+        $("clientSearch")
+          .value
+          .trim()
+          .toLowerCase();
+
+      const filtered =
+        allClients.filter(client =>
+          `${client.name || ""} ${client.email || ""} ${client.goal || ""}`
+            .toLowerCase()
+            .includes(query)
+        );
+
+      renderClients(filtered);
+    }
+
+    async function selectClientById(id) {
+      const client =
+        allClients.find(
+          item => item.id === id
+        );
+
+      if (!client) {
+        return;
+      }
+
+      selectedClient = client;
+
+      renderClients(
+        allClients.filter(client =>
+          `${client.name || ""} ${client.email || ""} ${client.goal || ""}`
+            .toLowerCase()
+            .includes(
+              $("clientSearch").value
+                .trim()
+                .toLowerCase()
+            )
+        )
       );
 
-    }
+      $("coachEmpty").style.display =
+        "none";
 
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      "Could not restore your session.",
-      true
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-sb.auth.onAuthStateChange(
-  async (
-    event,
-    session
-  ) => {
-
-    if(
-      event === "SIGNED_IN" &&
-      session
-    ){
-
-      await enterApp(
-        session.user
+      $("coachEditor").classList.add(
+        "visible"
       );
 
+      $("selectedClientName").textContent =
+        client.name ||
+        "Unnamed client";
+
+      $("selectedClientMeta").textContent =
+        [
+          client.email,
+          client.age
+            ? `${client.age} years`
+            : null,
+          client.goal
+        ]
+          .filter(Boolean)
+          .join(" · ");
+
+      $("coachTraining").value =
+        client.training_plan || "";
+
+      $("coachNutrition").value =
+        client.nutrition_plan || "";
+
+      await loadSelectedClientCheckins();
     }
 
+    async function savePlan() {
+      if (!selectedClient) {
+        return;
+      }
 
-    if(
-      event === "SIGNED_OUT"
-    ){
+      const training =
+        $("coachTraining").value;
+
+      const nutrition =
+        $("coachNutrition").value;
+
+      const button =
+        document.querySelector(
+          "#coachEditor .primary-btn"
+        );
+
+      button.disabled = true;
+      button.textContent = "Saving...";
+
+      const { data, error } =
+        await sb
+          .from("profiles")
+          .update({
+            training_plan: training,
+            nutrition_plan: nutrition,
+            updated_at:
+              new Date().toISOString()
+          })
+          .eq("id", selectedClient.id)
+          .select(`
+            id,
+            name,
+            email,
+            age,
+            goal,
+            training_plan,
+            nutrition_plan,
+            created_at
+          `)
+          .single();
+
+      button.disabled = false;
+      button.textContent = "Save client plan";
+
+      if (error) {
+        console.error(error);
+
+        showToast(
+          error.message ||
+          "Could not save plan.",
+          true
+        );
+
+        return;
+      }
+
+      selectedClient = data;
+
+      const index =
+        allClients.findIndex(
+          client =>
+            client.id === data.id
+        );
+
+      if (index !== -1) {
+        allClients[index] = data;
+      }
+
+      showToast(
+        "Client plan saved."
+      );
+
+      renderClients(allClients);
+    }
+
+    async function loadSelectedClientCheckins() {
+      if (!selectedClient) {
+        return;
+      }
+
+      const { data, error } =
+        await sb
+          .from("checkins")
+          .select("*")
+          .eq(
+            "user_id",
+            selectedClient.id
+          )
+          .order("created_at", {
+            ascending: false
+          });
+
+      if (error) {
+        console.error(error);
+
+        $("coachCheckins").innerHTML =
+          `<div class="checkin-item">
+             <strong>
+               ${escapeHTML(error.message)}
+             </strong>
+           </div>`;
+
+        return;
+      }
+
+      renderCheckins(
+        $("coachCheckins"),
+        data || []
+      );
+    }
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+    async function logout() {
+      await sb.auth.signOut();
 
       currentUser = null;
+      currentProfile = null;
+      selectedClient = null;
+      allClients = [];
 
+      $("navAuthBtn").textContent =
+        "Sign in";
+
+      $("clientList").innerHTML =
+        "";
+
+      showHome();
     }
 
-  }
-);
+    /* =========================================================
+       AUTH STATE
+    ========================================================= */
 
+    sb.auth.onAuthStateChange(
+      async (event, session) => {
 
-/* =========================================================
-   START
-========================================================= */
+        if (
+          event === "SIGNED_IN" &&
+          session?.user
+        ) {
+          await enterApp(
+            session.user
+          );
+        }
 
-renderAuth();
+        if (
+          event === "SIGNED_OUT"
+        ) {
+          currentUser = null;
+          currentProfile = null;
+          selectedClient = null;
 
-boot();
+          $("navAuthBtn").textContent =
+            "Sign in";
 
-</script>
+          showHome();
+        }
+      }
+    );
+
+    /* =========================================================
+       BOOT
+    ========================================================= */
+
+    async function boot() {
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await sb.auth.getSession();
+
+        if (error) {
+          throw error;
+        }
+
+        if (data.session?.user) {
+
+          await enterApp(
+            data.session.user
+          );
+
+        } else {
+
+          showHome();
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        showToast(
+          error.message ||
+          "Could not start the app.",
+          true
+        );
+
+        showHome();
+
+      } finally {
+
+        hideLoader();
+
+      }
+    }
+
+    /* =========================================================
+       KEYBOARD
+    ========================================================= */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Escape" &&
+          $("authModal").classList.contains("show")
+        ) {
+          closeAuth();
+        }
+
+      }
+    );
+
+    /* =========================================================
+       START
+    ========================================================= */
+
+    boot();
+  </script>
 
 </body>
 </html>
