@@ -83,6 +83,60 @@ function auth(req, res, next) {
   next();
 }
 
+/* =========================
+   AUTO CREATE COACH ACCOUNT
+   ========================= */
+
+function ensureCoach() {
+  const email = process.env.COACH_EMAIL;
+  const password = process.env.COACH_PASSWORD;
+  const name = process.env.COACH_NAME || 'IRONX Coach';
+
+  if (!email || !password) {
+    return;
+  }
+
+  const d = read();
+
+  const existing = d.users.find(
+    u =>
+      u.email.toLowerCase() ===
+      email.toLowerCase()
+  );
+
+  if (existing) {
+    existing.role = 'coach';
+    existing.name = name;
+    existing.password = hash(password);
+
+    write(d);
+    return;
+  }
+
+  d.users.push({
+    id: crypto.randomUUID(),
+    name,
+    email: email.toLowerCase(),
+    password: hash(password),
+    role: 'coach',
+    age: '',
+    goal: '',
+    createdAt: new Date().toISOString(),
+    plan: {
+      training: '',
+      nutrition: ''
+    }
+  });
+
+  write(d);
+}
+
+ensureCoach();
+
+/* =========================
+   REGISTER
+   ========================= */
+
 app.post('/api/register', (req, res) => {
   const {
     name,
@@ -144,6 +198,10 @@ app.post('/api/register', (req, res) => {
   });
 });
 
+/* =========================
+   LOGIN
+   ========================= */
+
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body || {};
 
@@ -181,6 +239,10 @@ app.post('/api/login', (req, res) => {
   });
 });
 
+/* =========================
+   CURRENT USER
+   ========================= */
+
 app.get('/api/me', auth, (req, res) => {
   res.json({
     user: {
@@ -194,6 +256,10 @@ app.get('/api/me', auth, (req, res) => {
     }
   });
 });
+
+/* =========================
+   CHECK-IN
+   ========================= */
 
 app.post('/api/checkin', auth, (req, res) => {
   const {
@@ -220,6 +286,10 @@ app.post('/api/checkin', auth, (req, res) => {
   res.json({ ok: true });
 });
 
+/* =========================
+   GET CHECK-INS
+   ========================= */
+
 app.get('/api/checkins', auth, (req, res) => {
   res.json({
     checkins: read()
@@ -230,6 +300,10 @@ app.get('/api/checkins', auth, (req, res) => {
       )
   });
 });
+
+/* =========================
+   COACH CLIENTS
+   ========================= */
 
 app.get('/api/coach/clients', auth, (req, res) => {
   if (req.user.role !== 'coach') {
@@ -254,6 +328,10 @@ app.get('/api/coach/clients', auth, (req, res) => {
   });
 });
 
+/* =========================
+   MANUAL COACH SEED
+   ========================= */
+
 app.post('/api/coach/seed', (req, res) => {
   const key = req.headers['x-coach-key'];
 
@@ -263,36 +341,22 @@ app.post('/api/coach/seed', (req, res) => {
     });
   }
 
-  const d = read();
+  ensureCoach();
 
-  if (!d.users.some(u => u.role === 'coach')) {
-    d.users.push({
-      id: crypto.randomUUID(),
-      name:
-        process.env.COACH_NAME ||
-        'IRONX Coach',
-      email:
-        process.env.COACH_EMAIL ||
-        'coach@ironx.local',
-      password: hash(
-        process.env.COACH_PASSWORD ||
-        'change-me'
-      ),
-      role: 'coach',
-      age: '',
-      goal: '',
-      createdAt: new Date().toISOString(),
-      plan: {}
-    });
-
-    write(d);
-  }
-
-  res.json({ ok: true });
+  res.json({
+    ok: true,
+    message: 'Coach account ready'
+  });
 });
 
+/* =========================
+   FRONTEND
+   ========================= */
+
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(
+    path.join(__dirname, 'index.html')
+  );
 });
 
 module.exports = app;
