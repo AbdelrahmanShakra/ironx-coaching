@@ -1,3202 +1,1916 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="google-site-verification"
-        content="2C0-BYVBVxUqS62j-jhVgWxKZZCemMeBY-2XMd_q9Io">
-
-  <meta name="theme-color" content="#050608">
-  <meta name="description"
-        content="IRONX Coaching - Personal fitness coaching">
-
-  <title>IRONX Coaching</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root {
-      --bg: #040507;
-      --bg2: #080a0e;
-
-      --glass: rgba(8, 10, 14, .48);
-      --glass-strong: rgba(8, 10, 14, .68);
-
-      --white: #f5f5f7;
-      --muted: #8d929c;
-
-      --line: rgba(255,255,255,.11);
-      --line-soft: rgba(255,255,255,.07);
-
-      --green: #70f0a7;
-      --red: #ff6262;
-
-      --radius: 26px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(
-          circle at 20% 10%,
-          rgba(100,110,255,.13),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 85% 30%,
-          rgba(0,255,180,.055),
-          transparent 28%
-        ),
-        linear-gradient(
-          145deg,
-          #030405,
-          #090b10 50%,
-          #030405
-        );
-
-      color: var(--white);
-
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      width: 500px;
-      height: 500px;
-
-      top: -250px;
-      left: -180px;
-
-      border-radius: 50%;
-
-      background: rgba(255,255,255,.025);
-      filter: blur(100px);
-
-      pointer-events: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* =========================
-       LIQUID GLASS
-    ========================= */
-
-    .glass {
-      background: var(--glass);
-
-      border: 1px solid var(--line);
-
-      backdrop-filter:
-        blur(32px)
-        saturate(145%);
-
-      -webkit-backdrop-filter:
-        blur(32px)
-        saturate(145%);
-
-      box-shadow:
-        0 25px 70px rgba(0,0,0,.35),
-        inset 0 1px 0 rgba(255,255,255,.065);
-    }
-
-    .glass::before {
-      content: "";
-
-      position: absolute;
-      inset: 0;
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,255,255,.075),
-          transparent 32%,
-          transparent 70%,
-          rgba(255,255,255,.025)
-        );
-
-      pointer-events: none;
-    }
-
-    /* =========================
-       LOGO
-    ========================= */
-
-    .logo {
-      font-size: 25px;
-      font-weight: 950;
-      letter-spacing: 4px;
-      color: white;
-    }
-
-    .logo span {
-      opacity: .35;
-    }
-
-    /* =========================
-       LANGUAGE
-    ========================= */
-
-    .language {
-      display: flex;
-      gap: 4px;
-
-      padding: 4px;
-
-      border-radius: 999px;
-
-      background: rgba(255,255,255,.055);
-      border: 1px solid var(--line);
-
-      width: max-content;
-    }
-
-    .language button {
-      border: 0;
-      background: transparent;
-
-      color: var(--muted);
-
-      padding: 7px 12px;
-
-      border-radius: 999px;
-
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .language button.active {
-      background: rgba(255,255,255,.92);
-      color: #050505;
-    }
-
-    /* =========================
-       AUTH
-    ========================= */
-
-    #authScreen {
-      min-height: 100vh;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 25px;
-    }
-
-    .auth-container {
-      width: 100%;
-      max-width: 430px;
-    }
-
-    .auth-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      margin-bottom: 18px;
-    }
-
-    .auth-card {
-      position: relative;
-
-      padding: 35px;
-
-      border-radius: 32px;
-
-      overflow: hidden;
-    }
-
-    .auth-card > * {
-      position: relative;
-      z-index: 2;
-    }
-
-    .auth-title {
-      font-size: 40px;
-      line-height: 1;
-      letter-spacing: -2px;
-
-      margin-top: 25px;
-    }
-
-    .auth-subtitle {
-      color: var(--muted);
-      line-height: 1.6;
-
-      margin-top: 12px;
-      margin-bottom: 30px;
-    }
-
-    .field {
-      margin-bottom: 15px;
-    }
-
-    .field label {
-      display: block;
-
-      color: var(--muted);
-
-      font-size: 12px;
-      font-weight: 600;
-
-      margin-bottom: 7px;
-    }
-
-    .field input {
-      width: 100%;
-
-      border: 1px solid var(--line);
-
-      background: rgba(0,0,0,.27);
-
-      color: white;
-
-      outline: none;
-
-      border-radius: 16px;
-
-      padding: 15px 16px;
-
-      transition: .2s;
-    }
-
-    .field input:focus {
-      border-color: rgba(255,255,255,.3);
-
-      background: rgba(255,255,255,.035);
-    }
-
-    .primary {
-      width: 100%;
-
-      border: 0;
-
-      padding: 15px;
-
-      border-radius: 16px;
-
-      background: white;
-      color: black;
-
-      font-weight: 850;
-
-      margin-top: 5px;
-
-      transition: .2s;
-    }
-
-    .primary:hover {
-      transform: translateY(-2px);
-    }
-
-    .auth-switch {
-      text-align: center;
-
-      color: var(--muted);
-
-      margin-top: 20px;
-
-      font-size: 13px;
-    }
-
-    .auth-switch button {
-      border: 0;
-      background: transparent;
-
-      color: white;
-
-      font-weight: 800;
-
-      margin-left: 4px;
-    }
-
-    .error {
-      color: var(--red);
-
-      font-size: 13px;
-
-      margin-top: 12px;
-
-      line-height: 1.5;
-    }
-
-    .success {
-      color: var(--green);
-
-      font-size: 13px;
-
-      margin-top: 12px;
-
-      line-height: 1.5;
-    }
-
-    /* =========================
-       APP
-    ========================= */
-
-    #app {
-      min-height: 100vh;
-    }
-
-    .app-shell {
-      min-height: 100vh;
-    }
-
-    /* =========================
-       DESKTOP SIDEBAR
-    ========================= */
-
-    .sidebar {
-      position: fixed;
-
-      left: 20px;
-      top: 20px;
-      bottom: 20px;
-
-      width: 235px;
-
-      border-radius: 30px;
-
-      padding: 24px 16px;
-
-      z-index: 100;
-
-      overflow: hidden;
-    }
-
-    .sidebar > * {
-      position: relative;
-      z-index: 2;
-    }
-
-    .sidebar-logo {
-      padding: 5px 12px 35px;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-
-      gap: 6px;
-    }
-
-    .nav-button {
-      width: 100%;
-
-      display: flex;
-      align-items: center;
-
-      gap: 13px;
-
-      border: 1px solid transparent;
-
-      background: transparent;
-
-      color: var(--muted);
-
-      padding: 13px;
-
-      border-radius: 16px;
-
-      text-align: left;
-
-      transition: .2s;
-    }
-
-    .nav-button:hover {
-      color: white;
-
-      background: rgba(255,255,255,.045);
-    }
-
-    .nav-button.active {
-      color: white;
-
-      background: rgba(255,255,255,.085);
-
-      border-color: rgba(255,255,255,.08);
-    }
-
-    .nav-icon {
-      width: 24px;
-
-      text-align: center;
-
-      font-size: 17px;
-    }
-
-    .sidebar-bottom {
-      position: absolute;
-
-      left: 16px;
-      right: 16px;
-      bottom: 20px;
-    }
-
-    .logout {
-      width: 100%;
-
-      padding: 12px;
-
-      border-radius: 15px;
-
-      border: 1px solid var(--line);
-
-      background: rgba(255,255,255,.035);
-
-      color: var(--muted);
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
-
-    .main {
-      margin-left: 275px;
-
-      width: calc(100% - 295px);
-
-      max-width: 1400px;
-
-      padding: 30px 35px 80px;
-    }
-
-    .topbar {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      margin-bottom: 32px;
-    }
-
-    .welcome-small {
-      color: var(--muted);
-
-      font-size: 13px;
-
-      margin-bottom: 6px;
-    }
-
-    .welcome-title {
-      font-size: clamp(28px, 4vw, 48px);
-
-      letter-spacing: -2px;
-
-      line-height: 1;
-    }
-
-    .profile {
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      padding: 6px 12px 6px 6px;
-
-      border-radius: 999px;
-
-      background: var(--glass);
-
-      border: 1px solid var(--line);
-
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-
-      border-radius: 50%;
-
-      display: grid;
-      place-items: center;
-
-      background: white;
-
-      color: black;
-
-      font-weight: 900;
-    }
-
-    .profile-name {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero {
-      min-height: 430px;
-
-      border-radius: 38px;
-
-      padding: 45px;
-
-      position: relative;
-
-      overflow: hidden;
-
-      background:
-        radial-gradient(
-          circle at 80% 20%,
-          rgba(255,255,255,.10),
-          transparent 28%
-        ),
-        radial-gradient(
-          circle at 10% 100%,
-          rgba(80,100,255,.09),
-          transparent 30%
-        ),
-        linear-gradient(
-          135deg,
-          #101319,
-          #050608
-        );
-
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .hero::after {
-      content: "IRONX";
-
-      position: absolute;
-
-      right: -30px;
-      bottom: -70px;
-
-      font-size: clamp(100px, 17vw, 240px);
-
-      font-weight: 1000;
-
-      letter-spacing: -15px;
-
-      color: white;
-
-      opacity: .025;
-
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-
-      z-index: 2;
-
-      max-width: 750px;
-    }
-
-    .hero-kicker {
-      display: inline-block;
-
-      padding: 7px 12px;
-
-      border-radius: 999px;
-
-      background: rgba(255,255,255,.07);
-
-      border: 1px solid var(--line);
-
-      color: #c9ccd2;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-      letter-spacing: 1.5px;
-
-      margin-bottom: 24px;
-    }
-
-    .hero-title {
-      font-size: clamp(48px, 8vw, 100px);
-
-      line-height: .87;
-
-      letter-spacing: -6px;
-
-      font-weight: 950;
-    }
-
-    .hero-title span {
-      color: rgba(255,255,255,.3);
-    }
-
-    .hero-description {
-      color: var(--muted);
-
-      max-width: 540px;
-
-      line-height: 1.7;
-
-      margin-top: 25px;
-    }
-
-    .hero-actions {
-      display: flex;
-
-      gap: 10px;
-
-      margin-top: 30px;
-    }
-
-    .hero-button {
-      border: 0;
-
-      background: white;
-      color: black;
-
-      padding: 14px 20px;
-
-      border-radius: 15px;
-
-      font-weight: 850;
-    }
-
-    .secondary-button {
-      border: 1px solid var(--line);
-
-      background: rgba(255,255,255,.045);
-
-      color: white;
-
-      padding: 14px 20px;
-
-      border-radius: 15px;
-
-      font-weight: 750;
-    }
-
-    /* =========================
-       SECTION
-    ========================= */
-
-    .section {
-      margin-top: 35px;
-    }
-
-    .section-head {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: end;
-
-      margin-bottom: 16px;
-    }
-
-    .section-head h2 {
-      font-size: 23px;
-
-      letter-spacing: -.7px;
-    }
-
-    .section-head p {
-      color: var(--muted);
-
-      font-size: 13px;
-    }
-
-    /* =========================
-       STATS
-    ========================= */
-
-    .stats {
-      display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
-      gap: 12px;
-
-      margin-top: 12px;
-    }
-
-    .stat {
-      position: relative;
-
-      padding: 23px;
-
-      border-radius: 23px;
-
-      overflow: hidden;
-    }
-
-    .stat-number {
-      font-size: 33px;
-
-      font-weight: 900;
-
-      letter-spacing: -1px;
-    }
-
-    .stat-label {
-      color: var(--muted);
-
-      font-size: 12px;
-
-      margin-top: 5px;
-    }
-
-    /* =========================
-       FEATURE CARDS
-    ========================= */
-
-    .feature-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 13px;
-    }
-
-    .feature {
-      position: relative;
-
-      min-height: 190px;
-
-      padding: 24px;
-
-      border-radius: 24px;
-
-      overflow: hidden;
-    }
-
-    .feature-number {
-      color: rgba(255,255,255,.22);
-
-      font-size: 12px;
-
-      font-weight: 800;
-
-      letter-spacing: 2px;
-    }
-
-    .feature h3 {
-      font-size: 22px;
-
-      margin-top: 50px;
-    }
-
-    .feature p {
-      color: var(--muted);
-
-      font-size: 13px;
-
-      line-height: 1.6;
-
-      margin-top: 8px;
-    }
-
-    /* =========================
-       PLAN
-    ========================= */
-
-    .plan-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 14px;
-    }
-
-    .plan-card {
-      padding: 25px;
-
-      min-height: 230px;
-
-      border-radius: 26px;
-
-      position: relative;
-
-      overflow: hidden;
-    }
-
-    .plan-day {
-      color: var(--muted);
-
-      font-size: 11px;
-
-      letter-spacing: 1.5px;
-
-      font-weight: 800;
-    }
-
-    .plan-card h3 {
-      font-size: 26px;
-
-      margin-top: 12px;
-    }
-
-    .exercise-list {
-      list-style: none;
-
-      margin-top: 25px;
-    }
-
-    .exercise-list li {
-      display: flex;
-
-      justify-content: space-between;
-
-      padding: 10px 0;
-
-      border-bottom: 1px solid var(--line-soft);
-
-      color: #cfd2d8;
-
-      font-size: 13px;
-    }
-
-    /* =========================
-       PROGRESS
-    ========================= */
-
-    .progress-layout {
-      display: grid;
-
-      grid-template-columns: 1.3fr .7fr;
-
-      gap: 14px;
-    }
-
-    .progress-card {
-      padding: 28px;
-
-      border-radius: 27px;
-    }
-
-    .big-progress {
-      font-size: 75px;
-
-      font-weight: 950;
-
-      letter-spacing: -5px;
-    }
-
-    .progress-bar {
-      width: 100%;
-
-      height: 9px;
-
-      background: rgba(255,255,255,.07);
-
-      border-radius: 99px;
-
-      margin-top: 20px;
-
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      width: 68%;
-
-      height: 100%;
-
-      background: white;
-
-      border-radius: inherit;
-    }
-
-    .lift-grid {
-      display: grid;
-
-      gap: 10px;
-    }
-
-    .lift {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      padding: 17px;
-
-      border-radius: 18px;
-    }
-
-    .lift-name {
-      color: var(--muted);
-
-      font-size: 12px;
-    }
-
-    .lift-value {
-      font-size: 20px;
-
-      font-weight: 850;
-    }
-
-    /* =========================
-       GOALS
-    ========================= */
-
-    .goals {
-      display: grid;
-
-      gap: 10px;
-    }
-
-    .goal {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      padding: 20px;
-
-      border-radius: 20px;
-    }
-
-    .goal-info h3 {
-      font-size: 16px;
-    }
-
-    .goal-info p {
-      color: var(--muted);
-
-      font-size: 12px;
-
-      margin-top: 5px;
-    }
-
-    .goal-check {
-      width: 30px;
-      height: 30px;
-
-      display: grid;
-
-      place-items: center;
-
-      border-radius: 50%;
-
-      border: 1px solid var(--line);
-    }
-
-    .goal-check.done {
-      background: white;
-
-      color: black;
-    }
-
-    /* =========================
-       ACCOUNT
-    ========================= */
-
-    .account-card {
-      max-width: 700px;
-
-      padding: 25px;
-
-      border-radius: 27px;
-    }
-
-    .account-row {
-      display: flex;
-
-      justify-content: space-between;
-
-      padding: 18px 0;
-
-      border-bottom: 1px solid var(--line-soft);
-    }
-
-    .account-row:last-child {
-      border-bottom: 0;
-    }
-
-    .account-label {
-      color: var(--muted);
-    }
-
-    /* =========================
-       MOBILE NAV
-    ========================= */
-
-    .mobile-nav {
-      display: none;
-    }
-
-    /* =========================
-       RTL
-    ========================= */
-
-    [dir="rtl"] .nav-button {
-      text-align: right;
-    }
-
-    [dir="rtl"] .profile {
-      padding:
-        6px
-        6px
-        6px
-        12px;
-    }
-
-    [dir="rtl"] .hero-title {
-      letter-spacing: -3px;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media(max-width: 900px) {
-
-      .sidebar {
-        display: none;
-      }
-
-      .main {
-        margin-left: 0;
-
-        width: 100%;
-
-        padding:
-          20px
-          18px
-          110px;
-      }
-
-      .topbar {
-        margin-bottom: 24px;
-      }
-
-      .welcome-small {
-        font-size: 11px;
-      }
-
-      .welcome-title {
-        font-size: 30px;
-      }
-
-      .profile-name {
-        display: none;
-      }
-
-      .hero {
-        min-height: 450px;
-
-        padding: 28px;
-
-        border-radius: 30px;
-      }
-
-      .hero-title {
-        font-size: clamp(52px, 15vw, 82px);
-
-        letter-spacing: -4px;
-      }
-
-      .hero-description {
-        font-size: 14px;
-      }
-
-      .stats {
-        grid-template-columns:
-          repeat(2, 1fr);
-      }
-
-      .feature-grid,
-      .plan-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .progress-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .mobile-nav {
-        display: flex;
-
-        position: fixed;
-
-        left: 13px;
-        right: 13px;
-        bottom: 13px;
-
-        z-index: 999;
-
-        padding: 7px;
-
-        border-radius: 25px;
-
-        background:
-          rgba(7,9,13,.66);
-
-        border:
-          1px solid rgba(255,255,255,.12);
-
-        backdrop-filter:
-          blur(32px)
-          saturate(150%);
-
-        -webkit-backdrop-filter:
-          blur(32px)
-          saturate(150%);
-
-        box-shadow:
-          0 20px 60px rgba(0,0,0,.6),
-          inset 0 1px rgba(255,255,255,.07);
-      }
-
-      .mobile-nav button {
-        flex: 1;
-
-        border: 0;
-
-        background: transparent;
-
-        color: var(--muted);
-
-        padding: 9px 4px;
-
-        border-radius: 18px;
-
-        font-size: 10px;
-      }
-
-      .mobile-nav button.active {
-        color: white;
-
-        background:
-          rgba(255,255,255,.09);
-      }
-
-      .mobile-icon {
-        display: block;
-
-        font-size: 18px;
-
-        margin-bottom: 4px;
-      }
-    }
-
-    @media(max-width:500px) {
-
-      #authScreen {
-        padding: 15px;
-      }
-
-      .auth-card {
-        padding: 27px 20px;
-
-        border-radius: 27px;
-      }
-
-      .auth-title {
-        font-size: 34px;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-      }
-
-      .hero-button,
-      .secondary-button {
-        width: 100%;
-      }
-
-      .stat {
-        padding: 18px;
-      }
-
-      .stat-number {
-        font-size: 26px;
-      }
-
-      .feature {
-        min-height: 160px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-<!-- =========================================================
-     AUTH SCREEN
-========================================================= -->
-
-<section id="authScreen">
-
-  <div class="auth-container">
-
-    <div class="auth-top">
-
-      <div class="logo">
-        IRON<span>X</span>
-      </div>
-
-      <div class="language">
-        <button
-          id="enBtn"
-          class="active"
-          onclick="setLanguage('en')">
-          EN
-        </button>
-
-        <button
-          id="arBtn"
-          onclick="setLanguage('ar')">
-          عربي
-        </button>
-      </div>
-
-    </div>
-
-    <div class="auth-card glass">
-
-      <div class="auth-mode-label"
-           id="authModeLabel">
-        MEMBER ACCESS
-      </div>
-
-      <h1
-        class="auth-title"
-        id="authTitle">
-        Welcome back.
-      </h1>
-
-      <p
-        class="auth-subtitle"
-        id="authSubtitle">
-        Sign in to continue your training.
-      </p>
-
-      <form id="authForm">
-
-        <div
-          class="field hidden"
-          id="nameField">
-
-          <label id="nameLabel">
-            Name
-          </label>
-
-          <input
-            id="nameInput"
-            type="text"
-            autocomplete="name"
-            placeholder="Your name">
-
-        </div>
-
-        <div class="field">
-
-          <label id="emailLabel">
-            Email
-          </label>
-
-          <input
-            id="emailInput"
-            type="email"
-            autocomplete="email"
-            placeholder="you@example.com"
-            required>
-
-        </div>
-
-        <div class="field">
-
-          <label id="passwordLabel">
-            Password
-          </label>
-
-          <input
-            id="passwordInput"
-            type="password"
-            autocomplete="current-password"
-            placeholder="••••••••"
-            required>
-
-        </div>
-
-        <button
-          class="primary"
-          id="authButton"
-          type="submit">
-
-          Sign In
-
-        </button>
-
-        <div
-          id="authMessage"
-          class="error">
-        </div>
-
-      </form>
-
-      <div class="auth-switch">
-
-        <span id="switchText">
-          Don't have an account?
-        </span>
-
-        <button
-          id="switchButton"
-          onclick="toggleAuthMode()">
-
-          Create account
-
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-     APP
-========================================================= -->
-
-<div id="app" class="hidden">
-
-  <div class="app-shell">
-
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar glass">
-
-      <div class="sidebar-logo">
-
-        <div class="logo">
-          IRON<span>X</span>
-        </div>
-
-      </div>
-
-      <nav class="sidebar-nav">
-
-        <button
-          class="nav-button active"
-          data-page="home">
-
-          <span class="nav-icon">⌂</span>
-
-          <span data-i18n="home">
-            Home
-          </span>
-
-        </button>
-
-        <button
-          class="nav-button"
-          data-page="plan">
-
-          <span class="nav-icon">▣</span>
-
-          <span data-i18n="plan">
-            My Plan
-          </span>
-
-        </button>
-
-        <button
-          class="nav-button"
-          data-page="progress">
-
-          <span class="nav-icon">↗</span>
-
-          <span data-i18n="progress">
-            Progress
-          </span>
-
-        </button>
-
-        <button
-          class="nav-button"
-          data-page="goals">
-
-          <span class="nav-icon">◎</span>
-
-          <span data-i18n="goals">
-            Goals
-          </span>
-
-        </button>
-
-        <button
-          class="nav-button"
-          data-page="account">
-
-          <span class="nav-icon">◉</span>
-
-          <span data-i18n="account">
-            Account
-          </span>
-
-        </button>
-
-      </nav>
-
-      <div class="sidebar-bottom">
-
-        <button
-          class="logout"
-          onclick="logout()"
-          data-i18n="logout">
-
-          Log out
-
-        </button>
-
-      </div>
-
-    </aside>
-
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-      <header class="topbar">
-
-        <div>
-
-          <div
-            class="welcome-small"
-            data-i18n="welcomeBack">
-            WELCOME BACK
-          </div>
-
-          <h1
-            class="welcome-title"
-            id="welcomeTitle">
-            Athlete.
-          </h1>
-
-        </div>
-
-        <div class="profile">
-
-          <div
-            class="avatar"
-            id="avatar">
-            I
-          </div>
-
-          <span
-            class="profile-name"
-            id="profileName">
-            Athlete
-          </span>
-
-        </div>
-
-      </header>
-
-
-      <!-- ================= HOME ================= -->
-
-      <section
-        id="page-home"
-        class="page">
-
-        <div class="hero">
-
-          <div class="hero-content">
-
-            <div
-              class="hero-kicker"
-              data-i18n="kicker">
-              PERSONAL COACHING
-            </div>
-
-            <h2
-              class="hero-title">
-
-              BUILD<br>
-              <span>YOUR</span><br>
-              LEGACY.
-
-            </h2>
-
-            <p
-              class="hero-description"
-              data-i18n="heroDescription">
-
-              Training, nutrition and progress built around your goals.
-              No unnecessary noise. Just consistent work.
-
-            </p>
-
-            <div class="hero-actions">
-
-              <button
-                class="hero-button"
-                onclick="showPage('plan')"
-                data-i18n="viewPlan">
-
-                View my plan
-
-              </button>
-
-              <button
-                class="secondary-button"
-                onclick="showPage('progress')"
-                data-i18n="viewProgress">
-
-                View progress
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- STATS -->
-
-        <div class="stats">
-
-          <div class="stat glass">
-
-            <div class="stat-number">
-              4
-            </div>
-
-            <div
-              class="stat-label"
-              data-i18n="workouts">
-              Workouts / week
-            </div>
-
-          </div>
-
-          <div class="stat glass">
-
-            <div class="stat-number">
-              68%
-            </div>
-
-            <div
-              class="stat-label"
-              data-i18n="completion">
-              Plan completion
-            </div>
-
-          </div>
-
-          <div class="stat glass">
-
-            <div class="stat-number">
-              12
-            </div>
-
-            <div
-              class="stat-label"
-              data-i18n="weeks">
-              Weeks active
-            </div>
-
-          </div>
-
-          <div class="stat glass">
-
-            <div class="stat-number">
-              8
-            </div>
-
-            <div
-              class="stat-label"
-              data-i18n="sessions">
-              Sessions
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- FOCUS -->
-
-        <div class="section">
-
-          <div class="section-head">
-
-            <div>
-
-              <h2 data-i18n="focus">
-                Your focus
-              </h2>
-
-              <p data-i18n="focusSub">
-                Keep the important things simple.
-              </p>
-
-            </div>
-
-          </div>
-
-          <div class="feature-grid">
-
-            <div class="feature glass">
-
-              <div class="feature-number">
-                01
-              </div>
-
-              <h3 data-i18n="strength">
-                Strength
-              </h3>
-
-              <p data-i18n="strengthText">
-                Progressive overload with controlled technique.
-              </p>
-
-            </div>
-
-            <div class="feature glass">
-
-              <div class="feature-number">
-                02
-              </div>
-
-              <h3 data-i18n="nutrition">
-                Nutrition
-              </h3>
-
-              <p data-i18n="nutritionText">
-                Simple targets that fit your lifestyle.
-              </p>
-
-            </div>
-
-            <div class="feature glass">
-
-              <div class="feature-number">
-                03
-              </div>
-
-              <h3 data-i18n="tracking">
-                Tracking
-              </h3>
-
-              <p data-i18n="trackingText">
-                Measure your work and adjust intelligently.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- ================= PLAN ================= -->
-
-      <section
-        id="page-plan"
-        class="page hidden">
-
-        <div class="section-head">
-
-          <div>
-
-            <h2 data-i18n="planTitle">
-              My Training Plan
-            </h2>
-
-            <p data-i18n="planSub">
-              This week's sessions.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div class="plan-grid">
-
-          <div class="plan-card glass">
-
-            <div class="plan-day">
-              DAY 01
-            </div>
-
-            <h3>
-              Upper A
-            </h3>
-
-            <ul class="exercise-list">
-
-              <li>
-                <span>Bench Press</span>
-                <span>4×6</span>
-              </li>
-
-              <li>
-                <span>Row</span>
-                <span>4×8</span>
-              </li>
-
-              <li>
-                <span>Shoulder Press</span>
-                <span>3×8</span>
-              </li>
-
-              <li>
-                <span>Lat Pulldown</span>
-                <span>3×10</span>
-              </li>
-
-            </ul>
-
-          </div>
-
-
-          <div class="plan-card glass">
-
-            <div class="plan-day">
-              DAY 02
-            </div>
-
-            <h3>
-              Upper B
-            </h3>
-
-            <ul class="exercise-list">
-
-              <li>
-                <span>Incline Press</span>
-                <span>4×8</span>
-              </li>
-
-              <li>
-                <span>T-Bar Row</span>
-                <span>4×8</span>
-              </li>
-
-              <li>
-                <span>Lateral Raise</span>
-                <span>3×12</span>
-              </li>
-
-              <li>
-                <span>Biceps Curl</span>
-                <span>3×10</span>
-              </li>
-
-            </ul>
-
-          </div>
-
-
-          <div class="plan-card glass">
-
-            <div class="plan-day">
-              DAY 03
-            </div>
-
-            <h3>
-              Recovery
-            </h3>
-
-            <ul class="exercise-list">
-
-              <li>
-                <span>Walking</span>
-                <span>20m</span>
-              </li>
-
-              <li>
-                <span>Mobility</span>
-                <span>10m</span>
-              </li>
-
-              <li>
-                <span>Sleep</span>
-                <span>8h</span>
-              </li>
-
-              <li>
-                <span>Hydration</span>
-                <span>✓</span>
-              </li>
-
-            </ul>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- ================= PROGRESS ================= -->
-
-      <section
-        id="page-progress"
-        class="page hidden">
-
-        <div class="section-head">
-
-          <div>
-
-            <h2 data-i18n="progressTitle">
-              Progress
-            </h2>
-
-            <p data-i18n="progressSub">
-              Your current performance.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div class="progress-layout">
-
-          <div class="progress-card glass">
-
-            <div
-              class="big-progress">
-              68%
-            </div>
-
-            <p
-              style="color:var(--muted)"
-              data-i18n="weeklyCompletion">
-              Weekly plan completion
-            </p>
-
-            <div class="progress-bar">
-
-              <div class="progress-fill"></div>
-
-            </div>
-
-          </div>
-
-
-          <div class="lift-grid">
-
-            <div class="lift glass">
-
-              <div>
-                <div class="lift-name">
-                  Bench Press
-                </div>
-              </div>
-
-              <div class="lift-value">
-                80 kg
-              </div>
-
-            </div>
-
-            <div class="lift glass">
-
-              <div>
-                <div class="lift-name">
-                  Deadlift
-                </div>
-              </div>
-
-              <div class="lift-value">
-                140 kg
-              </div>
-
-            </div>
-
-            <div class="lift glass">
-
-              <div>
-                <div class="lift-name">
-                  Squat
-                </div>
-              </div>
-
-              <div class="lift-value">
-                100 kg
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- ================= GOALS ================= -->
-
-      <section
-        id="page-goals"
-        class="page hidden">
-
-        <div class="section-head">
-
-          <div>
-
-            <h2 data-i18n="goalsTitle">
-              Goals
-            </h2>
-
-            <p data-i18n="goalsSub">
-              Small wins build the big result.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div class="goals">
-
-          <div class="goal glass">
-
-            <div class="goal-info">
-
-              <h3 data-i18n="goal1">
-                Complete 4 workouts
-              </h3>
-
-              <p data-i18n="goal1sub">
-                This week
-              </p>
-
-            </div>
-
-            <div class="goal-check done">
-              ✓
-            </div>
-
-          </div>
-
-
-          <div class="goal glass">
-
-            <div class="goal-info">
-
-              <h3 data-i18n="goal2">
-                Improve bench press
-              </h3>
-
-              <p data-i18n="goal2sub">
-                Reach the next training milestone
-              </p>
-
-            </div>
-
-            <div class="goal-check">
-            </div>
-
-          </div>
-
-
-          <div class="goal glass">
-
-            <div class="goal-info">
-
-              <h3 data-i18n="goal3">
-                Stay consistent
-              </h3>
-
-              <p data-i18n="goal3sub">
-                Keep nutrition on target
-              </p>
-
-            </div>
-
-            <div class="goal-check">
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- ================= ACCOUNT ================= -->
-
-      <section
-        id="page-account"
-        class="page hidden">
-
-        <div class="section-head">
-
-          <div>
-
-            <h2 data-i18n="accountTitle">
-              Account
-            </h2>
-
-            <p data-i18n="accountSub">
-              Your IRONX profile.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div class="account-card glass">
-
-          <div class="account-row">
-
-            <span
-              class="account-label"
-              data-i18n="name">
-              Name
-            </span>
-
-            <strong id="accountName">
-              -
-            </strong>
-
-          </div>
-
-          <div class="account-row">
-
-            <span
-              class="account-label">
-              Email
-            </span>
-
-            <strong id="accountEmail">
-              -
-            </strong>
-
-          </div>
-
-          <div class="account-row">
-
-            <span
-              class="account-label"
-              data-i18n="status">
-              Status
-            </span>
-
-            <strong style="color:var(--green)"
-                    data-i18n="active">
-              Active
-            </strong>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-
-
-    <!-- MOBILE NAV -->
-
-    <nav class="mobile-nav">
-
-      <button
-        class="active"
-        data-page="home">
-
-        <span class="mobile-icon">
-          ⌂
-        </span>
-
-        <span data-i18n="home">
-          Home
-        </span>
-
-      </button>
-
-      <button
-        data-page="plan">
-
-        <span class="mobile-icon">
-          ▣
-        </span>
-
-        <span data-i18n="plan">
-          Plan
-        </span>
-
-      </button>
-
-      <button
-        data-page="progress">
-
-        <span class="mobile-icon">
-          ↗
-        </span>
-
-        <span data-i18n="progress">
-          Progress
-        </span>
-
-      </button>
-
-      <button
-        data-page="goals">
-
-        <span class="mobile-icon">
-          ◎
-        </span>
-
-        <span data-i18n="goals">
-          Goals
-        </span>
-
-      </button>
-
-      <button
-        data-page="account">
-
-        <span class="mobile-icon">
-          ◉
-        </span>
-
-        <span data-i18n="account">
-          Account
-        </span>
-
-      </button>
-
-    </nav>
-
-  </div>
-
-</div>
-
-
-<script>
-
+<style>
 /* =========================================================
-   SUPABASE
-========================================================= */
+   IRONX PREMIUM LIQUID GLASS
+   ========================================================= */
 
-/*
-  PUT YOUR SUPABASE VALUES HERE.
+:root {
+  --bg: #050608;
+  --bg-soft: #090b0f;
+  --surface: rgba(255,255,255,.055);
+  --surface-strong: rgba(255,255,255,.085);
+  --surface-hover: rgba(255,255,255,.11);
 
-  Supabase Dashboard:
-  Project Settings
-  → API
-  → Project URL
-  → Publishable / Anon key
-*/
+  --border: rgba(255,255,255,.12);
+  --border-soft: rgba(255,255,255,.07);
 
-const SUPABASE_URL =
-  "YOUR_SUPABASE_URL";
+  --text: #f5f7fa;
+  --muted: #9299a5;
+  --dim: #666d78;
 
-const SUPABASE_ANON_KEY =
-  "YOUR_SUPABASE_ANON_KEY";
+  --accent: #ffffff;
+  --accent-soft: rgba(255,255,255,.15);
 
+  --green: #7dffb2;
+  --red: #ff6f7d;
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+
+  --blur: blur(28px) saturate(170%);
+  --blur-heavy: blur(42px) saturate(190%);
+
+  --shadow:
+    0 30px 80px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  --transition:
+    cubic-bezier(.2,.8,.2,1);
+}
 
 
 /* =========================================================
-   STATE
-========================================================= */
+   RESET
+   ========================================================= */
 
-let authMode = "login";
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-let language =
-  localStorage.getItem("ironx_language") || "en";
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(255,255,255,.055),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(130,150,255,.035),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(255,255,255,.025),
+      transparent 35%
+    ),
+    #050608;
+
+  color: var(--text);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Segoe UI",
+    sans-serif;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* subtle premium grain */
+
+body::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: .035;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+
+  z-index: 9999;
+}
 
 
 /* =========================================================
-   TRANSLATIONS
-========================================================= */
-
-const translations = {
-
-  en: {
-
-    home: "Home",
-    plan: "My Plan",
-    progress: "Progress",
-    goals: "Goals",
-    account: "Account",
-    logout: "Log out",
-
-    welcomeBack: "WELCOME BACK",
-
-    kicker: "PERSONAL COACHING",
-
-    heroDescription:
-      "Training, nutrition and progress built around your goals. No unnecessary noise. Just consistent work.",
-
-    viewPlan: "View my plan",
-    viewProgress: "View progress",
-
-    workouts: "Workouts / week",
-    completion: "Plan completion",
-    weeks: "Weeks active",
-    sessions: "Sessions",
-
-    focus: "Your focus",
-    focusSub: "Keep the important things simple.",
-
-    strength: "Strength",
-    strengthText:
-      "Progressive overload with controlled technique.",
-
-    nutrition: "Nutrition",
-    nutritionText:
-      "Simple targets that fit your lifestyle.",
-
-    tracking: "Tracking",
-    trackingText:
-      "Measure your work and adjust intelligently.",
-
-    planTitle: "My Training Plan",
-    planSub: "This week's sessions.",
-
-    progressTitle: "Progress",
-    progressSub: "Your current performance.",
-
-    weeklyCompletion:
-      "Weekly plan completion",
-
-    goalsTitle: "Goals",
-    goalsSub:
-      "Small wins build the big result.",
-
-    goal1:
-      "Complete 4 workouts",
-
-    goal1sub:
-      "This week",
-
-    goal2:
-      "Improve bench press",
-
-    goal2sub:
-      "Reach the next training milestone",
-
-    goal3:
-      "Stay consistent",
-
-    goal3sub:
-      "Keep nutrition on target",
-
-    accountTitle:
-      "Account",
-
-    accountSub:
-      "Your IRONX profile.",
-
-    name:
-      "Name",
-
-    status:
-      "Status",
-
-    active:
-      "Active"
-
-  },
-
-
-  ar: {
-
-    home: "الرئيسية",
-    plan: "خطتي",
-    progress: "التقدم",
-    goals: "الأهداف",
-    account: "الحساب",
-    logout: "تسجيل الخروج",
-
-    welcomeBack: "مرحباً بعودتك",
-
-    kicker: "تدريب شخصي",
-
-    heroDescription:
-      "تمرين وتغذية ومتابعة مصممة حول أهدافك. بدون تعقيد. فقط شغل مستمر.",
-
-    viewPlan: "عرض خطتي",
-    viewProgress: "عرض التقدم",
-
-    workouts: "تمارين / أسبوع",
-    completion: "إكمال الخطة",
-    weeks: "أسابيع نشطة",
-    sessions: "تمارين",
-
-    focus: "تركيزك",
-    focusSub: "خلي المهم بسيط.",
-
-    strength: "القوة",
-    strengthText:
-      "زيادة تدريجية في الأوزان مع أداء متحكم.",
-
-    nutrition: "التغذية",
-    nutritionText:
-      "أهداف بسيطة تناسب أسلوب حياتك.",
-
-    tracking: "المتابعة",
-    trackingText:
-      "قِس تقدمك وعدّل خطتك بذكاء.",
-
-    planTitle:
-      "خطة التمرين",
-
-    planSub:
-      "تمارين هذا الأسبوع.",
-
-    progressTitle:
-      "التقدم",
-
-    progressSub:
-      "مستواك الحالي.",
-
-    weeklyCompletion:
-      "نسبة إكمال الأسبوع",
-
-    goalsTitle:
-      "الأهداف",
-
-    goalsSub:
-      "النتيجة الكبيرة تبدأ بخطوات صغيرة.",
-
-    goal1:
-      "إكمال 4 تمارين",
-
-    goal1sub:
-      "هذا الأسبوع",
-
-    goal2:
-      "تحسين البنش",
-
-    goal2sub:
-      "الوصول للمرحلة التدريبية التالية",
-
-    goal3:
-      "الاستمرارية",
-
-    goal3sub:
-      "الالتزام بالتغذية",
-
-    accountTitle:
-      "الحساب",
-
-    accountSub:
-      "ملفك في IRONX.",
-
-    name:
-      "الاسم",
-
-    status:
-      "الحالة",
-
-    active:
-      "نشط"
-
-  }
-
-};
-
-
-/* =========================================================
-   LANGUAGE
-========================================================= */
-
-function setLanguage(lang) {
-
-  language = lang;
-
-  localStorage.setItem(
-    "ironx_language",
-    lang
-  );
-
-  document.documentElement.lang =
-    lang;
-
-  document.documentElement.dir =
-    lang === "ar" ? "rtl" : "ltr";
-
-
-  document
-    .getElementById("enBtn")
-    .classList.toggle(
-      "active",
-      lang === "en"
+   GLOBAL GLASS
+   ========================================================= */
+
+.glass {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.09),
+      rgba(255,255,255,.035)
     );
 
+  border: 1px solid var(--border);
 
-  document
-    .getElementById("arBtn")
-    .classList.toggle(
-      "active",
-      lang === "ar"
+  box-shadow: var(--shadow);
+
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.logo {
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -1.8px;
+
+  color: #fff;
+
+  text-shadow:
+    0 0 25px rgba(255,255,255,.12);
+}
+
+.logo span {
+  color: #fff;
+
+  opacity: .45;
+}
+
+
+/* =========================================================
+   AUTH SCREEN
+   ========================================================= */
+
+#authScreen {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 28px;
+
+  position: relative;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(255,255,255,.055),
+      transparent 35%
+    );
+}
+
+
+/* top */
+
+.auth-top {
+  position: absolute;
+
+  top: 30px;
+  left: 30px;
+  right: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+/* language */
+
+.language {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 5px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.055);
+
+  border: 1px solid rgba(255,255,255,.10);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.language button {
+  border: 0;
+
+  color: var(--muted);
+
+  background: transparent;
+
+  padding: 8px 13px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  transition:
+    .35s var(--transition);
+}
+
+.language button:hover {
+  color: #fff;
+}
+
+.language button.active {
+  color: #000;
+
+  background: #fff;
+
+  box-shadow:
+    0 5px 20px rgba(255,255,255,.12);
+}
+
+
+/* =========================================================
+   AUTH CARD
+   ========================================================= */
+
+.auth-card {
+  width: min(440px, 100%);
+
+  padding: 42px;
+
+  border-radius: 34px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  animation:
+    authEnter .8s var(--transition);
+}
+
+
+/* glass shine */
+
+.auth-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 12%;
+  right: 12%;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.55),
+      transparent
     );
 
-
-  document
-    .querySelectorAll("[data-i18n]")
-    .forEach(element => {
-
-      const key =
-        element.dataset.i18n;
-
-      if (
-        translations[lang][key]
-      ) {
-
-        element.textContent =
-          translations[lang][key];
-
-      }
-
-    });
-
-
-  updateAuthText();
-
-  updateCurrentUserUI();
+  opacity: .7;
 }
 
 
-/* =========================================================
-   AUTH TEXT
-========================================================= */
+.auth-card::after {
+  content: "";
 
-function updateAuthText() {
+  position: absolute;
 
-  const ar =
-    language === "ar";
+  width: 220px;
+  height: 220px;
 
+  top: -140px;
+  right: -100px;
 
-  if (authMode === "login") {
+  background: rgba(255,255,255,.045);
 
-    document
-      .getElementById("authTitle")
-      .textContent =
-        ar
-          ? "مرحباً بعودتك."
-          : "Welcome back.";
+  border-radius: 50%;
 
+  filter: blur(50px);
 
-    document
-      .getElementById("authSubtitle")
-      .textContent =
-        ar
-          ? "سجل الدخول وكمل تمرينك."
-          : "Sign in to continue your training.";
+  pointer-events: none;
+}
 
 
-    document
-      .getElementById("authButton")
-      .textContent =
-        ar
-          ? "تسجيل الدخول"
-          : "Sign In";
-
-
-    document
-      .getElementById("switchText")
-      .textContent =
-        ar
-          ? "ليس لديك حساب؟"
-          : "Don't have an account?";
-
-
-    document
-      .getElementById("switchButton")
-      .textContent =
-        ar
-          ? "إنشاء حساب"
-          : "Create account";
-
-
-  } else {
-
-    document
-      .getElementById("authTitle")
-      .textContent =
-        ar
-          ? "أنشئ حسابك."
-          : "Create your account.";
-
-
-    document
-      .getElementById("authSubtitle")
-      .textContent =
-        ar
-          ? "ابدأ رحلتك مع IRONX."
-          : "Start your journey with IRONX.";
-
-
-    document
-      .getElementById("authButton")
-      .textContent =
-        ar
-          ? "إنشاء الحساب"
-          : "Create account";
-
-
-    document
-      .getElementById("switchText")
-      .textContent =
-        ar
-          ? "لديك حساب بالفعل؟"
-          : "Already have an account?";
-
-
-    document
-      .getElementById("switchButton")
-      .textContent =
-        ar
-          ? "تسجيل الدخول"
-          : "Sign in";
-
+@keyframes authEnter {
+  from {
+    opacity: 0;
+    transform:
+      translateY(20px)
+      scale(.97);
   }
 
-
-  document
-    .getElementById("nameLabel")
-    .textContent =
-      ar ? "الاسم" : "Name";
-
-
-  document
-    .getElementById("emailLabel")
-    .textContent =
-      ar ? "البريد الإلكتروني" : "Email";
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
 
 
-  document
-    .getElementById("passwordLabel")
-    .textContent =
-      ar ? "كلمة المرور" : "Password";
+.auth-mode-label {
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  color: #777f8b;
+
+  font-weight: 800;
+
+  margin-bottom: 13px;
+}
+
+
+.auth-title {
+  font-size: clamp(32px, 6vw, 44px);
+
+  line-height: .98;
+
+  letter-spacing: -2px;
+
+  font-weight: 850;
+
+  margin-bottom: 12px;
+}
+
+
+.auth-subtitle {
+  color: var(--muted);
+
+  font-size: 14px;
+
+  line-height: 1.7;
+
+  margin-bottom: 32px;
 }
 
 
 /* =========================================================
-   AUTH MODE
-========================================================= */
+   FORM
+   ========================================================= */
 
-function toggleAuthMode() {
+.field {
+  margin-bottom: 17px;
+}
 
-  authMode =
-    authMode === "login"
-      ? "register"
-      : "login";
+.field label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 11px;
+
+  color: #aab0ba;
+
+  font-weight: 700;
+
+  letter-spacing: .3px;
+}
 
 
-  const nameField =
-    document.getElementById(
-      "nameField"
+.field input {
+  width: 100%;
+
+  height: 56px;
+
+  padding: 0 17px;
+
+  border-radius: 17px;
+
+  border: 1px solid rgba(255,255,255,.09);
+
+  outline: none;
+
+  background:
+    rgba(255,255,255,.045);
+
+  color: #fff;
+
+  font-size: 14px;
+
+  transition:
+    .3s var(--transition);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+
+.field input::placeholder {
+  color: #555d68;
+}
+
+
+.field input:hover {
+  background:
+    rgba(255,255,255,.06);
+}
+
+
+.field input:focus {
+  border-color:
+    rgba(255,255,255,.28);
+
+  background:
+    rgba(255,255,255,.07);
+
+  box-shadow:
+    0 0 0 4px rgba(255,255,255,.035),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.primary {
+  width: 100%;
+
+  height: 56px;
+
+  border: 0;
+
+  border-radius: 17px;
+
+  background: #fff;
+
+  color: #050505;
+
+  font-size: 13px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  margin-top: 7px;
+
+  transition:
+    transform .3s var(--transition),
+    box-shadow .3s var(--transition);
+
+  box-shadow:
+    0 15px 35px rgba(255,255,255,.08);
+}
+
+
+.primary:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 20px 45px rgba(255,255,255,.13);
+}
+
+
+.primary:active {
+  transform:
+    translateY(0)
+    scale(.98);
+}
+
+
+.auth-switch {
+  margin-top: 24px;
+
+  text-align: center;
+
+  color: #707782;
+
+  font-size: 12px;
+}
+
+
+.auth-switch button {
+  border: 0;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  margin-left: 5px;
+}
+
+
+.error {
+  min-height: 18px;
+
+  margin-top: 12px;
+
+  color: var(--red);
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+#app {
+  min-height: 100vh;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+  position: fixed;
+
+  left: 22px;
+  top: 22px;
+  bottom: 22px;
+
+  width: 245px;
+
+  border-radius: 30px;
+
+  padding: 25px 15px;
+
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255,255,255,.075),
+      rgba(255,255,255,.025)
     );
 
+  backdrop-filter: var(--blur-heavy);
+  -webkit-backdrop-filter: var(--blur-heavy);
 
-  nameField.classList.toggle(
-    "hidden",
-    authMode === "login"
-  );
-
-
-  document
-    .getElementById("authMessage")
-    .textContent = "";
-
-
-  document
-    .getElementById("passwordInput")
-    .autocomplete =
-      authMode === "login"
-        ? "current-password"
-        : "new-password";
-
-
-  updateAuthText();
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.08);
 }
 
 
-/* =========================================================
-   AUTH FORM
-========================================================= */
-
-document
-  .getElementById("authForm")
-  .addEventListener(
-    "submit",
-    async function(event) {
-
-      event.preventDefault();
-
-
-      const name =
-        document
-          .getElementById("nameInput")
-          .value
-          .trim();
-
-
-      const email =
-        document
-          .getElementById("emailInput")
-          .value
-          .trim();
-
-
-      const password =
-        document
-          .getElementById("passwordInput")
-          .value;
-
-
-      const message =
-        document
-          .getElementById("authMessage");
-
-
-      message.textContent = "";
-
-      message.className = "error";
-
-
-      if (
-        SUPABASE_URL ===
-          "YOUR_SUPABASE_URL" ||
-        SUPABASE_ANON_KEY ===
-          "YOUR_SUPABASE_ANON_KEY"
-      ) {
-
-        message.textContent =
-          language === "ar"
-            ? "لسه لازم تحط بيانات Supabase داخل الكود."
-            : "Add your Supabase credentials first.";
-
-        return;
-      }
-
-
-      try {
-
-        if (authMode === "register") {
-
-          if (!name) {
-
-            message.textContent =
-              language === "ar"
-                ? "اكتب اسمك."
-                : "Enter your name.";
-
-            return;
-          }
-
-
-          if (password.length < 6) {
-
-            message.textContent =
-              language === "ar"
-                ? "كلمة المرور لازم تكون 6 أحرف على الأقل."
-                : "Password must be at least 6 characters.";
-
-            return;
-          }
-
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth.signUp({
-
-              email,
-              password,
-
-              options: {
-
-                data: {
-                  full_name: name
-                }
-
-              }
-
-            });
-
-
-          if (error) {
-            throw error;
-          }
-
-
-          if (
-            data.user &&
-            !data.session
-          ) {
-
-            message.className =
-              "success";
-
-            message.textContent =
-              language === "ar"
-                ? "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيد الحساب."
-                : "Account created. Check your email to confirm your account.";
-
-            return;
-          }
-
-
-          await loadUser();
-
-          openApp();
-
-
-        } else {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth
-              .signInWithPassword({
-
-                email,
-                password
-
-              });
-
-
-          if (error) {
-            throw error;
-          }
-
-
-          if (!data.session) {
-
-            throw new Error(
-              "No active session."
-            );
-
-          }
-
-
-          await loadUser();
-
-          openApp();
-
-        }
-
-      } catch (error) {
-
-        console.error(error);
-
-        message.textContent =
-          translateAuthError(
-            error.message
-          );
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   AUTH ERROR TRANSLATION
-========================================================= */
-
-function translateAuthError(error) {
-
-  if (language === "ar") {
-
-    if (
-      error.includes(
-        "Invalid login credentials"
-      )
-    ) {
-      return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-    }
-
-    if (
-      error.includes(
-        "User already registered"
-      )
-    ) {
-      return "هذا البريد مسجل بالفعل.";
-    }
-
-    if (
-      error.includes(
-        "Password should be at least"
-      )
-    ) {
-      return "كلمة المرور قصيرة جداً.";
-    }
-
-    return "حدث خطأ أثناء العملية.";
-  }
-
-
-  return error ||
-    "Something went wrong.";
+.sidebar-logo {
+  padding:
+    7px 13px 30px;
 }
 
 
-/* =========================================================
-   SESSION
-========================================================= */
+.sidebar-nav {
+  display: flex;
 
-async function checkSession() {
+  flex-direction: column;
 
-  const {
-    data
-  } =
-    await supabaseClient.auth
-      .getSession();
-
-
-  if (
-    data &&
-    data.session
-  ) {
-
-    await loadUser();
-
-    openApp();
-
-  }
-
+  gap: 6px;
 }
 
 
-/* =========================================================
-   USER
-========================================================= */
+.nav-button {
+  position: relative;
 
-let currentUser = null;
+  display: flex;
+  align-items: center;
 
+  gap: 13px;
 
-async function loadUser() {
+  width: 100%;
 
-  const {
-    data
-  } =
-    await supabaseClient.auth
-      .getUser();
+  height: 52px;
 
+  padding: 0 15px;
 
-  if (
-    !data ||
-    !data.user
-  ) {
-    return;
-  }
+  border: 0;
 
+  border-radius: 16px;
 
-  currentUser =
-    data.user;
+  background: transparent;
 
-  updateCurrentUserUI();
+  color: #777f8a;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  transition:
+    .35s var(--transition);
 }
 
 
-function updateCurrentUserUI() {
+.nav-button:hover {
+  color: #fff;
 
-  if (!currentUser) {
-    return;
-  }
-
-
-  const metadata =
-    currentUser.user_metadata ||
-    {};
-
-
-  const name =
-    metadata.full_name ||
-    currentUser.email
-      ?.split("@")[0] ||
-    "Athlete";
-
-
-  const first =
-    name
-      .charAt(0)
-      .toUpperCase();
-
-
-  document
-    .getElementById("avatar")
-    .textContent =
-      first;
-
-
-  document
-    .getElementById("profileName")
-    .textContent =
-      name;
-
-
-  document
-    .getElementById("welcomeTitle")
-    .textContent =
-      language === "ar"
-        ? `مرحباً ${name}.`
-        : `Welcome, ${name}.`;
-
-
-  document
-    .getElementById("accountName")
-    .textContent =
-      name;
-
-
-  document
-    .getElementById("accountEmail")
-    .textContent =
-      currentUser.email ||
-      "-";
+  background:
+    rgba(255,255,255,.045);
 }
 
 
-/* =========================================================
-   OPEN APP
-========================================================= */
+.nav-button.active {
+  color: #fff;
 
-function openApp() {
-
-  document
-    .getElementById("authScreen")
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById("app")
-    .classList
-    .remove("hidden");
-
-
-  updateCurrentUserUI();
-
-  showPage("home");
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logout() {
-
-  await supabaseClient.auth.signOut();
-
-
-  currentUser = null;
-
-
-  document
-    .getElementById("app")
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById("authScreen")
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById("authForm")
-    .reset();
-
-
-  authMode = "login";
-
-
-  document
-    .getElementById("nameField")
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById("authMessage")
-    .textContent = "";
-
-
-  updateAuthText();
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function showPage(page) {
-
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      pageElement =>
-        pageElement
-          .classList
-          .add("hidden")
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.045)
     );
 
+  border:
+    1px solid rgba(255,255,255,.08);
 
-  const target =
-    document.getElementById(
-      "page-" + page
-    );
-
-
-  if (target) {
-
-    target
-      .classList
-      .remove("hidden");
-
-  }
-
-
-  document
-    .querySelectorAll(
-      ".nav-button, .mobile-nav button"
-    )
-    .forEach(button => {
-
-      button
-        .classList
-        .toggle(
-          "active",
-          button.dataset.page === page
-        );
-
-    });
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 
-document
-  .querySelectorAll(
-    ".nav-button, .mobile-nav button"
-  )
-  .forEach(button => {
+.nav-button.active::before {
+  content: "";
 
-    button.addEventListener(
-      "click",
-      () => {
+  position: absolute;
 
-        showPage(
-          button.dataset.page
-        );
+  left: -1px;
 
-      }
-    );
+  width: 3px;
+  height: 22px;
 
-  });
+  border-radius: 0 10px 10px 0;
+
+  background: #fff;
+
+  box-shadow:
+    0 0 18px rgba(255,255,255,.45);
+}
+
+
+.nav-icon {
+  width: 22px;
+
+  text-align: center;
+
+  font-size: 16px;
+
+  opacity: .8;
+}
+
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+
+.logout {
+  width: 100%;
+
+  height: 48px;
+
+  border-radius: 15px;
+
+  border: 1px solid rgba(255,255,255,.06);
+
+  background:
+    rgba(255,255,255,.025);
+
+  color: #777f8a;
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  transition:
+    .3s var(--transition);
+}
+
+
+.logout:hover {
+  color: #fff;
+
+  background:
+    rgba(255,255,255,.06);
+}
 
 
 /* =========================================================
-   INITIALIZE
-========================================================= */
+   MAIN
+   ========================================================= */
 
-setLanguage(language);
+.main {
+  margin-left: 290px;
 
+  padding:
+    35px 38px 80px;
 
-/*
-  Supabase session listener.
-  Keeps the UI synchronized when the
-  authentication state changes.
-*/
-
-supabaseClient.auth.onAuthStateChange(
-  async function(event, session) {
-
-    if (
-      event === "SIGNED_IN" &&
-      session
-    ) {
-
-      await loadUser();
-
-      openApp();
-
-    }
+  max-width: 1700px;
+}
 
 
-    if (
-      event === "SIGNED_OUT"
-    ) {
+/* =========================================================
+   TOPBAR
+   ========================================================= */
 
-      currentUser = null;
+.topbar {
+  display: flex;
 
-    }
+  justify-content: space-between;
 
+  align-items: center;
+
+  margin-bottom: 32px;
+}
+
+
+.welcome-small {
+  color: #656c77;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  font-weight: 800;
+
+  margin-bottom: 7px;
+}
+
+
+.welcome-title {
+  font-size: clamp(28px, 4vw, 44px);
+
+  letter-spacing: -2px;
+
+  font-weight: 850;
+}
+
+
+.profile {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    6px 13px 6px 6px;
+
+  border-radius: 999px;
+
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  background:
+    rgba(255,255,255,.045);
+
+  backdrop-filter: blur(25px);
+}
+
+
+.avatar {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff,
+      #aaa
+    );
+
+  color: #000;
+
+  font-size: 13px;
+
+  font-weight: 900;
+}
+
+
+.profile-name {
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+  min-height: 470px;
+
+  border-radius: 34px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  display: flex;
+  align-items: flex-end;
+
+  padding: 52px;
+
+  background:
+    radial-gradient(
+      circle at 75% 25%,
+      rgba(255,255,255,.09),
+      transparent 25%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.085),
+      rgba(255,255,255,.025)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.11);
+
+  backdrop-filter:
+    blur(35px)
+    saturate(170%);
+
+  -webkit-backdrop-filter:
+    blur(35px)
+    saturate(170%);
+
+  box-shadow:
+    0 40px 110px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+
+.hero::before {
+  content: "";
+
+  position: absolute;
+
+  width: 480px;
+  height: 480px;
+
+  right: -140px;
+  top: -170px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.12),
+      transparent 65%
+    );
+
+  filter: blur(10px);
+
+  pointer-events: none;
+}
+
+
+.hero::after {
+  content: "IRONX";
+
+  position: absolute;
+
+  right: 4%;
+  bottom: -45px;
+
+  font-size: clamp(100px, 17vw, 260px);
+
+  font-weight: 950;
+
+  letter-spacing: -14px;
+
+  color: rgba(255,255,255,.025);
+
+  pointer-events: none;
+}
+
+
+.hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 650px;
+}
+
+
+.hero-kicker {
+  font-size: 10px;
+
+  letter-spacing: 2.5px;
+
+  color: #858d98;
+
+  font-weight: 850;
+
+  margin-bottom: 18px;
+}
+
+
+.hero-title {
+  font-size: clamp(55px, 8vw, 105px);
+
+  line-height: .84;
+
+  letter-spacing: -6px;
+
+  font-weight: 950;
+
+  margin-bottom: 28px;
+}
+
+
+.hero-title span {
+  color: transparent;
+
+  -webkit-text-stroke:
+    1px rgba(255,255,255,.55);
+}
+
+
+.hero-description {
+  max-width: 510px;
+
+  color: #949ba5;
+
+  line-height: 1.7;
+
+  font-size: 13px;
+
+  margin-bottom: 28px;
+}
+
+
+.hero-actions {
+  display: flex;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+
+.hero-button,
+.secondary-button {
+  height: 48px;
+
+  padding: 0 20px;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  transition:
+    .3s var(--transition);
+}
+
+
+.hero-button {
+  border: 0;
+
+  color: #000;
+
+  background: #fff;
+
+  box-shadow:
+    0 15px 35px rgba(255,255,255,.08);
+}
+
+
+.hero-button:hover {
+  transform: translateY(-2px);
+}
+
+
+.secondary-button {
+  border:
+    1px solid rgba(255,255,255,.1);
+
+  color: #fff;
+
+  background:
+    rgba(255,255,255,.04);
+
+  backdrop-filter: blur(20px);
+}
+
+
+.secondary-button:hover {
+  background:
+    rgba(255,255,255,.08);
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+
+  margin-top: 14px;
+}
+
+
+.stat {
+  padding: 25px;
+
+  border-radius: 23px;
+
+  transition:
+    .35s var(--transition);
+}
+
+
+.stat:hover {
+  transform: translateY(-4px);
+
+  background:
+    rgba(255,255,255,.075);
+}
+
+
+.stat-number {
+  font-size: 30px;
+
+  font-weight: 850;
+
+  letter-spacing: -1px;
+
+  margin-bottom: 6px;
+}
+
+
+.stat-label {
+  color: #727985;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.section {
+  margin-top: 65px;
+}
+
+
+.section-head {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+
+.section-head h2 {
+  font-size: 25px;
+
+  letter-spacing: -1px;
+
+  margin-bottom: 5px;
+}
+
+
+.section-head p {
+  color: #737a85;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+   ========================================================= */
+
+.feature-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 13px;
+}
+
+
+.feature {
+  min-height: 210px;
+
+  padding: 28px;
+
+  border-radius: 25px;
+
+  transition:
+    .4s var(--transition);
+}
+
+
+.feature:hover {
+  transform:
+    translateY(-6px)
+    scale(1.01);
+
+  background:
+    rgba(255,255,255,.075);
+}
+
+
+.feature-number {
+  color: #555d68;
+
+  font-size: 10px;
+
+  letter-spacing: 1px;
+
+  margin-bottom: 55px;
+}
+
+
+.feature h3 {
+  font-size: 20px;
+
+  margin-bottom: 8px;
+}
+
+
+.feature p {
+  color: #777f89;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   PLAN
+   ========================================================= */
+
+.plan-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 14px;
+}
+
+
+.plan-card {
+  padding: 28px;
+
+  border-radius: 25px;
+
+  transition:
+    .4s var(--transition);
+}
+
+
+.plan-card:hover {
+  transform: translateY(-5px);
+}
+
+
+.plan-day {
+  color: #666e79;
+
+  font-size: 10px;
+
+  letter-spacing: 1.5px;
+
+  font-weight: 800;
+
+  margin-bottom: 15px;
+}
+
+
+.plan-card h3 {
+  font-size: 24px;
+
+  margin-bottom: 25px;
+}
+
+
+.exercise-list {
+  list-style: none;
+}
+
+
+.exercise-list li {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 13px 0;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.055);
+
+  font-size: 12px;
+
+  color: #a6adb7;
+}
+
+
+.exercise-list li span:last-child {
+  color: #fff;
+
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress-layout {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1.3fr;
+
+  gap: 14px;
+}
+
+
+.progress-card {
+  padding: 35px;
+
+  border-radius: 28px;
+}
+
+
+.big-progress {
+  font-size: 75px;
+
+  line-height: 1;
+
+  font-weight: 900;
+
+  letter-spacing: -5px;
+
+  margin-bottom: 12px;
+}
+
+
+.progress-bar {
+  height: 6px;
+
+  margin-top: 20px;
+
+  background:
+    rgba(255,255,255,.06);
+
+  border-radius: 99px;
+
+  overflow: hidden;
+}
+
+
+.progress-fill {
+  width: 68%;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      #888
+    );
+
+  box-shadow:
+    0 0 20px rgba(255,255,255,.25);
+}
+
+
+.lift-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+
+.lift {
+  min-height: 170px;
+
+  padding: 25px;
+
+  border-radius: 24px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  transition:
+    .35s var(--transition);
+}
+
+
+.lift:hover {
+  transform: translateY(-5px);
+}
+
+
+.lift-name {
+  color: #858c96;
+
+  font-size: 11px;
+}
+
+
+.lift-value {
+  font-size: 27px;
+
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   GOALS
+   ========================================================= */
+
+.goals {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+.goal {
+  min-height: 90px;
+
+  padding: 20px 23px;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  transition:
+    .35s var(--transition);
+}
+
+
+.goal:hover {
+  transform: translateX(4px);
+
+  background:
+    rgba(255,255,255,.075);
+}
+
+
+.goal-info h3 {
+  font-size: 14px;
+
+  margin-bottom: 5px;
+}
+
+
+.goal-info p {
+  color: #6f7782;
+
+  font-size: 11px;
+}
+
+
+.goal-check {
+  width: 26px;
+  height: 26px;
+
+  border-radius: 50%;
+
+  border:
+    1px solid rgba(255,255,255,.15);
+
+  display: grid;
+
+  place-items: center;
+
+  color: transparent;
+}
+
+
+.goal-check.done {
+  background: #fff;
+
+  color: #000;
+
+  border-color: #fff;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   ACCOUNT
+   ========================================================= */
+
+.account-card {
+  max-width: 700px;
+
+  border-radius: 27px;
+
+  padding: 10px 25px;
+}
+
+
+.account-row {
+  min-height: 72px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.055);
+}
+
+
+.account-row:last-child {
+  border-bottom: 0;
+}
+
+
+.account-label {
+  color: #777f89;
+
+  font-size: 12px;
+}
+
+
+.account-row strong {
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   PAGE TRANSITIONS
+   ========================================================= */
+
+.page {
+  animation:
+    pageEnter .5s var(--transition);
+}
+
+
+@keyframes pageEnter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(12px);
   }
-);
 
+  to {
+    opacity: 1;
 
-/* Check existing session */
-
-if (
-  SUPABASE_URL !==
-    "YOUR_SUPABASE_URL" &&
-  SUPABASE_ANON_KEY !==
-    "YOUR_SUPABASE_ANON_KEY"
-) {
-
-  checkSession();
+    transform:
+      translateY(0);
+  }
 
 }
 
-</script>
 
-</body>
-</html>
+/* =========================================================
+   PREMIUM FLOATING MOBILE NAV
+   ========================================================= */
+
+.mobile-nav {
+
+  position: fixed;
+
+  left: 50%;
+
+  bottom: 17px;
+
+  transform:
+    translateX(-50%);
+
+  width:
+    min(94vw, 470px);
+
+  height: 70px;
+
+  padding: 7px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 5px;
+
+  z-index: 999;
+
+  border-radius: 25px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.105),
+      rgba(255,255,255,.035)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.13);
+
+  backdrop-filter:
+    blur(35px)
+    saturate(180%);
+
+  -webkit-backdrop-filter:
+    blur(35px)
+    saturate(180%);
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.2);
+}
+
+
+/* top glass reflection */
+
+.mobile-nav::before {
+
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: 14%;
+
+  right: 14%;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.65),
+      transparent
+    );
+
+  opacity: .7;
+}
+
+
+.mobile-nav button {
+
+  position: relative;
+
+  flex: 1;
+
+  height: 56px;
+
+  border: 0;
+
+  border-radius: 19px;
+
+  background: transparent;
+
+  color: #686f7a;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 4px;
+
+  cursor: pointer;
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  transition:
+    .35s var(--transition);
+}
+
+
+.mobile-nav button:hover {
+
+  color: #fff;
+
+}
+
+
+.mobile-nav button.active {
+
+  color: #fff;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.13),
+      rgba(255,255,255,.045)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 7px 25px rgba(0,0,0,.18);
+}
+
+
+.mobile-nav button.active::after {
+
+  content: "";
+
+  position: absolute;
+
+  bottom: 5px;
+
+  width: 18px;
+
+  height: 2px;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  box-shadow:
+    0 0 12px rgba(255,255,255,.6);
+}
+
+
+.mobile-icon {
+
+  font-size: 18px;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   HIDDEN
+   ========================================================= */
+
+.hidden {
+  display: none !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (min-width: 901px) {
+
+  .mobile-nav {
+    display: none;
+  }
+
+}
+
+
+@media (max-width: 1100px) {
+
+  .sidebar {
+    width: 210px;
+  }
+
+  .main {
+    margin-left: 250px;
+
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  .stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .feature-grid,
+  .plan-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+
+    padding:
+      22px 16px 110px;
+  }
+
+  .hero {
+    min-height: 500px;
+
+    padding: 32px 25px;
+
+    border-radius: 29px;
+  }
+
+  .hero-title {
+    font-size:
+      clamp(53px, 16vw, 90px);
+
+    letter-spacing: -4px;
+  }
+
+  .feature-grid,
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-layout {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  #authScreen {
+    padding: 18px;
+  }
+
+  .auth-top {
+    top: 18px;
+
+    left: 18px;
+    right: 18px;
+  }
+
+  .auth-card {
+    padding: 29px 22px;
+
+    border-radius: 27px;
+  }
+
+  .auth-title {
+    font-size: 34px;
+
+    letter-spacing: -1.7px;
+  }
+
+  .topbar {
+    margin-bottom: 22px;
+  }
+
+  .profile-name {
+    display: none;
+  }
+
+  .hero {
+    min-height: 530px;
+
+    align-items: flex-end;
+
+    padding:
+      28px 22px;
+  }
+
+  .hero-description {
+    font-size: 12px;
+  }
+
+  .stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 9px;
+  }
+
+  .stat {
+    padding: 19px;
+
+    border-radius: 20px;
+  }
+
+  .stat-number {
+    font-size: 25px;
+  }
+
+  .feature {
+    min-height: 180px;
+
+    padding: 23px;
+  }
+
+  .feature-number {
+    margin-bottom: 35px;
+  }
+
+  .lift-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lift {
+    min-height: 125px;
+  }
+
+  .progress-card {
+    padding: 27px;
+  }
+
+  .big-progress {
+    font-size: 60px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+
+    animation-duration: .01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    transition-duration: .01ms !important;
+
+    scroll-behavior: auto !important;
+  }
+
+}
+</style>
