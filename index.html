@@ -1,2147 +1,1548 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- GOOGLE SEARCH CONSOLE -->
-<meta name="google-site-verification" content="2C0-BYVBVxUqS62j-jhVgWxKZZCemMeBY-2XMd_q9Io">
-
-<meta name="description" content="IRONX Coaching - Online Fitness Coaching">
-<meta name="theme-color" content="#07080b">
-
-<title>IRONX | Coaching</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-<style>
-:root{
-  --bg:#06070a;
-  --card:rgba(255,255,255,.065);
-  --card2:rgba(255,255,255,.095);
-  --border:rgba(255,255,255,.12);
-  --text:#fff;
-  --muted:#969aa5;
-  --red:#ff2945;
-  --red2:#ff6175;
-  --green:#4de0a0;
-  --shadow:0 25px 70px rgba(0,0,0,.45);
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-  background:var(--bg);
-}
-
-body{
-  min-height:100vh;
-  font-family:Cairo,Arial,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 80% 0%,rgba(255,41,69,.17),transparent 30%),
-    radial-gradient(circle at 0% 50%,rgba(75,60,255,.10),transparent 32%),
-    var(--bg);
-  overflow-x:hidden;
-}
-
-button,input,textarea,select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.glass{
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.095),
-    rgba(255,255,255,.035)
-  );
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(25px) saturate(150%);
-  -webkit-backdrop-filter:blur(25px) saturate(150%);
-}
-
-.top{
-  position:fixed;
-  z-index:100;
-  top:12px;
-  left:0;
-  right:0;
-  padding:0 12px;
-}
-
-.topbar{
-  width:min(1120px,100%);
-  min-height:64px;
-  margin:auto;
-  padding:8px 10px 8px 18px;
-  border-radius:999px;
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-  letter-spacing:.1em;
-}
-
-.logo-icon{
-  width:40px;
-  height:40px;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(145deg,#ff566a,#a90018);
-  box-shadow:0 10px 30px rgba(255,41,69,.25);
-  transform:rotate(-5deg);
-}
-
-.logo-icon span{
-  transform:rotate(5deg);
-}
-
-.logo b{
-  color:var(--red2);
-}
-
-.status{
-  flex:1;
-  text-align:center;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.btn{
-  border:0;
-  color:#fff;
-  padding:12px 19px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#ff3048,#b70820);
-  font-weight:800;
-  box-shadow:0 10px 30px rgba(255,41,69,.2);
-  transition:.2s;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-}
-
-.btn.dark{
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border);
-  box-shadow:none;
-}
-
-.screen{
-  display:none;
-  min-height:100vh;
-  padding:115px 0 70px;
-}
-
-.screen.active{
-  display:block;
-}
-
-.wrap{
-  width:min(1120px,calc(100% - 28px));
-  margin:auto;
-}
-
-.hero{
-  min-height:calc(100vh - 70px);
-  display:grid;
-  place-items:center;
-  text-align:center;
-}
-
-.hero-content{
-  max-width:850px;
-}
-
-.tag{
-  display:inline-flex;
-  padding:8px 14px;
-  border-radius:999px;
-  color:#ff6879;
-  background:rgba(255,41,69,.08);
-  border:1px solid rgba(255,41,69,.15);
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.12em;
-}
-
-.hero h1{
-  margin:25px 0 20px;
-  font-size:clamp(52px,10vw,105px);
-  line-height:.88;
-  letter-spacing:-.07em;
-  font-weight:900;
-}
-
-.hero h1 span{
-  color:var(--red);
-}
-
-.hero p{
-  max-width:650px;
-  margin:auto;
-  color:var(--muted);
-  line-height:1.9;
-}
-
-.actions{
-  margin-top:30px;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.title{
-  margin-bottom:25px;
-}
-
-.title small{
-  color:var(--red2);
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.15em;
-}
-
-.title h2{
-  margin-top:5px;
-  font-size:clamp(34px,5vw,55px);
-  line-height:1;
-}
-
-.title p{
-  margin-top:8px;
-  color:var(--muted);
-}
-
-.card{
-  padding:22px;
-  border-radius:25px;
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.075),
-    rgba(255,255,255,.025)
-  );
-  border:1px solid var(--border);
-  box-shadow:0 15px 50px rgba(0,0,0,.2);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-}
-
-.form{
-  width:min(650px,100%);
-}
-
-.field{
-  display:grid;
-  gap:7px;
-  margin-bottom:14px;
-}
-
-.field label{
-  color:var(--muted);
-  font-size:11px;
-}
-
-.field input,
-.field textarea,
-.field select{
-  width:100%;
-  color:#fff;
-  background:rgba(0,0,0,.25);
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:13px 15px;
-  outline:none;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-  border-color:rgba(255,41,69,.6);
-  box-shadow:0 0 0 4px rgba(255,41,69,.08);
-}
-
-.err{
-  color:#ff7070;
-  font-size:12px;
-  margin-top:10px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-
-.two{
-  grid-template-columns:1fr 1fr;
-}
-
-.stat{
-  min-height:135px;
-}
-
-.stat small{
-  color:var(--muted);
-}
-
-.stat strong{
-  display:block;
-  margin-top:15px;
-  font-size:32px;
-}
-
-.accent{
-  color:var(--red2);
-}
-
-.head{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:24px;
-}
-
-.head h2{
-  font-size:38px;
-}
-
-.head p,
-.muted{
-  color:var(--muted);
-}
-
-.plan{
-  white-space:pre-wrap;
-  color:#d4d6dc;
-  line-height:2;
-  margin-top:15px;
-}
-
-.list{
-  display:grid;
-  gap:12px;
-}
-
-.client{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.pill{
-  display:inline-flex;
-  padding:5px 10px;
-  border-radius:999px;
-  background:var(--green);
-  color:#06120d;
-  font-size:10px;
-  font-weight:900;
-}
-
-.empty{
-  padding:40px;
-  text-align:center;
-  color:var(--muted);
-  border:1px dashed var(--border);
-  border-radius:22px;
-}
-
-.tabs{
-  display:flex;
-  gap:7px;
-  margin-bottom:18px;
-  padding:7px;
-  width:max-content;
-  max-width:100%;
-  border-radius:999px;
-  background:rgba(255,255,255,.045);
-  border:1px solid var(--border);
-  overflow:auto;
-}
-
-.tabs button{
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  padding:10px 16px;
-  border-radius:999px;
-  white-space:nowrap;
-}
-
-.tabs button.active{
-  color:#fff;
-  background:linear-gradient(135deg,#ff3048,#b90b20);
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:500;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:rgba(0,0,0,.75);
-  backdrop-filter:blur(12px);
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modalbox{
-  width:min(680px,100%);
-  max-height:90vh;
-  overflow:auto;
-  padding:25px;
-  border-radius:30px;
-  background:rgba(14,15,20,.94);
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-}
-
-.toast{
-  position:fixed;
-  z-index:600;
-  bottom:20px;
-  left:20px;
-  display:none;
-  padding:13px 17px;
-  border-radius:16px;
-  background:rgba(20,21,27,.92);
-  border:1px solid var(--border);
-  backdrop-filter:blur(20px);
-}
-
-.toast.show{
-  display:block;
-}
-
-/* CLIENT */
-
-#client{
-  padding-bottom:100px;
-}
-
-.client-layout{
-  display:grid;
-  grid-template-columns:190px 1fr;
-  gap:16px;
-}
-
-.sidebar{
-  height:max-content;
-  position:sticky;
-  top:95px;
-  padding:12px;
-  border-radius:25px;
-}
-
-.side-title{
-  padding:12px;
-  font-weight:900;
-  letter-spacing:.1em;
-}
-
-.side-btn{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  text-align:right;
-  padding:13px;
-  border-radius:15px;
-  margin-bottom:4px;
-}
-
-.side-btn:hover,
-.side-btn.active{
-  color:#fff;
-  background:rgba(255,255,255,.08);
-}
-
-.side-btn.active{
-  box-shadow:inset -3px 0 var(--red);
-}
-
-.mobile-nav{
-  display:none;
-}
-
-.account-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.avatar{
-  width:75px;
-  height:75px;
-  border-radius:25px;
-  display:grid;
-  place-items:center;
-  margin-bottom:15px;
-  font-size:27px;
-  font-weight:900;
-  background:linear-gradient(145deg,#ff5265,#9d0015);
-}
-
-/* RESPONSIVE */
-
-@media(max-width:850px){
-
-  .grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .client-layout{
-    display:block;
-  }
-
-  .sidebar{
-    display:none;
-  }
-
-  .mobile-nav{
-    position:fixed;
-    z-index:200;
-    display:flex;
-    left:12px;
-    right:12px;
-    bottom:12px;
-    padding:7px;
-    border-radius:25px;
-    background:rgba(16,17,22,.8);
-    border:1px solid rgba(255,255,255,.14);
-    box-shadow:0 20px 60px rgba(0,0,0,.5);
-    backdrop-filter:blur(25px) saturate(160%);
-    -webkit-backdrop-filter:blur(25px) saturate(160%);
-  }
-
-  .mobile-nav button{
-    flex:1;
-    border:0;
-    background:transparent;
-    color:var(--muted);
-    padding:8px 3px;
-    display:grid;
-    place-items:center;
-    gap:3px;
-    font-size:9px;
-  }
-
-  .mobile-nav button.active{
-    color:#fff;
-  }
-
-  .mobile-nav button.active span{
-    color:var(--red2);
-  }
-
-  .account-grid,
-  .two{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:600px){
-
-  .top{
-    top:8px;
-    padding:0 8px;
-  }
-
-  .topbar{
-    min-height:58px;
-    padding:6px 8px 6px 12px;
-  }
-
-  .logo-icon{
-    width:36px;
-    height:36px;
-    border-radius:12px;
-  }
-
-  .logo{
-    font-size:13px;
-  }
-
-  .status{
-    font-size:9px;
-  }
-
-  .top #logout{
-    padding:9px 12px;
-    font-size:10px;
-  }
-
-  .screen{
-    padding-top:100px;
-  }
-
-  .hero{
-    min-height:calc(100vh - 30px);
-  }
-
-  .hero h1{
-    font-size:clamp(48px,16vw,75px);
-  }
-
-  .hero p{
-    font-size:13px;
-  }
-
-  .actions{
-    flex-direction:column;
-  }
-
-  .actions .btn{
-    width:100%;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .head{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .head h2{
-    font-size:32px;
-  }
-
-  .card{
-    padding:18px;
-    border-radius:22px;
-  }
-
-  .tabs{
-    width:100%;
-    border-radius:18px;
-  }
-
-  .tabs button{
-    flex:1;
-    padding:9px;
-    font-size:11px;
-  }
-
-  .client{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="google-site-verification"
+        content="2C0-BYVBVxUqS62j-jhVgWxKZZCemMeBY-2XMd_q9Io">
+
+  <meta name="theme-color" content="#07090d">
+  <meta name="description"
+        content="IRONX Coaching - Personal fitness coaching, workout plans and progress tracking.">
+
+  <title>IRONX Coaching</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #07090d;
+      --bg2: #0c1017;
+      --glass: rgba(255,255,255,.075);
+      --glass2: rgba(255,255,255,.11);
+      --border: rgba(255,255,255,.12);
+      --text: #f5f7fa;
+      --muted: #8e98a8;
+      --accent: #ffffff;
+      --green: #67e8a5;
+      --danger: #ff6868;
+      --radius: 24px;
+    }
+
+    body {
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      background:
+        radial-gradient(circle at 15% 10%, rgba(100,120,255,.12), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(0,255,180,.07), transparent 30%),
+        linear-gradient(135deg,#05070a,#0b0f16 55%,#05070a);
+
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,.035);
+      filter: blur(100px);
+      border-radius: 50%;
+      top: -150px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* AUTH */
+
+    #authScreen {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 35px;
+      border-radius: 30px;
+
+      background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.12);
+
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.45),
+        inset 0 1px rgba(255,255,255,.08);
+    }
+
+    .logo {
+      font-weight: 900;
+      letter-spacing: 3px;
+      font-size: 28px;
+    }
+
+    .logo span {
+      opacity: .4;
+    }
+
+    .auth-head {
+      margin-bottom: 28px;
+    }
+
+    .auth-head p {
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .lang {
+      display: flex;
+      gap: 5px;
+      padding: 4px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      width: max-content;
+      margin-bottom: 25px;
+    }
+
+    .lang button {
+      border: 0;
+      color: var(--muted);
+      background: transparent;
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+
+    .lang button.active {
+      background: white;
+      color: black;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.22);
+      color: white;
+      padding: 14px 15px;
+      border-radius: 15px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: rgba(255,255,255,.35);
+    }
+
+    .primary {
+      width: 100%;
+      border: 0;
+      border-radius: 15px;
+      padding: 14px;
+      margin-top: 8px;
+      font-weight: 800;
+      background: white;
+      color: black;
+      transition: .2s;
+    }
+
+    .primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .switch {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .switch button {
+      border: 0;
+      background: transparent;
+      color: white;
+      font-weight: 700;
+    }
+
+    .error {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    /* APP */
+
+    #app {
+      min-height: 100vh;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      width: 250px;
+      height: 100vh;
+      padding: 25px 18px;
+
+      background: rgba(255,255,255,.045);
+      border-right: 1px solid var(--border);
+
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+    }
+
+    .side-logo {
+      padding: 8px 12px 30px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .nav button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      color: white;
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.08);
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+    }
+
+    .logout {
+      position: absolute;
+      bottom: 25px;
+      left: 18px;
+      right: 18px;
+    }
+
+    .logout button {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      padding: 12px;
+      border-radius: 14px;
+    }
+
+    .main {
+      grid-column: 2;
+      padding: 30px;
+      max-width: 1450px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .welcome h1 {
+      font-size: clamp(25px,4vw,42px);
+      letter-spacing: -1px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 12px 7px 7px;
+      border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: white;
+      color: black;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      box-shadow: inset 0 1px rgba(255,255,255,.05);
+    }
+
+    .hero {
+      min-height: 260px;
+      border-radius: 30px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,.12), transparent 35%),
+        linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025));
+    }
+
+    .hero::after {
+      content: "IRONX";
+      position: absolute;
+      right: -20px;
+      bottom: -50px;
+      font-size: 150px;
+      font-weight: 1000;
+      opacity: .025;
+      letter-spacing: -10px;
+    }
+
+    .hero h2 {
+      font-size: clamp(28px,4vw,50px);
+      max-width: 650px;
+      line-height: 1.05;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .hero-button {
+      display: inline-block;
+      margin-top: 25px;
+      background: white;
+      color: black;
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-weight: 800;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 14px;
+      margin-top: 15px;
+    }
+
+    .stat {
+      padding: 20px;
+      border-radius: 22px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .section {
+      margin-top: 35px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .section-title h2 {
+      font-size: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 15px;
+    }
+
+    .card {
+      padding: 22px;
+      border-radius: 22px;
+      min-height: 170px;
+    }
+
+    .card-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.09);
+      margin-bottom: 18px;
+      font-size: 20px;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .progress-box {
+      padding: 25px;
+      border-radius: 24px;
+    }
+
+    .progress-line {
+      height: 10px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 68%;
+      background: white;
+      border-radius: inherit;
+    }
+
+    .goal-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .goal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      border-radius: 18px;
+    }
+
+    .check {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: black;
+    }
+
+    .check.done {
+      background: white;
+    }
+
+    .account {
+      max-width: 700px;
+    }
+
+    .account-box {
+      padding: 25px;
+      border-radius: 25px;
+    }
+
+    .account-row {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .account-row:last-child {
+      border-bottom: 0;
+    }
+
+    .account-row span:first-child {
+      color: var(--muted);
+    }
+
+    /* MOBILE NAV */
+
+    .mobile-nav {
+      display: none;
+    }
+
+    @media(max-width: 900px) {
+
+      .app-layout {
+        display: block;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 18px 16px 110px;
+      }
+
+      .topbar {
+        margin-bottom: 20px;
+      }
+
+      .profile span {
+        display: none;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 25px;
+        min-height: 290px;
+      }
+
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        z-index: 100;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        padding: 8px;
+
+        background: rgba(20,22,27,.72);
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: 24px;
+
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+
+        box-shadow: 0 20px 50px rgba(0,0,0,.5);
+      }
+
+      .mobile-nav button {
+        flex: 1;
+        background: transparent;
+        color: var(--muted);
+        border: 0;
+        padding: 10px 4px;
+        border-radius: 17px;
+        font-size: 11px;
+      }
+
+      .mobile-nav button.active {
+        color: white;
+        background: rgba(255,255,255,.09);
+      }
+
+      .mobile-nav .m-icon {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+    }
+
+    @media(max-width:500px) {
+
+      .auth-card {
+        padding: 25px 20px;
+      }
+
+      .stats {
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 16px;
+      }
+
+      .stat-number {
+        font-size: 24px;
+      }
+
+      .welcome h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="top">
-  <div class="topbar glass">
+<!-- AUTH -->
 
-    <div class="logo">
-      <div class="logo-icon">
-        <span>IX</span>
-      </div>
-      <div><b>IRON</b>X</div>
+<div id="authScreen">
+
+  <div class="auth-card">
+
+    <div class="lang">
+      <button id="enBtn" class="active" onclick="setLanguage('en')">EN</button>
+      <button id="arBtn" onclick="setLanguage('ar')">عربي</button>
     </div>
 
-    <div id="topStatus" class="status">
-      Online Coaching Platform
-    </div>
+    <div class="auth-head">
+      <div class="logo">IRON<span>X</span></div>
 
-    <button id="logout" class="btn dark" style="display:none">
-      خروج
-    </button>
-
-  </div>
-</header>
-
-
-<!-- LANDING -->
-
-<section id="landing" class="screen active">
-
-  <div class="wrap hero">
-
-    <div class="hero-content">
-
-      <div class="tag">
-        IRONX / ONLINE COACHING
-      </div>
-
-      <h1>
-        BUILD YOUR<br>
-        <span>NEXT LEVEL.</span>
+      <h1 id="authTitle" style="margin-top:20px">
+        Welcome back
       </h1>
 
-      <p>
-        منصة IRONX للكوتشينج أونلاين.
-        خطط تمرين، تغذية، متابعة وتقدمك كله في مكان واحد.
+      <p id="authSubtitle">
+        Sign in to access your coaching dashboard.
       </p>
-
-      <div class="actions">
-
-        <button class="btn" onclick="show('login')">
-          تسجيل الدخول
-        </button>
-
-        <button class="btn dark" onclick="show('register')">
-          إنشاء حساب
-        </button>
-
-      </div>
-
     </div>
 
-  </div>
-
-</section>
-
-
-<!-- LOGIN -->
-
-<section id="login" class="screen">
-
-  <div class="wrap">
-
-    <div class="title">
-
-      <small>IRONX ACCOUNT</small>
-
-      <h2>تسجيل الدخول</h2>
-
-      <p>ادخل إلى حسابك وتابع خطتك.</p>
-
-    </div>
-
-    <form class="form card" id="loginForm">
+    <form id="authForm">
 
       <div class="field">
-        <label>Email</label>
-        <input name="email" type="email" required>
+        <label id="nameLabel" class="hidden">Name</label>
+        <input id="nameInput"
+               class="hidden"
+               type="text"
+               placeholder="Your name">
       </div>
 
       <div class="field">
-        <label>Password</label>
-        <input name="password" type="password" required>
+        <label id="emailLabel">Email</label>
+        <input id="emailInput"
+               type="email"
+               placeholder="you@example.com"
+               required>
       </div>
 
-      <button class="btn">
-        دخول
+      <div class="field">
+        <label id="passwordLabel">Password</label>
+        <input id="passwordInput"
+               type="password"
+               placeholder="••••••••"
+               required>
+      </div>
+
+      <button class="primary" id="authButton">
+        Sign In
       </button>
 
-      <p id="loginErr" class="err"></p>
+      <div id="authError" class="error"></div>
 
     </form>
 
-    <br>
-
-    <button class="btn dark" onclick="show('landing')">
-      رجوع
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- REGISTER -->
-
-<section id="register" class="screen">
-
-  <div class="wrap">
-
-    <div class="title">
-
-      <small>START YOUR JOURNEY</small>
-
-      <h2>إنشاء حساب</h2>
-
-      <p>ابدأ رحلة التدريب مع IRONX.</p>
-
-    </div>
-
-    <form class="form card" id="regForm">
-
-      <div class="field">
-        <label>الاسم</label>
-        <input name="name" required>
-      </div>
-
-      <div class="field">
-        <label>Email</label>
-        <input name="email" type="email" required>
-      </div>
-
-      <div class="field">
-        <label>Password</label>
-        <input name="password" type="password" minlength="8" required>
-      </div>
-
-      <button class="btn">
-        إنشاء الحساب
+    <div class="switch">
+      <span id="switchText">Don't have an account?</span>
+      <button onclick="toggleAuth()" id="switchButton">
+        Create account
       </button>
-
-      <p id="regErr" class="err"></p>
-
-    </form>
-
-    <br>
-
-    <button class="btn dark" onclick="show('landing')">
-      رجوع
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- CLIENT -->
-
-<section id="client" class="screen">
-
-  <div class="wrap">
-
-    <div class="client-layout">
-
-      <aside class="sidebar glass">
-
-        <div class="side-title">
-          IRONX
-        </div>
-
-        <button class="side-btn active"
-          onclick="clientTab('overview',this)">
-          الرئيسية
-        </button>
-
-        <button class="side-btn"
-          onclick="clientTab('training',this)">
-          خطة التمرين
-        </button>
-
-        <button class="side-btn"
-          onclick="clientTab('nutrition',this)">
-          التغذية
-        </button>
-
-        <button class="side-btn"
-          onclick="clientTab('checkin',this)">
-          المتابعة
-        </button>
-
-        <button class="side-btn"
-          onclick="clientTab('account',this)">
-          حسابي
-        </button>
-
-      </aside>
-
-      <main>
-
-        <div class="head">
-
-          <div>
-
-            <h2>Dashboard</h2>
-
-            <p id="clientHello"></p>
-
-          </div>
-
-        </div>
-
-        <div id="clientStats" class="grid"></div>
-
-        <br>
-
-        <div id="clientContent"></div>
-
-      </main>
-
     </div>
 
   </div>
-
-</section>
-
-
-<!-- MOBILE NAV -->
-
-<nav id="mobileNav" class="mobile-nav glass">
-
-  <button class="active"
-    onclick="mobileClientTab('overview',this)">
-
-    <span>⌂</span>
-    الرئيسية
-
-  </button>
-
-  <button onclick="mobileClientTab('training',this)">
-
-    <span>▣</span>
-    التمرين
-
-  </button>
-
-  <button onclick="mobileClientTab('nutrition',this)">
-
-    <span>♥</span>
-    التغذية
-
-  </button>
-
-  <button onclick="mobileClientTab('checkin',this)">
-
-    <span>◫</span>
-    المتابعة
-
-  </button>
-
-  <button onclick="mobileClientTab('account',this)">
-
-    <span>●</span>
-    حسابي
-
-  </button>
-
-</nav>
-
-
-<!-- COACH -->
-
-<section id="coach" class="screen">
-
-  <div class="wrap">
-
-    <div class="head">
-
-      <div>
-
-        <h2>Coach Dashboard</h2>
-
-        <p>
-          إدارة العملاء والخطط والمتابعة.
-        </p>
-
-      </div>
-
-      <button class="btn" onclick="openAddClient()">
-        + عميل جديد
-      </button>
-
-    </div>
-
-    <div id="coachStats" class="grid"></div>
-
-    <br>
-
-    <div class="card">
-
-      <h3>العملاء</h3>
-
-      <br>
-
-      <div id="clientsList" class="list"></div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- MODAL -->
-
-<div id="modal" class="modal">
-
-  <div id="modalContent" class="modalbox"></div>
 
 </div>
 
 
-<div id="toast" class="toast"></div>
+<!-- APP -->
 
+<div id="app" class="hidden">
 
-<script>
+  <div class="app-layout">
 
-const API="/api";
+    <aside class="sidebar">
 
-let token=localStorage.getItem("ironx_token");
-let me=null;
-let clientData=null;
-let coachClients=[];
-let currentCoach=null;
-
-
-const $=s=>document.querySelector(s);
-
-
-async function api(path,opt={}){
-
-  opt.headers={
-    ...(opt.headers||{}),
-    ...(token?{
-      Authorization:"Bearer "+token
-    }:{} )
-  };
-
-  if(opt.body && typeof opt.body!=="string"){
-
-    opt.headers["Content-Type"]="application/json";
-
-    opt.body=JSON.stringify(opt.body);
-
-  }
-
-  const r=await fetch(API+path,opt);
-
-  const d=await r.json().catch(()=>({}));
-
-  if(!r.ok){
-
-    throw new Error(
-      d.error || "حصل خطأ"
-    );
-
-  }
-
-  return d;
-}
-
-
-function show(id){
-
-  document
-    .querySelectorAll(".screen")
-    .forEach(x=>x.classList.remove("active"));
-
-  const el=$("#"+id);
-
-  if(el){
-    el.classList.add("active");
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-function toast(t){
-
-  $("#toast").textContent=t;
-
-  $("#toast").classList.add("show");
-
-  setTimeout(()=>{
-    $("#toast").classList.remove("show");
-  },2500);
-
-}
-
-
-/* LOGIN */
-
-$("#loginForm").onsubmit=async e=>{
-
-  e.preventDefault();
-
-  $("#loginErr").textContent="";
-
-  try{
-
-    const d=await api(
-      "/auth/login",
-      {
-        method:"POST",
-        body:Object.fromEntries(
-          new FormData(e.target)
-        )
-      }
-    );
-
-    token=d.token;
-
-    localStorage.setItem(
-      "ironx_token",
-      token
-    );
-
-    me=d.user;
-
-    boot();
-
-  }catch(x){
-
-    $("#loginErr").textContent=x.message;
-
-  }
-
-};
-
-
-/* REGISTER */
-
-$("#regForm").onsubmit=async e=>{
-
-  e.preventDefault();
-
-  $("#regErr").textContent="";
-
-  try{
-
-    const d=await api(
-      "/auth/register",
-      {
-        method:"POST",
-        body:Object.fromEntries(
-          new FormData(e.target)
-        )
-      }
-    );
-
-    token=d.token;
-
-    localStorage.setItem(
-      "ironx_token",
-      token
-    );
-
-    me=d.user;
-
-    boot();
-
-  }catch(x){
-
-    $("#regErr").textContent=x.message;
-
-  }
-
-};
-
-
-/* LOGOUT */
-
-$("#logout").onclick=()=>{
-
-  localStorage.removeItem(
-    "ironx_token"
-  );
-
-  token=null;
-  me=null;
-
-  $("#logout").style.display="none";
-
-  $("#mobileNav").style.display="none";
-
-  $("#topStatus").textContent=
-    "Online Coaching Platform";
-
-  show("landing");
-
-};
-
-
-async function boot(){
-
-  if(!token){
-
-    $("#mobileNav").style.display="none";
-
-    return;
-
-  }
-
-  try{
-
-    me=(await api("/me")).user;
-
-    $("#logout").style.display="block";
-
-    $("#topStatus").textContent=
-      me.name || me.email;
-
-    if(me.role==="coach"){
-
-      $("#mobileNav").style.display="none";
-
-      show("coach");
-
-      await loadCoach();
-
-    }else{
-
-      $("#mobileNav").style.display="flex";
-
-      show("client");
-
-      await loadClient();
-
-    }
-
-  }catch(e){
-
-    localStorage.removeItem(
-      "ironx_token"
-    );
-
-    token=null;
-
-    $("#mobileNav").style.display="none";
-
-    show("landing");
-
-  }
-
-}
-
-
-/* CLIENT */
-
-async function loadClient(){
-
-  clientData=
-    await api("/client/dashboard");
-
-  $("#clientHello").textContent=
-    "أهلًا "+
-    clientData.profile.name+
-    " 👋";
-
-  renderClient("overview");
-
-}
-
-
-function renderClient(tab){
-
-  const p=clientData.profile;
-  const plans=clientData.plans||[];
-  const checks=clientData.checkins||[];
-
-  $("#clientStats").innerHTML=[
-
-    [
-      "الوزن",
-      p.weight
-        ? p.weight+" kg"
-        : "--"
-    ],
-
-    [
-      "الهدف",
-      p.goal || "--"
-    ],
-
-    [
-      "آخر Check-in",
-      checks[0]?.date || "--"
-    ]
-
-  ].map((x,i)=>`
-
-    <div class="card stat">
-
-      <small>${x[0]}</small>
-
-      <strong class="${i===0?"accent":""}">
-        ${x[1]}
-      </strong>
-
-    </div>
-
-  `).join("");
-
-
-  let c="";
-
-
-  if(tab==="overview"){
-
-    c=`
-
-      <div class="grid two">
-
-        <div class="card">
-
-          <h3>بياناتك</h3>
-
-          <br>
-
-          <p class="muted">
-
-            الطول:
-            ${p.height||"--"} سم
-
-            <br>
-
-            الخبرة:
-            ${esc(p.experience||"--")}
-
-            <br>
-
-            أيام التمرين:
-            ${esc(p.days||"--")}
-
-          </p>
-
-        </div>
-
-
-        <div class="card">
-
-          <h3>آخر متابعة</h3>
-
-          <br>
-
-          <p class="muted">
-
-            ${
-              checks[0]
-
-              ?
-
-              `
-              الوزن:
-              ${checks[0].weight||"--"} kg
-
-              <br>
-
-              الخصر:
-              ${checks[0].waist||"--"} cm
-
-              <br>
-
-              ${esc(checks[0].notes||"")}
-              `
-
-              :
-
-              "لسه مفيش Check-in."
-            }
-
-          </p>
-
-        </div>
-
+      <div class="side-logo">
+        <div class="logo">IRON<span>X</span></div>
       </div>
 
-    `;
+      <nav class="nav">
 
-  }
-
-
-  if(tab==="training"){
-
-    c=planHTML(
-      plans.find(x=>x.type==="training"),
-      "خطة التمرين"
-    );
-
-  }
-
-
-  if(tab==="nutrition"){
-
-    c=planHTML(
-      plans.find(x=>x.type==="nutrition"),
-      "خطة التغذية"
-    );
-
-  }
-
-
-  if(tab==="checkin"){
-
-    c=`
-
-      <form class="card form" id="checkinForm">
-
-        <h3>Weekly Check-in</h3>
-
-        <br>
-
-        <div class="two grid">
-
-          <div class="field">
-
-            <label>الوزن kg</label>
-
-            <input
-              name="weight"
-              type="number"
-              step=".1"
-              value="${p.weight||""}"
-            >
-
-          </div>
-
-          <div class="field">
-
-            <label>الخصر cm</label>
-
-            <input
-              name="waist"
-              type="number"
-              step=".1"
-            >
-
-          </div>
-
-        </div>
-
-
-        <div class="field">
-
-          <label>الطاقة من 1 لـ 10</label>
-
-          <input
-            name="energy"
-            type="number"
-            min="1"
-            max="10"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>الالتزام %</label>
-
-          <input
-            name="adherence"
-            type="number"
-            min="0"
-            max="100"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>ملاحظات</label>
-
-          <textarea
-            name="notes"
-            rows="4"
-          ></textarea>
-
-        </div>
-
-
-        <button class="btn">
-          إرسال Check-in
+        <button class="active" data-page="home">
+          <span class="nav-icon">⌂</span>
+          <span data-i18n="home">Home</span>
         </button>
 
-      </form>
+        <button data-page="plan">
+          <span class="nav-icon">▣</span>
+          <span data-i18n="plan">My Plan</span>
+        </button>
 
-    `;
+        <button data-page="progress">
+          <span class="nav-icon">↗</span>
+          <span data-i18n="progress">Progress</span>
+        </button>
 
-  }
+        <button data-page="goals">
+          <span class="nav-icon">◎</span>
+          <span data-i18n="goals">Goals</span>
+        </button>
+
+        <button data-page="account">
+          <span class="nav-icon">◉</span>
+          <span data-i18n="account">Account</span>
+        </button>
+
+      </nav>
+
+      <div class="logout">
+        <button onclick="logout()" data-i18n="logout">
+          Log out
+        </button>
+      </div>
+
+    </aside>
 
 
-  if(tab==="account"){
+    <main class="main">
 
-    const initial=
-      (p.name||"U").charAt(0).toUpperCase();
+      <div class="topbar">
 
-    c=`
+        <div class="welcome">
+          <h1 id="welcomeTitle">Welcome back.</h1>
+          <p id="welcomeSub">
+            Let's build something stronger.
+          </p>
+        </div>
 
-      <div class="account-grid">
+        <div class="profile">
 
-        <div class="card">
-
-          <div class="avatar">
-            ${initial}
+          <div class="avatar" id="avatar">
+            I
           </div>
 
-          <h3>
-            ${esc(p.name||"User")}
-          </h3>
-
-          <p class="muted">
-            ${esc(me?.email||"")}
-          </p>
-
-          <br>
-
-          <span class="pill">
-            CLIENT
+          <span id="profileName">
+            Athlete
           </span>
 
         </div>
 
+      </div>
 
-        <div class="card">
 
-          <h3>بيانات الحساب</h3>
+      <!-- HOME -->
 
-          <br>
+      <section id="page-home" class="page">
 
-          <p class="muted">
+        <div class="hero glass">
 
-            الاسم:
-            ${esc(p.name||"--")}
+          <h2 data-i18n="heroTitle">
+            Build strength.<br>
+            Build discipline.
+          </h2>
 
-            <br>
-
-            البريد:
-            ${esc(me?.email||"--")}
-
-            <br>
-
-            الهدف:
-            ${esc(p.goal||"--")}
-
+          <p data-i18n="heroText">
+            Your training, nutrition and progress in one focused system.
           </p>
 
-          <br>
-
-          <button
-            class="btn dark"
-            onclick="logoutNow()"
-          >
-            تسجيل الخروج
+          <button class="hero-button" onclick="showPage('plan')"
+                  data-i18n="viewPlan">
+            View my plan
           </button>
 
         </div>
 
-      </div>
 
-    `;
-
-  }
-
-
-  $("#clientContent").innerHTML=c;
-
-
-  if(tab==="checkin"){
-
-    $("#checkinForm").onsubmit=async e=>{
-
-      e.preventDefault();
-
-      try{
-
-        await api(
-          "/client/checkin",
-          {
-            method:"POST",
-            body:Object.fromEntries(
-              new FormData(e.target)
-            )
-          }
-        );
-
-        toast(
-          "تم إرسال الـ Check-in"
-        );
-
-        await loadClient();
-
-      }catch(x){
-
-        toast(x.message);
-
-      }
-
-    };
-
-  }
-
-}
-
-
-function planHTML(p,title){
-
-  if(!p){
-
-    return `
-      <div class="empty">
-        لسه الكوتش مضافش ${title}.
-      </div>
-    `;
-
-  }
-
-  return `
-
-    <div class="card">
-
-      <h3>
-        ${esc(p.title||title)}
-      </h3>
-
-      <div class="plan">
-        ${esc(p.content||"")}
-      </div>
-
-      <br>
-
-      <p class="muted">
-        آخر تحديث:
-        ${p.updatedAt
-          ? new Date(p.updatedAt).toLocaleString("ar-EG")
-          : "--"
-        }
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-function esc(s=""){
-
-  return String(s).replace(
-    /[&<>"']/g,
-    m=>({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[m])
-  );
-
-}
-
-
-function clientTab(t,b){
-
-  document
-    .querySelectorAll(".side-btn")
-    .forEach(x=>x.classList.remove("active"));
-
-  if(b){
-    b.classList.add("active");
-  }
-
-  renderClient(t);
-
-}
-
-
-function mobileClientTab(t,b){
-
-  document
-    .querySelectorAll(".mobile-nav button")
-    .forEach(x=>x.classList.remove("active"));
-
-  b.classList.add("active");
-
-  renderClient(t);
-
-}
-
-
-function logoutNow(){
-  $("#logout").click();
-}
-
-
-/* COACH */
-
-async function loadCoach(){
-
-  coachClients=
-    await api("/coach/clients");
-
-  $("#coachStats").innerHTML=[
-
-    [
-      "العملاء",
-      coachClients.length
-    ],
-
-    [
-      "Check-ins",
-      coachClients.filter(
-        x=>x.latestCheckin
-      ).length
-    ]
-
-  ].map(x=>`
-
-    <div class="card stat">
-
-      <small>${x[0]}</small>
-
-      <strong>
-        ${x[1]}
-      </strong>
-
-    </div>
-
-  `).join("");
-
-  renderClients();
-
-}
-
-
-function renderClients(){
-
-  $("#clientsList").innerHTML=
-
-    coachClients.length
-
-    ?
-
-    coachClients.map(c=>`
-
-      <div class="client card">
-
-        <div>
-
-          <b>
-            ${esc(c.name)}
-          </b>
-
-          <div class="muted">
-
-            ${esc(c.email)}
-
-            ·
-
-            ${esc(
-              c.goal ||
-              "هدف غير محدد"
-            )}
+        <div class="stats">
+
+          <div class="stat glass">
+            <div class="stat-number">4</div>
+            <div class="stat-label" data-i18n="workouts">
+              Workouts / week
+            </div>
+          </div>
+
+          <div class="stat glass">
+            <div class="stat-number">68%</div>
+            <div class="stat-label" data-i18n="completion">
+              Plan completion
+            </div>
+          </div>
+
+          <div class="stat glass">
+            <div class="stat-number">12</div>
+            <div class="stat-label" data-i18n="weeks">
+              Weeks active
+            </div>
+          </div>
+
+          <div class="stat glass">
+            <div class="stat-number">8</div>
+            <div class="stat-label" data-i18n="sessions">
+              Sessions done
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <div class="section-title">
+            <h2 data-i18n="focus">Your focus</h2>
+          </div>
+
+          <div class="cards">
+
+            <div class="card glass">
+              <div class="card-icon">⚡</div>
+              <h3 data-i18n="strength">Strength</h3>
+              <p data-i18n="strengthText">
+                Progressive overload with controlled technique.
+              </p>
+            </div>
+
+            <div class="card glass">
+              <div class="card-icon">🥗</div>
+              <h3 data-i18n="nutrition">Nutrition</h3>
+              <p data-i18n="nutritionText">
+                Simple nutrition targets that fit your lifestyle.
+              </p>
+            </div>
+
+            <div class="card glass">
+              <div class="card-icon">📈</div>
+              <h3 data-i18n="tracking">Tracking</h3>
+              <p data-i18n="trackingText">
+                Monitor performance and make smarter adjustments.
+              </p>
+            </div>
 
           </div>
 
         </div>
 
-        <button
-          class="btn dark"
-          onclick="openClient('${c.id}')"
-        >
-          إدارة
-        </button>
-
-      </div>
-
-    `).join("")
-
-    :
-
-    `
-      <div class="empty">
-        مفيش عملاء لسه.
-      </div>
-    `;
-
-}
+      </section>
 
 
-async function openClient(id){
+      <!-- PLAN -->
 
-  const d=
-    await api(
-      "/coach/client/"+id
-    );
+      <section id="page-plan" class="page hidden">
 
-  currentCoach=d;
+        <div class="section-title">
+          <h2 data-i18n="myPlanTitle">My Training Plan</h2>
+        </div>
 
-  openModal(`
+        <div class="cards">
 
-    <div class="head">
+          <div class="card glass">
+            <div class="card-icon">1</div>
+            <h3>Upper A</h3>
+            <p>
+              Bench Press<br>
+              Row<br>
+              Shoulder Press<br>
+              Lat Pulldown
+            </p>
+          </div>
 
-      <div>
+          <div class="card glass">
+            <div class="card-icon">2</div>
+            <h3>Upper B</h3>
+            <p>
+              Incline Press<br>
+              T-Bar Row<br>
+              Lateral Raise<br>
+              Biceps
+            </p>
+          </div>
 
-        <h2>
-          ${esc(d.client.name)}
-        </h2>
-
-        <p>
-          ${esc(d.client.email)}
-        </p>
-
-      </div>
-
-      <button
-        class="btn dark"
-        onclick="closeModal()"
-      >
-        إغلاق
-      </button>
-
-    </div>
-
-
-    <div class="tabs">
-
-      <button
-        class="active"
-        onclick="coachPanel('plan',this)"
-      >
-        الخطة
-      </button>
-
-      <button
-        onclick="coachPanel('checkin',this)"
-      >
-        Check-ins
-      </button>
-
-    </div>
-
-
-    <div id="coachPanel"></div>
-
-  `);
-
-  coachPanel(
-    "plan",
-    document.querySelector(
-      ".modalbox .tabs button"
-    )
-  );
-
-}
-
-
-function coachPanel(type,b){
-
-  document
-    .querySelectorAll(
-      ".modalbox .tabs button"
-    )
-    .forEach(x=>
-      x.classList.remove("active")
-    );
-
-  b.classList.add("active");
-
-  const d=currentCoach;
-
-  if(type==="plan"){
-
-    $("#coachPanel").innerHTML=`
-
-      <form class="card" id="planForm">
-
-        <div class="field">
-
-          <label>نوع الخطة</label>
-
-          <select name="type">
-
-            <option value="training">
-              training
-            </option>
-
-            <option value="nutrition">
-              nutrition
-            </option>
-
-          </select>
+          <div class="card glass">
+            <div class="card-icon">3</div>
+            <h3>Recovery</h3>
+            <p data-i18n="recoveryText">
+              Rest, sleep and recovery work.
+            </p>
+          </div>
 
         </div>
 
+      </section>
 
-        <div class="field">
 
-          <label>العنوان</label>
+      <!-- PROGRESS -->
 
-          <input
-            name="title"
-            placeholder="Week 1"
-          >
+      <section id="page-progress" class="page hidden">
+
+        <div class="section-title">
+          <h2 data-i18n="progressTitle">Progress</h2>
+        </div>
+
+        <div class="progress-box glass">
+
+          <h3 data-i18n="weeklyProgress">
+            Weekly completion
+          </h3>
+
+          <div class="progress-line">
+            <div class="progress-fill"></div>
+          </div>
+
+          <p style="margin-top:12px;color:var(--muted)">
+            68%
+          </p>
 
         </div>
 
+        <div class="cards" style="margin-top:15px">
 
-        <div class="field">
+          <div class="card glass">
+            <h3>Bench Press</h3>
+            <p>80 kg</p>
+          </div>
 
-          <label>المحتوى</label>
+          <div class="card glass">
+            <h3>Deadlift</h3>
+            <p>140 kg</p>
+          </div>
 
-          <textarea
-            name="content"
-            rows="14"
-            placeholder="Bench Press 3x8&#10;Lat Pulldown 3x10..."
-          ></textarea>
+          <div class="card glass">
+            <h3>Squat</h3>
+            <p>100 kg</p>
+          </div>
 
         </div>
 
+      </section>
 
-        <button class="btn">
-          حفظ الخطة
-        </button>
 
-      </form>
+      <!-- GOALS -->
 
-    `;
+      <section id="page-goals" class="page hidden">
 
+        <div class="section-title">
+          <h2 data-i18n="goalsTitle">Goals</h2>
+        </div>
 
-    $("#planForm").onsubmit=async e=>{
+        <div class="goal-list">
 
-      e.preventDefault();
+          <div class="goal glass">
+            <span data-i18n="goal1">
+              Complete 4 workouts this week
+            </span>
+            <span class="check done">✓</span>
+          </div>
 
-      try{
+          <div class="goal glass">
+            <span data-i18n="goal2">
+              Improve bench press
+            </span>
+            <span class="check"> </span>
+          </div>
 
-        await api(
-          "/coach/client/"
-          +d.client.id+
-          "/plan",
-          {
-            method:"POST",
-            body:Object.fromEntries(
-              new FormData(e.target)
-            )
-          }
-        );
+          <div class="goal glass">
+            <span data-i18n="goal3">
+              Stay consistent with nutrition
+            </span>
+            <span class="check"> </span>
+          </div>
 
-        toast("الخطة اتحدثت");
+        </div>
 
-        closeModal();
+      </section>
 
-        await loadCoach();
 
-      }catch(x){
+      <!-- ACCOUNT -->
 
-        toast(x.message);
+      <section id="page-account" class="page hidden account">
 
-      }
+        <div class="section-title">
+          <h2 data-i18n="accountTitle">Account</h2>
+        </div>
 
-    };
+        <div class="account-box glass">
 
-  }
+          <div class="account-row">
+            <span data-i18n="name">Name</span>
+            <strong id="accountName">Athlete</strong>
+          </div>
 
+          <div class="account-row">
+            <span>Email</span>
+            <strong id="accountEmail">-</strong>
+          </div>
 
-  if(type==="checkin"){
+          <div class="account-row">
+            <span data-i18n="status">Status</span>
+            <strong style="color:var(--green)"
+                    data-i18n="active">
+              Active
+            </strong>
+          </div>
 
-    $("#coachPanel").innerHTML=`
+        </div>
 
-      <div class="list">
+      </section>
 
-        ${
-          d.checkins?.length
+    </main>
 
-          ?
+  </div>
 
-          d.checkins.map(x=>`
 
-            <div class="card">
+  <!-- MOBILE NAV -->
 
-              <b>${x.date}</b>
+  <nav class="mobile-nav">
 
-              <p class="muted">
+    <button class="active" data-page="home">
+      <span class="m-icon">⌂</span>
+      <span data-i18n="home">Home</span>
+    </button>
 
-                Weight:
-                ${x.weight||"--"}
+    <button data-page="plan">
+      <span class="m-icon">▣</span>
+      <span data-i18n="plan">Plan</span>
+    </button>
 
-                ·
+    <button data-page="progress">
+      <span class="m-icon">↗</span>
+      <span data-i18n="progress">Progress</span>
+    </button>
 
-                Waist:
-                ${x.waist||"--"}
+    <button data-page="goals">
+      <span class="m-icon">◎</span>
+      <span data-i18n="goals">Goals</span>
+    </button>
 
-                ·
+    <button data-page="account">
+      <span class="m-icon">◉</span>
+      <span data-i18n="account">Account</span>
+    </button>
 
-                Energy:
-                ${x.energy||"--"}
+  </nav>
 
-                ·
+</div>
 
-                Adherence:
-                ${x.adherence||"--"}%
 
-              </p>
+<script>
 
-              <p>
-                ${esc(x.notes||"")}
-              </p>
+  let authMode = "login";
+  let language = localStorage.getItem("ironx_language") || "en";
 
-            </div>
+  const translations = {
 
-          `).join("")
+    en: {
 
-          :
+      home: "Home",
+      plan: "My Plan",
+      progress: "Progress",
+      goals: "Goals",
+      account: "Account",
+      logout: "Log out",
 
-          `
-            <div class="empty">
-              No check-ins.
-            </div>
-          `
-        }
+      heroTitle: "Build strength.<br>Build discipline.",
+      heroText:
+        "Your training, nutrition and progress in one focused system.",
 
-      </div>
+      viewPlan: "View my plan",
 
-    `;
+      workouts: "Workouts / week",
+      completion: "Plan completion",
+      weeks: "Weeks active",
+      sessions: "Sessions done",
 
-  }
+      focus: "Your focus",
+      strength: "Strength",
+      strengthText:
+        "Progressive overload with controlled technique.",
 
-}
+      nutrition: "Nutrition",
+      nutritionText:
+        "Simple nutrition targets that fit your lifestyle.",
 
+      tracking: "Tracking",
+      trackingText:
+        "Monitor performance and make smarter adjustments.",
 
-function openAddClient(){
+      myPlanTitle: "My Training Plan",
 
-  openModal(`
+      recoveryText:
+        "Rest, sleep and recovery work.",
 
-    <div class="head">
+      progressTitle: "Progress",
+      weeklyProgress: "Weekly completion",
 
-      <h2>
-        إضافة عميل
-      </h2>
+      goalsTitle: "Goals",
 
-      <button
-        class="btn dark"
-        onclick="closeModal()"
-      >
-        إغلاق
-      </button>
+      goal1: "Complete 4 workouts this week",
+      goal2: "Improve bench press",
+      goal3: "Stay consistent with nutrition",
 
-    </div>
+      accountTitle: "Account",
+      name: "Name",
+      status: "Status",
+      active: "Active"
 
+    },
 
-    <form class="card" id="addClientForm">
+    ar: {
 
-      <div class="field">
+      home: "الرئيسية",
+      plan: "خطتي",
+      progress: "التقدم",
+      goals: "الأهداف",
+      account: "الحساب",
+      logout: "تسجيل الخروج",
 
-        <label>الاسم</label>
+      heroTitle: "ابني قوتك.<br>ابني انضباطك.",
+      heroText:
+        "تمرينك وتغذيتك وتقدمك في نظام واحد.",
 
-        <input name="name" required>
+      viewPlan: "عرض خطتي",
 
-      </div>
+      workouts: "تمرين / أسبوع",
+      completion: "نسبة إكمال الخطة",
+      weeks: "أسابيع نشطة",
+      sessions: "تمرين مكتمل",
 
+      focus: "تركيزك",
+      strength: "القوة",
+      strengthText:
+        "زيادة تدريجية في الأوزان مع التحكم في الأداء.",
 
-      <div class="field">
+      nutrition: "التغذية",
+      nutritionText:
+        "أهداف غذائية بسيطة تناسب أسلوب حياتك.",
 
-        <label>Email</label>
+      tracking: "المتابعة",
+      trackingText:
+        "تابع أداءك واتخذ قرارات تدريبية أذكى.",
 
-        <input
-          name="email"
-          type="email"
-          required
-        >
+      myPlanTitle: "خطة التمرين",
 
-      </div>
+      recoveryText:
+        "راحة ونوم واستشفاء مناسب.",
 
+      progressTitle: "التقدم",
+      weeklyProgress: "إكمال الأسبوع",
 
-      <div class="field">
+      goalsTitle: "الأهداف",
 
-        <label>Temporary Password</label>
+      goal1: "إكمال 4 تمارين هذا الأسبوع",
+      goal2: "تحسين تمرين البنش",
+      goal3: "الالتزام بالتغذية",
 
-        <input
-          name="password"
-          value="Client123!"
-        >
-
-      </div>
-
-
-      <button class="btn">
-        إنشاء
-      </button>
-
-    </form>
-
-  `);
-
-
-  $("#addClientForm").onsubmit=async e=>{
-
-    e.preventDefault();
-
-    try{
-
-      const d=
-        await api(
-          "/coach/clients",
-          {
-            method:"POST",
-            body:Object.fromEntries(
-              new FormData(e.target)
-            )
-          }
-        );
-
-      toast(
-        "تم إنشاء العميل"
-      );
-
-      closeModal();
-
-      await loadCoach();
-
-    }catch(x){
-
-      toast(x.message);
+      accountTitle: "الحساب",
+      name: "الاسم",
+      status: "الحالة",
+      active: "نشط"
 
     }
 
   };
 
-}
 
+  function setLanguage(lang) {
 
-function openModal(html){
+    language = lang;
 
-  $("#modalContent").innerHTML=html;
+    localStorage.setItem("ironx_language", lang);
 
-  $("#modal").classList.add("show");
+    document.documentElement.lang = lang;
+    document.documentElement.dir =
+      lang === "ar" ? "rtl" : "ltr";
 
-}
+    document.getElementById("enBtn")
+      .classList.toggle("active", lang === "en");
 
+    document.getElementById("arBtn")
+      .classList.toggle("active", lang === "ar");
 
-function closeModal(){
+    document.querySelectorAll("[data-i18n]").forEach(el => {
 
-  $("#modal").classList.remove("show");
+      const key = el.dataset.i18n;
 
-}
+      if (translations[lang][key]) {
+        el.innerHTML = translations[lang][key];
+      }
 
+    });
 
-$("#modal").onclick=e=>{
-
-  if(e.target.id==="modal"){
-    closeModal();
+    updateAuthText();
   }
 
-};
+
+  function updateAuthText() {
+
+    const ar = language === "ar";
+
+    if (authMode === "login") {
+
+      document.getElementById("authTitle").textContent =
+        ar ? "مرحباً بعودتك" : "Welcome back";
+
+      document.getElementById("authSubtitle").textContent =
+        ar
+          ? "سجل الدخول للوصول إلى لوحة التدريب الخاصة بك."
+          : "Sign in to access your coaching dashboard.";
+
+      document.getElementById("authButton").textContent =
+        ar ? "تسجيل الدخول" : "Sign In";
+
+      document.getElementById("switchText").textContent =
+        ar ? "ليس لديك حساب؟" : "Don't have an account?";
+
+      document.getElementById("switchButton").textContent =
+        ar ? "إنشاء حساب" : "Create account";
+
+    } else {
+
+      document.getElementById("authTitle").textContent =
+        ar ? "أنشئ حسابك" : "Create your account";
+
+      document.getElementById("authSubtitle").textContent =
+        ar
+          ? "ابدأ رحلتك مع IRONX Coaching."
+          : "Start your journey with IRONX Coaching.";
+
+      document.getElementById("authButton").textContent =
+        ar ? "إنشاء الحساب" : "Create account";
+
+      document.getElementById("switchText").textContent =
+        ar ? "لديك حساب بالفعل؟" : "Already have an account?";
+
+      document.getElementById("switchButton").textContent =
+        ar ? "تسجيل الدخول" : "Sign in";
+    }
+
+    document.getElementById("nameLabel").textContent =
+      ar ? "الاسم" : "Name";
+
+    document.getElementById("nameInput").placeholder =
+      ar ? "اكتب اسمك" : "Your name";
+
+    document.getElementById("emailLabel").textContent =
+      ar ? "البريد الإلكتروني" : "Email";
+
+    document.getElementById("passwordLabel").textContent =
+      ar ? "كلمة المرور" : "Password";
+
+  }
 
 
-/* START */
+  function toggleAuth() {
 
-boot();
+    authMode =
+      authMode === "login" ? "register" : "login";
+
+    document.getElementById("nameInput")
+      .classList.toggle("hidden", authMode === "login");
+
+    document.getElementById("nameLabel")
+      .classList.toggle("hidden", authMode === "login");
+
+    document.getElementById("authError").textContent = "";
+
+    updateAuthText();
+  }
+
+
+  document.getElementById("authForm")
+    .addEventListener("submit", function(e) {
+
+      e.preventDefault();
+
+      const name =
+        document.getElementById("nameInput").value.trim();
+
+      const email =
+        document.getElementById("emailInput").value.trim();
+
+      const password =
+        document.getElementById("passwordInput").value;
+
+      const error =
+        document.getElementById("authError");
+
+      error.textContent = "";
+
+      if (!email || !password) {
+        error.textContent =
+          language === "ar"
+            ? "اكتب البريد وكلمة المرور."
+            : "Enter your email and password.";
+
+        return;
+      }
+
+
+      let users =
+        JSON.parse(localStorage.getItem("ironx_users") || "[]");
+
+
+      if (authMode === "register") {
+
+        if (!name) {
+
+          error.textContent =
+            language === "ar"
+              ? "اكتب اسمك."
+              : "Enter your name.";
+
+          return;
+        }
+
+        if (password.length < 6) {
+
+          error.textContent =
+            language === "ar"
+              ? "كلمة المرور يجب أن تكون 6 أحرف على الأقل."
+              : "Password must be at least 6 characters.";
+
+          return;
+        }
+
+        if (users.some(u => u.email === email)) {
+
+          error.textContent =
+            language === "ar"
+              ? "هذا البريد مسجل بالفعل."
+              : "This email is already registered.";
+
+          return;
+        }
+
+        const user = {
+          name,
+          email,
+          password
+        };
+
+        users.push(user);
+
+        localStorage.setItem(
+          "ironx_users",
+          JSON.stringify(users)
+        );
+
+        localStorage.setItem(
+          "ironx_current_user",
+          JSON.stringify(user)
+        );
+
+        openApp();
+
+      } else {
+
+        const user =
+          users.find(
+            u =>
+              u.email === email &&
+              u.password === password
+          );
+
+        if (!user) {
+
+          error.textContent =
+            language === "ar"
+              ? "البريد أو كلمة المرور غير صحيحة."
+              : "Incorrect email or password.";
+
+          return;
+        }
+
+        localStorage.setItem(
+          "ironx_current_user",
+          JSON.stringify(user)
+        );
+
+        openApp();
+      }
+
+    });
+
+
+  function openApp() {
+
+    document.getElementById("authScreen")
+      .classList.add("hidden");
+
+    document.getElementById("app")
+      .classList.remove("hidden");
+
+    loadUser();
+
+    showPage("home");
+  }
+
+
+  function loadUser() {
+
+    const user =
+      JSON.parse(
+        localStorage.getItem("ironx_current_user")
+      );
+
+    if (!user) return;
+
+    const first =
+      user.name
+        ? user.name.charAt(0).toUpperCase()
+        : "I";
+
+    document.getElementById("avatar").textContent =
+      first;
+
+    document.getElementById("profileName").textContent =
+      user.name;
+
+    document.getElementById("welcomeTitle").textContent =
+      language === "ar"
+        ? `مرحباً ${user.name}.`
+        : `Welcome, ${user.name}.`;
+
+    document.getElementById("welcomeSub").textContent =
+      language === "ar"
+        ? "خلينا نبني جسم أقوى."
+        : "Let's build something stronger.";
+
+    document.getElementById("accountName").textContent =
+      user.name;
+
+    document.getElementById("accountEmail").textContent =
+      user.email;
+  }
+
+
+  function logout() {
+
+    localStorage.removeItem("ironx_current_user");
+
+    document.getElementById("app")
+      .classList.add("hidden");
+
+    document.getElementById("authScreen")
+      .classList.remove("hidden");
+
+    document.getElementById("authForm").reset();
+
+    authMode = "login";
+
+    document.getElementById("nameInput")
+      .classList.add("hidden");
+
+    document.getElementById("nameLabel")
+      .classList.add("hidden");
+
+    updateAuthText();
+  }
+
+
+  function showPage(page) {
+
+    document.querySelectorAll(".page")
+      .forEach(p => p.classList.add("hidden"));
+
+    const selected =
+      document.getElementById("page-" + page);
+
+    if (selected) {
+      selected.classList.remove("hidden");
+    }
+
+    document.querySelectorAll(
+      ".nav button, .mobile-nav button"
+    ).forEach(btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.page === page
+      );
+
+    });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+
+  document.querySelectorAll(
+    ".nav button, .mobile-nav button"
+  ).forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      showPage(button.dataset.page);
+
+    });
+
+  });
+
+
+  setLanguage(language);
+
+
+  const currentUser =
+    localStorage.getItem("ironx_current_user");
+
+  if (currentUser) {
+    openApp();
+  }
 
 </script>
 
