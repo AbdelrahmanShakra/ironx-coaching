@@ -1,47 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+>
+
+<meta
+  name="description"
+  content="IRONX Coaching - Premium personal fitness coaching."
+>
+
+<meta
+  name="google-site-verification"
+  content="2C0-BYVBVxUqS62j-jhVgWxKZZCemMeBY-2XMd_q9Io"
+>
+
+<title>IRONX Coaching</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
+
 /* =========================================================
    IRONX PREMIUM LIQUID GLASS
    ========================================================= */
 
 :root {
-  --bg: #050608;
-  --bg-soft: #090b0f;
-  --surface: rgba(255,255,255,.055);
-  --surface-strong: rgba(255,255,255,.085);
-  --surface-hover: rgba(255,255,255,.11);
+
+  --bg: #030405;
+  --bg2: #080a0d;
+
+  --glass: rgba(255,255,255,.055);
+  --glass2: rgba(255,255,255,.085);
 
   --border: rgba(255,255,255,.12);
-  --border-soft: rgba(255,255,255,.07);
+  --border2: rgba(255,255,255,.07);
 
-  --text: #f5f7fa;
+  --text: #f7f8fa;
   --muted: #9299a5;
-  --dim: #666d78;
+  --dim: #646b76;
 
-  --accent: #ffffff;
-  --accent-soft: rgba(255,255,255,.15);
+  --green: #83ffb4;
+  --red: #ff6877;
 
-  --green: #7dffb2;
-  --red: #ff6f7d;
+  --blur: blur(30px) saturate(180%);
+  --blurHeavy: blur(45px) saturate(190%);
 
-  --radius-xl: 32px;
-  --radius-lg: 24px;
-  --radius-md: 18px;
+  --ease: cubic-bezier(.2,.8,.2,1);
 
-  --blur: blur(28px) saturate(170%);
-  --blur-heavy: blur(42px) saturate(190%);
-
-  --shadow:
-    0 30px 80px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.08);
-
-  --transition:
-    cubic-bezier(.2,.8,.2,1);
 }
-
-
-/* =========================================================
-   RESET
-   ========================================================= */
 
 * {
   box-sizing: border-box;
@@ -54,27 +66,32 @@ html {
 }
 
 body {
+
   min-height: 100vh;
 
+  color: var(--text);
+
   background:
+
     radial-gradient(
-      circle at 15% 10%,
-      rgba(255,255,255,.055),
-      transparent 30%
+      circle at 8% 10%,
+      rgba(255,255,255,.09),
+      transparent 27%
     ),
+
     radial-gradient(
-      circle at 85% 15%,
+      circle at 92% 8%,
       rgba(130,150,255,.035),
-      transparent 28%
+      transparent 25%
     ),
+
     radial-gradient(
-      circle at 50% 100%,
-      rgba(255,255,255,.025),
+      circle at 50% 110%,
+      rgba(255,255,255,.045),
       transparent 35%
     ),
-    #050608;
 
-  color: var(--text);
+    #030405;
 
   font-family:
     Inter,
@@ -87,46 +104,141 @@ body {
   overflow-x: hidden;
 
   -webkit-font-smoothing: antialiased;
+
 }
 
-
-/* subtle premium grain */
-
 body::before {
+
   content: "";
 
   position: fixed;
+
   inset: 0;
 
   pointer-events: none;
 
-  opacity: .035;
+  z-index: 9999;
+
+  opacity: .025;
 
   background-image:
+
     url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
 
-  z-index: 9999;
+}
+
+body::after {
+
+  content: "";
+
+  position: fixed;
+
+  width: 520px;
+  height: 520px;
+
+  left: 50%;
+  top: 25%;
+
+  transform: translate(-50%,-50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.04),
+      transparent 68%
+    );
+
+  filter: blur(60px);
+
+  pointer-events: none;
+
+  z-index: -1;
+
+  animation:
+    ambient 14s ease-in-out infinite alternate;
+
+}
+
+@keyframes ambient {
+
+  from {
+    transform:
+      translate(-50%,-50%)
+      scale(.85);
+  }
+
+  to {
+    transform:
+      translate(-43%,-44%)
+      scale(1.15);
+  }
+
 }
 
 
 /* =========================================================
-   GLOBAL GLASS
+   UTILITIES
    ========================================================= */
 
+.hidden {
+  display: none !important;
+}
+
 .glass {
+
+  position: relative;
+
   background:
+
     linear-gradient(
       145deg,
-      rgba(255,255,255,.09),
+      rgba(255,255,255,.095),
       rgba(255,255,255,.035)
     );
 
-  border: 1px solid var(--border);
+  border:
+    1px solid var(--border);
 
-  box-shadow: var(--shadow);
+  box-shadow:
 
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
+    inset 0 1px 0 rgba(255,255,255,.10),
+
+    inset 0 -1px 0 rgba(0,0,0,.2),
+
+    0 25px 70px rgba(0,0,0,.38);
+
+  backdrop-filter:
+    var(--blur);
+
+  -webkit-backdrop-filter:
+    var(--blur);
+
+}
+
+.glass::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  background:
+
+    linear-gradient(
+      125deg,
+      rgba(255,255,255,.08),
+      transparent 25%,
+      transparent 75%,
+      rgba(255,255,255,.02)
+    );
+
 }
 
 
@@ -135,317 +247,261 @@ body::before {
    ========================================================= */
 
 .logo {
-  font-size: 25px;
-  font-weight: 900;
-  letter-spacing: -1.8px;
 
   color: #fff;
 
-  text-shadow:
-    0 0 25px rgba(255,255,255,.12);
+  font-size: 25px;
+
+  font-weight: 950;
+
+  letter-spacing: -1.8px;
+
 }
 
 .logo span {
-  color: #fff;
-
-  opacity: .45;
+  opacity: .42;
 }
 
 
 /* =========================================================
-   AUTH SCREEN
+   AUTH
    ========================================================= */
 
 #authScreen {
+
   min-height: 100vh;
 
   display: flex;
-  flex-direction: column;
 
   align-items: center;
+
   justify-content: center;
 
-  padding: 28px;
+  padding: 30px;
 
   position: relative;
 
-  background:
-    radial-gradient(
-      circle at 50% 35%,
-      rgba(255,255,255,.055),
-      transparent 35%
-    );
 }
 
-
-/* top */
-
 .auth-top {
+
   position: absolute;
 
-  top: 30px;
+  top: 28px;
+
   left: 30px;
   right: 30px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
+
 }
 
-
-/* language */
-
 .language {
+
   display: flex;
-  align-items: center;
+
   gap: 4px;
 
   padding: 5px;
 
   border-radius: 999px;
 
-  background: rgba(255,255,255,.055);
+  background:
+    rgba(255,255,255,.045);
 
-  border: 1px solid rgba(255,255,255,.10);
+  border:
+    1px solid rgba(255,255,255,.10);
 
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter:
+    blur(25px);
+
+  -webkit-backdrop-filter:
+    blur(25px);
+
 }
 
 .language button {
+
   border: 0;
 
-  color: var(--muted);
-
   background: transparent;
+
+  color: #777e89;
 
   padding: 8px 13px;
 
   border-radius: 999px;
 
+  font-size: 11px;
+
+  font-weight: 800;
+
   cursor: pointer;
 
-  font-size: 12px;
-  font-weight: 700;
-
   transition:
-    .35s var(--transition);
-}
+    .35s var(--ease);
 
-.language button:hover {
-  color: #fff;
 }
 
 .language button.active {
-  color: #000;
 
   background: #fff;
 
+  color: #000;
+
   box-shadow:
-    0 5px 20px rgba(255,255,255,.12);
+    0 7px 22px rgba(255,255,255,.12);
+
 }
 
 
-/* =========================================================
-   AUTH CARD
-   ========================================================= */
+/* AUTH CARD */
 
 .auth-card {
-  width: min(440px, 100%);
+
+  width: min(440px,100%);
 
   padding: 42px;
 
   border-radius: 34px;
 
-  position: relative;
-
   overflow: hidden;
 
   animation:
-    authEnter .8s var(--transition);
+    authIn .7s var(--ease);
+
 }
 
+@keyframes authIn {
 
-/* glass shine */
-
-.auth-card::before {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  left: 12%;
-  right: 12%;
-
-  height: 1px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,.55),
-      transparent
-    );
-
-  opacity: .7;
-}
-
-
-.auth-card::after {
-  content: "";
-
-  position: absolute;
-
-  width: 220px;
-  height: 220px;
-
-  top: -140px;
-  right: -100px;
-
-  background: rgba(255,255,255,.045);
-
-  border-radius: 50%;
-
-  filter: blur(50px);
-
-  pointer-events: none;
-}
-
-
-@keyframes authEnter {
   from {
+
     opacity: 0;
+
     transform:
-      translateY(20px)
-      scale(.97);
+      translateY(25px)
+      scale(.96);
+
   }
 
   to {
+
     opacity: 1;
+
     transform:
       translateY(0)
       scale(1);
-  }
-}
 
+  }
+
+}
 
 .auth-mode-label {
+
   font-size: 10px;
-
-  letter-spacing: 2px;
-
-  color: #777f8b;
-
-  font-weight: 800;
-
-  margin-bottom: 13px;
-}
-
-
-.auth-title {
-  font-size: clamp(32px, 6vw, 44px);
-
-  line-height: .98;
-
-  letter-spacing: -2px;
 
   font-weight: 850;
 
-  margin-bottom: 12px;
+  letter-spacing: 2px;
+
+  color: #727984;
+
+  margin-bottom: 13px;
+
 }
 
+.auth-title {
+
+  font-size: 43px;
+
+  line-height: .98;
+
+  letter-spacing: -2.5px;
+
+  margin-bottom: 12px;
+
+}
 
 .auth-subtitle {
+
   color: var(--muted);
 
-  font-size: 14px;
+  font-size: 13px;
 
   line-height: 1.7;
 
-  margin-bottom: 32px;
+  margin-bottom: 30px;
+
 }
-
-
-/* =========================================================
-   FORM
-   ========================================================= */
 
 .field {
   margin-bottom: 17px;
 }
 
 .field label {
+
   display: block;
-
-  margin-bottom: 8px;
-
-  font-size: 11px;
 
   color: #aab0ba;
 
-  font-weight: 700;
+  font-size: 11px;
 
-  letter-spacing: .3px;
+  font-weight: 750;
+
+  margin-bottom: 8px;
+
 }
 
-
 .field input {
+
   width: 100%;
 
   height: 56px;
 
-  padding: 0 17px;
-
   border-radius: 17px;
 
-  border: 1px solid rgba(255,255,255,.09);
+  border:
+    1px solid rgba(255,255,255,.09);
 
   outline: none;
 
   background:
-    rgba(255,255,255,.045);
+    rgba(255,255,255,.04);
 
   color: #fff;
+
+  padding: 0 17px;
 
   font-size: 14px;
 
   transition:
-    .3s var(--transition);
+    .3s var(--ease);
 
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.025);
 }
-
 
 .field input::placeholder {
-  color: #555d68;
+  color: #555c67;
 }
-
-
-.field input:hover {
-  background:
-    rgba(255,255,255,.06);
-}
-
 
 .field input:focus {
-  border-color:
-    rgba(255,255,255,.28);
 
   background:
     rgba(255,255,255,.07);
 
+  border-color:
+    rgba(255,255,255,.28);
+
   box-shadow:
-    0 0 0 4px rgba(255,255,255,.035),
-    inset 0 1px 0 rgba(255,255,255,.06);
+    0 0 0 4px rgba(255,255,255,.035);
+
 }
 
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
 .primary {
+
   width: 100%;
 
   height: 56px;
@@ -454,78 +510,84 @@ body::before {
 
   border-radius: 17px;
 
-  background: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      #fff,
+      #dedede
+    );
 
-  color: #050505;
+  color: #000;
 
-  font-size: 13px;
-
-  font-weight: 850;
+  font-weight: 900;
 
   cursor: pointer;
 
-  margin-top: 7px;
+  margin-top: 5px;
 
   transition:
-    transform .3s var(--transition),
-    box-shadow .3s var(--transition);
+    .35s var(--ease);
 
-  box-shadow:
-    0 15px 35px rgba(255,255,255,.08);
 }
-
 
 .primary:hover {
-  transform: translateY(-2px);
+
+  transform:
+    translateY(-2px)
+    scale(1.01);
 
   box-shadow:
-    0 20px 45px rgba(255,255,255,.13);
-}
+    0 20px 50px rgba(255,255,255,.12);
 
+}
 
 .primary:active {
+
   transform:
-    translateY(0)
-    scale(.98);
+    scale(.97);
+
 }
 
+.error {
+
+  min-height: 20px;
+
+  color: var(--red);
+
+  font-size: 12px;
+
+  margin-top: 12px;
+
+  line-height: 1.5;
+
+}
 
 .auth-switch {
+
   margin-top: 24px;
 
   text-align: center;
 
-  color: #707782;
+  color: #717883;
 
   font-size: 12px;
+
 }
 
-
 .auth-switch button {
+
   border: 0;
 
   background: transparent;
 
   color: #fff;
 
-  font-weight: 750;
+  font-weight: 800;
 
   cursor: pointer;
 
-  margin-left: 5px;
-}
+  margin-left: 4px;
 
-
-.error {
-  min-height: 18px;
-
-  margin-top: 12px;
-
-  color: var(--red);
-
-  font-size: 12px;
-
-  line-height: 1.5;
 }
 
 
@@ -543,10 +605,13 @@ body::before {
    ========================================================= */
 
 .sidebar {
+
   position: fixed;
 
   left: 22px;
+
   top: 22px;
+
   bottom: 22px;
 
   width: 245px;
@@ -558,52 +623,52 @@ body::before {
   z-index: 100;
 
   display: flex;
+
   flex-direction: column;
 
   background:
+
     linear-gradient(
-      160deg,
-      rgba(255,255,255,.075),
+      145deg,
+      rgba(255,255,255,.095),
       rgba(255,255,255,.025)
     );
 
-  backdrop-filter: var(--blur-heavy);
-  -webkit-backdrop-filter: var(--blur-heavy);
+  backdrop-filter:
+    var(--blurHeavy);
+
+  -webkit-backdrop-filter:
+    var(--blurHeavy);
 
   box-shadow:
-    0 35px 100px rgba(0,0,0,.5),
-    inset 0 1px 0 rgba(255,255,255,.08);
-}
 
+    inset 0 1px 0 rgba(255,255,255,.13),
+
+    0 35px 100px rgba(0,0,0,.55);
+
+}
 
 .sidebar-logo {
-  padding:
-    7px 13px 30px;
+  padding: 7px 13px 30px;
 }
 
-
 .sidebar-nav {
+
   display: flex;
 
   flex-direction: column;
 
   gap: 6px;
+
 }
 
-
 .nav-button {
+
   position: relative;
-
-  display: flex;
-  align-items: center;
-
-  gap: 13px;
 
   width: 100%;
 
   height: 52px;
-
-  padding: 0 15px;
 
   border: 0;
 
@@ -611,48 +676,60 @@ body::before {
 
   background: transparent;
 
-  color: #777f8a;
+  color: #737b86;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 0 15px;
 
   cursor: pointer;
 
   font-size: 13px;
 
-  font-weight: 700;
+  font-weight: 750;
 
   text-align: left;
 
   transition:
-    .35s var(--transition);
+    .35s var(--ease);
+
 }
 
-
 .nav-button:hover {
+
   color: #fff;
 
   background:
     rgba(255,255,255,.045);
+
 }
 
-
 .nav-button.active {
+
   color: #fff;
 
   background:
+
     linear-gradient(
       135deg,
       rgba(255,255,255,.12),
-      rgba(255,255,255,.045)
+      rgba(255,255,255,.035)
     );
 
   border:
     1px solid rgba(255,255,255,.08);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06);
+    inset 0 1px 0 rgba(255,255,255,.07);
+
 }
 
-
 .nav-button.active::before {
+
   content: "";
 
   position: absolute;
@@ -660,6 +737,7 @@ body::before {
   left: -1px;
 
   width: 3px;
+
   height: 22px;
 
   border-radius: 0 10px 10px 0;
@@ -667,56 +745,56 @@ body::before {
   background: #fff;
 
   box-shadow:
-    0 0 18px rgba(255,255,255,.45);
+    0 0 18px rgba(255,255,255,.55);
+
 }
 
-
 .nav-icon {
+
   width: 22px;
 
   text-align: center;
 
-  font-size: 16px;
+  font-size: 17px;
 
-  opacity: .8;
 }
-
 
 .sidebar-bottom {
   margin-top: auto;
 }
 
-
 .logout {
+
   width: 100%;
 
   height: 48px;
 
   border-radius: 15px;
 
-  border: 1px solid rgba(255,255,255,.06);
+  border:
+    1px solid rgba(255,255,255,.06);
 
   background:
     rgba(255,255,255,.025);
 
-  color: #777f8a;
+  color: #747b86;
 
   cursor: pointer;
 
-  font-size: 12px;
-
-  font-weight: 700;
+  font-weight: 750;
 
   transition:
-    .3s var(--transition);
+    .3s var(--ease);
+
 }
 
-
 .logout:hover {
+
   color: #fff;
 
   background:
-    rgba(255,255,255,.06);
+    rgba(255,255,255,.065);
+
 }
 
 
@@ -725,81 +803,84 @@ body::before {
    ========================================================= */
 
 .main {
+
   margin-left: 290px;
 
   padding:
     35px 38px 80px;
 
   max-width: 1700px;
+
 }
 
-
-/* =========================================================
-   TOPBAR
-   ========================================================= */
-
 .topbar {
-  display: flex;
 
-  justify-content: space-between;
+  display: flex;
 
   align-items: center;
 
+  justify-content: space-between;
+
   margin-bottom: 32px;
+
 }
 
-
 .welcome-small {
+
   color: #656c77;
 
   font-size: 10px;
 
   letter-spacing: 2px;
 
-  font-weight: 800;
+  font-weight: 850;
 
   margin-bottom: 7px;
-}
 
+}
 
 .welcome-title {
-  font-size: clamp(28px, 4vw, 44px);
 
-  letter-spacing: -2px;
+  font-size: 43px;
 
-  font-weight: 850;
+  letter-spacing: -2.5px;
+
+  font-weight: 900;
+
 }
 
-
 .profile {
+
   display: flex;
 
   align-items: center;
 
   gap: 10px;
 
-  padding:
-    6px 13px 6px 6px;
+  padding: 6px 13px 6px 6px;
 
   border-radius: 999px;
-
-  border:
-    1px solid rgba(255,255,255,.09);
 
   background:
     rgba(255,255,255,.045);
 
-  backdrop-filter: blur(25px);
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  backdrop-filter:
+    blur(25px);
+
 }
 
-
 .avatar {
+
   width: 38px;
   height: 38px;
 
   border-radius: 50%;
 
   display: grid;
+
   place-items: center;
 
   background:
@@ -811,16 +892,13 @@ body::before {
 
   color: #000;
 
-  font-size: 13px;
+  font-weight: 950;
 
-  font-weight: 900;
 }
-
 
 .profile-name {
   font-size: 12px;
-
-  font-weight: 700;
+  font-weight: 750;
 }
 
 
@@ -829,6 +907,7 @@ body::before {
    ========================================================= */
 
 .hero {
+
   min-height: 470px;
 
   border-radius: 34px;
@@ -838,109 +917,128 @@ body::before {
   position: relative;
 
   display: flex;
+
   align-items: flex-end;
 
   padding: 52px;
 
   background:
+
     radial-gradient(
-      circle at 75% 25%,
-      rgba(255,255,255,.09),
-      transparent 25%
+      circle at 82% 15%,
+      rgba(255,255,255,.11),
+      transparent 28%
     ),
+
+    radial-gradient(
+      circle at 15% 100%,
+      rgba(255,255,255,.04),
+      transparent 30%
+    ),
+
     linear-gradient(
       135deg,
-      rgba(255,255,255,.085),
+      rgba(255,255,255,.09),
       rgba(255,255,255,.025)
     );
 
   border:
-    1px solid rgba(255,255,255,.11);
-
-  backdrop-filter:
-    blur(35px)
-    saturate(170%);
-
-  -webkit-backdrop-filter:
-    blur(35px)
-    saturate(170%);
+    1px solid rgba(255,255,255,.14);
 
   box-shadow:
-    0 40px 110px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.09);
+
+    inset 0 1px 0 rgba(255,255,255,.13),
+
+    0 40px 110px rgba(0,0,0,.5);
+
+  backdrop-filter:
+    blur(38px)
+    saturate(180%);
+
+  -webkit-backdrop-filter:
+    blur(38px)
+    saturate(180%);
+
 }
 
-
 .hero::before {
+
   content: "";
 
   position: absolute;
 
-  width: 480px;
-  height: 480px;
+  width: 650px;
+  height: 650px;
 
-  right: -140px;
-  top: -170px;
+  right: -240px;
+  top: -310px;
 
   border-radius: 50%;
 
   background:
     radial-gradient(
       circle,
-      rgba(255,255,255,.12),
-      transparent 65%
+      rgba(255,255,255,.14),
+      rgba(255,255,255,.025) 40%,
+      transparent 70%
     );
 
-  filter: blur(10px);
+  filter: blur(12px);
 
-  pointer-events: none;
 }
 
-
 .hero::after {
+
   content: "IRONX";
 
   position: absolute;
 
-  right: 4%;
-  bottom: -45px;
+  right: 3%;
 
-  font-size: clamp(100px, 17vw, 260px);
+  bottom: -55px;
+
+  color:
+    rgba(255,255,255,.025);
+
+  font-size:
+    clamp(110px,17vw,260px);
 
   font-weight: 950;
 
-  letter-spacing: -14px;
-
-  color: rgba(255,255,255,.025);
+  letter-spacing: -15px;
 
   pointer-events: none;
+
 }
 
-
 .hero-content {
+
   position: relative;
 
   z-index: 2;
 
   max-width: 650px;
+
 }
 
-
 .hero-kicker {
-  font-size: 10px;
-
-  letter-spacing: 2.5px;
 
   color: #858d98;
 
+  font-size: 10px;
+
   font-weight: 850;
 
+  letter-spacing: 2.5px;
+
   margin-bottom: 18px;
+
 }
 
-
 .hero-title {
-  font-size: clamp(55px, 8vw, 105px);
+
+  font-size:
+    clamp(55px,8vw,105px);
 
   line-height: .84;
 
@@ -949,18 +1047,20 @@ body::before {
   font-weight: 950;
 
   margin-bottom: 28px;
+
 }
 
-
 .hero-title span {
+
   color: transparent;
 
   -webkit-text-stroke:
     1px rgba(255,255,255,.55);
+
 }
 
-
 .hero-description {
+
   max-width: 510px;
 
   color: #949ba5;
@@ -970,20 +1070,22 @@ body::before {
   font-size: 13px;
 
   margin-bottom: 28px;
+
 }
 
-
 .hero-actions {
+
   display: flex;
 
   gap: 10px;
 
   flex-wrap: wrap;
-}
 
+}
 
 .hero-button,
 .secondary-button {
+
   height: 48px;
 
   padding: 0 20px;
@@ -994,46 +1096,54 @@ body::before {
 
   font-size: 12px;
 
-  font-weight: 800;
+  font-weight: 850;
 
   transition:
-    .3s var(--transition);
+    .35s var(--ease);
+
 }
 
-
 .hero-button {
+
   border: 0;
 
   color: #000;
 
   background: #fff;
 
-  box-shadow:
-    0 15px 35px rgba(255,255,255,.08);
 }
-
 
 .hero-button:hover {
-  transform: translateY(-2px);
+
+  transform:
+    translateY(-3px)
+    scale(1.015);
+
+  box-shadow:
+    0 20px 50px rgba(255,255,255,.12);
+
 }
 
-
 .secondary-button {
+
   border:
-    1px solid rgba(255,255,255,.1);
+    1px solid rgba(255,255,255,.10);
 
   color: #fff;
 
   background:
     rgba(255,255,255,.04);
 
-  backdrop-filter: blur(20px);
+  backdrop-filter:
+    blur(20px);
+
 }
 
-
 .secondary-button:hover {
+
   background:
     rgba(255,255,255,.08);
+
 }
 
 
@@ -1042,52 +1152,59 @@ body::before {
    ========================================================= */
 
 .stats {
+
   display: grid;
 
   grid-template-columns:
-    repeat(4, 1fr);
+    repeat(4,1fr);
 
   gap: 12px;
 
   margin-top: 14px;
+
 }
 
-
 .stat {
+
   padding: 25px;
 
   border-radius: 23px;
 
   transition:
-    .35s var(--transition);
+    .4s var(--ease);
+
 }
 
-
 .stat:hover {
-  transform: translateY(-4px);
+
+  transform:
+    translateY(-5px);
 
   background:
     rgba(255,255,255,.075);
+
 }
 
-
 .stat-number {
+
   font-size: 30px;
 
-  font-weight: 850;
+  font-weight: 900;
 
   letter-spacing: -1px;
 
   margin-bottom: 6px;
+
 }
 
-
 .stat-label {
+
   color: #727985;
 
   font-size: 10px;
 
-  font-weight: 700;
+  font-weight: 750;
+
 }
 
 
@@ -1099,47 +1216,46 @@ body::before {
   margin-top: 65px;
 }
 
-
 .section-head {
-  display: flex;
-
-  justify-content: space-between;
-
   margin-bottom: 20px;
 }
 
-
 .section-head h2 {
+
   font-size: 25px;
 
   letter-spacing: -1px;
 
   margin-bottom: 5px;
+
 }
 
-
 .section-head p {
+
   color: #737a85;
 
   font-size: 12px;
+
 }
 
 
 /* =========================================================
-   FEATURE CARDS
+   FEATURES
    ========================================================= */
 
 .feature-grid {
+
   display: grid;
 
   grid-template-columns:
-    repeat(3, 1fr);
+    repeat(3,1fr);
 
   gap: 13px;
+
 }
 
-
 .feature {
+
   min-height: 210px;
 
   padding: 28px;
@@ -1147,21 +1263,23 @@ body::before {
   border-radius: 25px;
 
   transition:
-    .4s var(--transition);
+    .4s var(--ease);
+
 }
 
-
 .feature:hover {
+
   transform:
     translateY(-6px)
     scale(1.01);
 
   background:
     rgba(255,255,255,.075);
+
 }
 
-
 .feature-number {
+
   color: #555d68;
 
   font-size: 10px;
@@ -1169,22 +1287,25 @@ body::before {
   letter-spacing: 1px;
 
   margin-bottom: 55px;
+
 }
 
-
 .feature h3 {
+
   font-size: 20px;
 
   margin-bottom: 8px;
+
 }
 
-
 .feature p {
+
   color: #777f89;
 
   font-size: 12px;
 
   line-height: 1.6;
+
 }
 
 
@@ -1193,56 +1314,62 @@ body::before {
    ========================================================= */
 
 .plan-grid {
+
   display: grid;
 
   grid-template-columns:
-    repeat(3, 1fr);
+    repeat(3,1fr);
 
   gap: 14px;
+
 }
 
-
 .plan-card {
+
   padding: 28px;
 
   border-radius: 25px;
 
   transition:
-    .4s var(--transition);
-}
+    .4s var(--ease);
 
+}
 
 .plan-card:hover {
-  transform: translateY(-5px);
+  transform:
+    translateY(-5px);
 }
 
-
 .plan-day {
+
   color: #666e79;
 
   font-size: 10px;
 
   letter-spacing: 1.5px;
 
-  font-weight: 800;
+  font-weight: 850;
 
   margin-bottom: 15px;
+
 }
 
-
 .plan-card h3 {
+
   font-size: 24px;
 
   margin-bottom: 25px;
-}
 
+}
 
 .exercise-list {
+
   list-style: none;
+
 }
 
-
 .exercise-list li {
+
   display: flex;
 
   justify-content: space-between;
@@ -1255,13 +1382,15 @@ body::before {
   font-size: 12px;
 
   color: #a6adb7;
+
 }
 
-
 .exercise-list li span:last-child {
+
   color: #fff;
 
-  font-weight: 750;
+  font-weight: 800;
+
 }
 
 
@@ -1270,36 +1399,40 @@ body::before {
    ========================================================= */
 
 .progress-layout {
+
   display: grid;
 
   grid-template-columns:
     1fr 1.3fr;
 
   gap: 14px;
+
 }
 
-
 .progress-card {
+
   padding: 35px;
 
   border-radius: 28px;
+
 }
 
-
 .big-progress {
+
   font-size: 75px;
 
   line-height: 1;
 
-  font-weight: 900;
+  font-weight: 950;
 
   letter-spacing: -5px;
 
   margin-bottom: 12px;
+
 }
 
-
 .progress-bar {
+
   height: 6px;
 
   margin-top: 20px;
@@ -1310,10 +1443,11 @@ body::before {
   border-radius: 99px;
 
   overflow: hidden;
+
 }
 
-
 .progress-fill {
+
   width: 68%;
 
   height: 100%;
@@ -1329,20 +1463,22 @@ body::before {
 
   box-shadow:
     0 0 20px rgba(255,255,255,.25);
+
 }
 
-
 .lift-grid {
+
   display: grid;
 
   grid-template-columns:
-    repeat(3, 1fr);
+    repeat(3,1fr);
 
   gap: 12px;
+
 }
 
-
 .lift {
+
   min-height: 170px;
 
   padding: 25px;
@@ -1356,26 +1492,31 @@ body::before {
   justify-content: space-between;
 
   transition:
-    .35s var(--transition);
-}
+    .35s var(--ease);
 
+}
 
 .lift:hover {
-  transform: translateY(-5px);
+
+  transform:
+    translateY(-5px);
+
 }
 
-
 .lift-name {
+
   color: #858c96;
 
   font-size: 11px;
+
 }
 
-
 .lift-value {
+
   font-size: 27px;
 
-  font-weight: 850;
+  font-weight: 900;
+
 }
 
 
@@ -1384,15 +1525,17 @@ body::before {
    ========================================================= */
 
 .goals {
+
   display: flex;
 
   flex-direction: column;
 
   gap: 12px;
+
 }
 
-
 .goal {
+
   min-height: 90px;
 
   padding: 20px 23px;
@@ -1406,33 +1549,38 @@ body::before {
   align-items: center;
 
   transition:
-    .35s var(--transition);
+    .35s var(--ease);
+
 }
 
-
 .goal:hover {
-  transform: translateX(4px);
+
+  transform:
+    translateX(5px);
 
   background:
     rgba(255,255,255,.075);
+
 }
 
-
 .goal-info h3 {
+
   font-size: 14px;
 
   margin-bottom: 5px;
+
 }
 
-
 .goal-info p {
+
   color: #6f7782;
 
   font-size: 11px;
+
 }
 
-
 .goal-check {
+
   width: 26px;
   height: 26px;
 
@@ -1446,10 +1594,11 @@ body::before {
   place-items: center;
 
   color: transparent;
+
 }
 
-
 .goal-check.done {
+
   background: #fff;
 
   color: #000;
@@ -1459,6 +1608,7 @@ body::before {
   font-size: 12px;
 
   font-weight: 900;
+
 }
 
 
@@ -1467,39 +1617,41 @@ body::before {
    ========================================================= */
 
 .account-card {
+
   max-width: 700px;
 
   border-radius: 27px;
 
   padding: 10px 25px;
+
 }
 
-
 .account-row {
+
   min-height: 72px;
 
   display: flex;
 
-  justify-content: space-between;
-
   align-items: center;
+
+  justify-content: space-between;
 
   border-bottom:
     1px solid rgba(255,255,255,.055);
-}
 
+}
 
 .account-row:last-child {
   border-bottom: 0;
 }
 
-
 .account-label {
+
   color: #777f89;
 
   font-size: 12px;
-}
 
+}
 
 .account-row strong {
   font-size: 13px;
@@ -1507,36 +1659,41 @@ body::before {
 
 
 /* =========================================================
-   PAGE TRANSITIONS
+   PAGE ANIMATION
    ========================================================= */
 
 .page {
+
   animation:
-    pageEnter .5s var(--transition);
+    pageIn .45s var(--ease);
+
 }
 
-
-@keyframes pageEnter {
+@keyframes pageIn {
 
   from {
+
     opacity: 0;
 
     transform:
       translateY(12px);
+
   }
 
   to {
+
     opacity: 1;
 
     transform:
       translateY(0);
+
   }
 
 }
 
 
 /* =========================================================
-   PREMIUM FLOATING MOBILE NAV
+   MOBILE NAV
    ========================================================= */
 
 .mobile-nav {
@@ -1551,50 +1708,52 @@ body::before {
     translateX(-50%);
 
   width:
-    min(94vw, 470px);
+    min(92vw,460px);
 
-  height: 70px;
+  height: 69px;
 
-  padding: 7px;
+  padding: 6px;
 
   display: flex;
 
   align-items: center;
 
-  justify-content: space-between;
-
-  gap: 5px;
+  gap: 4px;
 
   z-index: 999;
 
   border-radius: 25px;
 
   background:
+
     linear-gradient(
       145deg,
-      rgba(255,255,255,.105),
+      rgba(255,255,255,.115),
       rgba(255,255,255,.035)
     );
 
   border:
-    1px solid rgba(255,255,255,.13);
+    1px solid rgba(255,255,255,.15);
 
   backdrop-filter:
-    blur(35px)
-    saturate(180%);
+    blur(38px)
+    saturate(190%)
+    brightness(115%);
 
   -webkit-backdrop-filter:
-    blur(35px)
-    saturate(180%);
+    blur(38px)
+    saturate(190%)
+    brightness(115%);
 
   box-shadow:
-    0 25px 70px rgba(0,0,0,.55),
-    inset 0 1px 0 rgba(255,255,255,.10),
-    inset 0 -1px 0 rgba(0,0,0,.2);
+
+    inset 0 1px 0 rgba(255,255,255,.13),
+
+    inset 0 -1px 0 rgba(0,0,0,.25),
+
+    0 25px 80px rgba(0,0,0,.58);
+
 }
-
-
-/* top glass reflection */
 
 .mobile-nav::before {
 
@@ -1602,11 +1761,11 @@ body::before {
 
   position: absolute;
 
+  left: 15%;
+
+  right: 15%;
+
   top: 0;
-
-  left: 14%;
-
-  right: 14%;
 
   height: 1px;
 
@@ -1618,9 +1777,7 @@ body::before {
       transparent
     );
 
-  opacity: .7;
 }
-
 
 .mobile-nav button {
 
@@ -1628,15 +1785,15 @@ body::before {
 
   flex: 1;
 
-  height: 56px;
+  height: 55px;
 
   border: 0;
 
-  border-radius: 19px;
+  border-radius: 18px;
 
   background: transparent;
 
-  color: #686f7a;
+  color: #6d7480;
 
   display: flex;
 
@@ -1652,36 +1809,32 @@ body::before {
 
   font-size: 9px;
 
-  font-weight: 750;
+  font-weight: 800;
 
   transition:
-    .35s var(--transition);
-}
-
-
-.mobile-nav button:hover {
-
-  color: #fff;
+    .35s var(--ease);
 
 }
-
 
 .mobile-nav button.active {
 
   color: #fff;
 
   background:
+
     linear-gradient(
       145deg,
-      rgba(255,255,255,.13),
-      rgba(255,255,255,.045)
+      rgba(255,255,255,.14),
+      rgba(255,255,255,.04)
     );
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 7px 25px rgba(0,0,0,.18);
-}
 
+    inset 0 1px 0 rgba(255,255,255,.10),
+
+    0 8px 25px rgba(0,0,0,.18);
+
+}
 
 .mobile-nav button.active::after {
 
@@ -1691,41 +1844,36 @@ body::before {
 
   bottom: 5px;
 
-  width: 18px;
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+
+  width: 17px;
 
   height: 2px;
 
-  border-radius: 10px;
+  border-radius: 20px;
 
   background: #fff;
 
   box-shadow:
-    0 0 12px rgba(255,255,255,.6);
-}
+    0 0 12px rgba(255,255,255,.7);
 
+}
 
 .mobile-icon {
 
   font-size: 18px;
 
-  line-height: 1;
 }
 
 
 /* =========================================================
-   HIDDEN
+   DESKTOP / MOBILE
    ========================================================= */
 
-.hidden {
-  display: none !important;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (min-width: 901px) {
+@media (min-width:901px) {
 
   .mobile-nav {
     display: none;
@@ -1733,8 +1881,7 @@ body::before {
 
 }
 
-
-@media (max-width: 1100px) {
+@media (max-width:1100px) {
 
   .sidebar {
     width: 210px;
@@ -1742,92 +1889,98 @@ body::before {
 
   .main {
     margin-left: 250px;
-
     padding-left: 25px;
     padding-right: 25px;
   }
 
   .stats {
     grid-template-columns:
-      repeat(2, 1fr);
+      repeat(2,1fr);
   }
 
   .feature-grid,
   .plan-grid {
     grid-template-columns:
-      repeat(2, 1fr);
+      repeat(2,1fr);
   }
 
 }
 
-
-@media (max-width: 900px) {
+@media (max-width:900px) {
 
   .sidebar {
     display: none;
   }
 
   .main {
+
     margin-left: 0;
 
     padding:
-      22px 16px 110px;
+      22px 16px 105px;
+
   }
 
   .hero {
-    min-height: 500px;
 
-    padding: 32px 25px;
+    min-height: 510px;
+
+    padding:
+      32px 25px;
 
     border-radius: 29px;
+
   }
 
-  .hero-title {
-    font-size:
-      clamp(53px, 16vw, 90px);
+  .progress-layout {
 
-    letter-spacing: -4px;
+    grid-template-columns: 1fr;
+
   }
 
   .feature-grid,
   .plan-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .progress-layout {
     grid-template-columns: 1fr;
+
   }
 
 }
 
-
-@media (max-width: 600px) {
+@media (max-width:600px) {
 
   #authScreen {
     padding: 18px;
   }
 
   .auth-top {
+
     top: 18px;
 
     left: 18px;
     right: 18px;
+
   }
 
   .auth-card {
-    padding: 29px 22px;
 
-    border-radius: 27px;
+    padding:
+      29px 22px;
+
+    border-radius: 28px;
+
   }
 
   .auth-title {
+
     font-size: 34px;
 
     letter-spacing: -1.7px;
+
   }
 
-  .topbar {
-    margin-bottom: 22px;
+  .welcome-title {
+    font-size: 32px;
   }
 
   .profile-name {
@@ -1835,43 +1988,42 @@ body::before {
   }
 
   .hero {
-    min-height: 530px;
 
-    align-items: flex-end;
+    min-height: 530px;
 
     padding:
       28px 22px;
+
   }
 
-  .hero-description {
-    font-size: 12px;
+  .hero-title {
+
+    font-size:
+      clamp(53px,16vw,90px);
+
+    letter-spacing: -4px;
+
   }
 
   .stats {
+
     grid-template-columns:
-      repeat(2, 1fr);
+      repeat(2,1fr);
 
     gap: 9px;
+
   }
 
   .stat {
+
     padding: 19px;
 
     border-radius: 20px;
+
   }
 
   .stat-number {
     font-size: 25px;
-  }
-
-  .feature {
-    min-height: 180px;
-
-    padding: 23px;
-  }
-
-  .feature-number {
-    margin-bottom: 35px;
   }
 
   .lift-grid {
@@ -1882,35 +2034,2160 @@ body::before {
     min-height: 125px;
   }
 
-  .progress-card {
-    padding: 27px;
-  }
+  .mobile-nav {
 
-  .big-progress {
-    font-size: 60px;
+    bottom: 12px;
+
+    width:
+      calc(100vw - 24px);
+
+    height: 66px;
+
   }
 
 }
 
 
 /* =========================================================
-   REDUCE MOTION
+   RTL
    ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+[dir="rtl"] {
+
+  text-align: right;
+
+}
+
+[dir="rtl"] .sidebar {
+
+  left: auto;
+
+  right: 22px;
+
+}
+
+[dir="rtl"] .main {
+
+  margin-left: 0;
+
+  margin-right: 290px;
+
+}
+
+[dir="rtl"] .nav-button {
+
+  text-align: right;
+
+}
+
+[dir="rtl"] .nav-button.active::before {
+
+  left: auto;
+
+  right: -1px;
+
+  border-radius:
+    10px 0 0 10px;
+
+}
+
+[dir="rtl"] .profile {
+
+  flex-direction: row-reverse;
+
+}
+
+@media (max-width:900px) {
+
+  [dir="rtl"] .main {
+
+    margin-right: 0;
+
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion:reduce) {
 
   *,
   *::before,
   *::after {
 
-    animation-duration: .01ms !important;
+    animation-duration:
+      .01ms !important;
 
-    animation-iteration-count: 1 !important;
+    animation-iteration-count:
+      1 !important;
 
-    transition-duration: .01ms !important;
+    transition-duration:
+      .01ms !important;
 
-    scroll-behavior: auto !important;
   }
 
 }
+
 </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     AUTH SCREEN
+     ===================================================== -->
+
+<div id="authScreen">
+
+  <div class="auth-top">
+
+    <div class="logo">
+      IRON<span>X</span>
+    </div>
+
+    <div class="language">
+
+      <button
+        id="enBtn"
+        class="active"
+        onclick="setLanguage('en')">
+        EN
+      </button>
+
+      <button
+        id="arBtn"
+        onclick="setLanguage('ar')">
+        عربي
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="auth-card glass">
+
+    <div
+      class="auth-mode-label"
+      id="authModeLabel">
+      MEMBER ACCESS
+    </div>
+
+    <h1
+      class="auth-title"
+      id="authTitle">
+      Welcome back.
+    </h1>
+
+    <p
+      class="auth-subtitle"
+      id="authSubtitle">
+      Sign in to continue your training.
+    </p>
+
+
+    <form id="authForm">
+
+      <div
+        class="field hidden"
+        id="nameField">
+
+        <label id="nameLabel">
+          Name
+        </label>
+
+        <input
+          id="nameInput"
+          type="text"
+          autocomplete="name"
+          placeholder="Your name">
+
+      </div>
+
+
+      <div class="field">
+
+        <label id="emailLabel">
+          Email
+        </label>
+
+        <input
+          id="emailInput"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          required>
+
+      </div>
+
+
+      <div class="field">
+
+        <label id="passwordLabel">
+          Password
+        </label>
+
+        <input
+          id="passwordInput"
+          type="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          required>
+
+      </div>
+
+
+      <button
+        class="primary"
+        id="authButton"
+        type="submit">
+
+        Sign In
+
+      </button>
+
+
+      <div
+        id="authMessage"
+        class="error">
+      </div>
+
+    </form>
+
+
+    <div class="auth-switch">
+
+      <span id="switchText">
+        Don't have an account?
+      </span>
+
+      <button
+        id="switchButton"
+        onclick="toggleAuthMode()">
+
+        Create account
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     APP
+     ===================================================== -->
+
+<div
+  id="app"
+  class="hidden">
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar glass">
+
+  <div class="sidebar-logo">
+
+    <div class="logo">
+      IRON<span>X</span>
+    </div>
+
+  </div>
+
+
+  <nav class="sidebar-nav">
+
+    <button
+      class="nav-button active"
+      data-page="home">
+
+      <span class="nav-icon">⌂</span>
+
+      <span data-i18n="home">
+        Home
+      </span>
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="plan">
+
+      <span class="nav-icon">▣</span>
+
+      <span data-i18n="plan">
+        My Plan
+      </span>
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="progress">
+
+      <span class="nav-icon">↗</span>
+
+      <span data-i18n="progress">
+        Progress
+      </span>
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="goals">
+
+      <span class="nav-icon">◎</span>
+
+      <span data-i18n="goals">
+        Goals
+      </span>
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="account">
+
+      <span class="nav-icon">◉</span>
+
+      <span data-i18n="account">
+        Account
+      </span>
+
+    </button>
+
+  </nav>
+
+
+  <div class="sidebar-bottom">
+
+    <button
+      class="logout"
+      onclick="logout()"
+      data-i18n="logout">
+
+      Log out
+
+    </button>
+
+  </div>
+
+</aside>
+
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+  <div>
+
+    <div
+      class="welcome-small"
+      data-i18n="welcomeBack">
+
+      WELCOME BACK
+
+    </div>
+
+    <h1
+      class="welcome-title"
+      id="welcomeTitle">
+
+      Athlete.
+
+    </h1>
+
+  </div>
+
+
+  <div class="profile">
+
+    <div
+      class="avatar"
+      id="avatar">
+
+      I
+
+    </div>
+
+    <span
+      class="profile-name"
+      id="profileName">
+
+      Athlete
+
+    </span>
+
+  </div>
+
+</header>
+
+
+
+<!-- HOME -->
+
+<section
+  id="page-home"
+  class="page">
+
+
+<div class="hero">
+
+  <div class="hero-content">
+
+    <div
+      class="hero-kicker"
+      data-i18n="kicker">
+
+      PERSONAL COACHING
+
+    </div>
+
+
+    <h2 class="hero-title">
+
+      BUILD<br>
+
+      <span>YOUR</span><br>
+
+      LEGACY.
+
+    </h2>
+
+
+    <p
+      class="hero-description"
+      data-i18n="heroDescription">
+
+      Training, nutrition and progress built around your goals.
+      No unnecessary noise. Just consistent work.
+
+    </p>
+
+
+    <div class="hero-actions">
+
+      <button
+        class="hero-button"
+        onclick="showPage('plan')"
+        data-i18n="viewPlan">
+
+        View my plan
+
+      </button>
+
+
+      <button
+        class="secondary-button"
+        onclick="showPage('progress')"
+        data-i18n="viewProgress">
+
+        View progress
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="stats">
+
+  <div class="stat glass">
+
+    <div class="stat-number">
+      4
+    </div>
+
+    <div
+      class="stat-label"
+      data-i18n="workouts">
+
+      Workouts / week
+
+    </div>
+
+  </div>
+
+
+  <div class="stat glass">
+
+    <div class="stat-number">
+      68%
+    </div>
+
+    <div
+      class="stat-label"
+      data-i18n="completion">
+
+      Plan completion
+
+    </div>
+
+  </div>
+
+
+  <div class="stat glass">
+
+    <div class="stat-number">
+      12
+    </div>
+
+    <div
+      class="stat-label"
+      data-i18n="weeks">
+
+      Weeks active
+
+    </div>
+
+  </div>
+
+
+  <div class="stat glass">
+
+    <div class="stat-number">
+      8
+    </div>
+
+    <div
+      class="stat-label"
+      data-i18n="sessions">
+
+      Sessions
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="section">
+
+  <div class="section-head">
+
+    <h2 data-i18n="focus">
+      Your focus
+    </h2>
+
+    <p data-i18n="focusSub">
+      Keep the important things simple.
+    </p>
+
+  </div>
+
+
+  <div class="feature-grid">
+
+
+    <div class="feature glass">
+
+      <div class="feature-number">
+        01
+      </div>
+
+      <h3 data-i18n="strength">
+        Strength
+      </h3>
+
+      <p data-i18n="strengthText">
+        Progressive overload with controlled technique.
+      </p>
+
+    </div>
+
+
+    <div class="feature glass">
+
+      <div class="feature-number">
+        02
+      </div>
+
+      <h3 data-i18n="nutrition">
+        Nutrition
+      </h3>
+
+      <p data-i18n="nutritionText">
+        Simple targets that fit your lifestyle.
+      </p>
+
+    </div>
+
+
+    <div class="feature glass">
+
+      <div class="feature-number">
+        03
+      </div>
+
+      <h3 data-i18n="tracking">
+        Tracking
+      </h3>
+
+      <p data-i18n="trackingText">
+        Measure your work and adjust intelligently.
+      </p>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+</section>
+
+
+
+<!-- PLAN -->
+
+<section
+  id="page-plan"
+  class="page hidden">
+
+  <div class="section-head">
+
+    <h2 data-i18n="planTitle">
+      My Training Plan
+    </h2>
+
+    <p data-i18n="planSub">
+      This week's sessions.
+    </p>
+
+  </div>
+
+
+  <div class="plan-grid">
+
+
+    <div class="plan-card glass">
+
+      <div class="plan-day">
+        DAY 01
+      </div>
+
+      <h3>
+        Upper A
+      </h3>
+
+      <ul class="exercise-list">
+
+        <li>
+          <span>Bench Press</span>
+          <span>4×6</span>
+        </li>
+
+        <li>
+          <span>Row</span>
+          <span>4×8</span>
+        </li>
+
+        <li>
+          <span>Shoulder Press</span>
+          <span>3×8</span>
+        </li>
+
+        <li>
+          <span>Lat Pulldown</span>
+          <span>3×10</span>
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <div class="plan-card glass">
+
+      <div class="plan-day">
+        DAY 02
+      </div>
+
+      <h3>
+        Upper B
+      </h3>
+
+      <ul class="exercise-list">
+
+        <li>
+          <span>Incline Press</span>
+          <span>4×8</span>
+        </li>
+
+        <li>
+          <span>T-Bar Row</span>
+          <span>4×8</span>
+        </li>
+
+        <li>
+          <span>Lateral Raise</span>
+          <span>3×12</span>
+        </li>
+
+        <li>
+          <span>Biceps Curl</span>
+          <span>3×10</span>
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <div class="plan-card glass">
+
+      <div class="plan-day">
+        DAY 03
+      </div>
+
+      <h3>
+        Recovery
+      </h3>
+
+      <ul class="exercise-list">
+
+        <li>
+          <span>Walking</span>
+          <span>20m</span>
+        </li>
+
+        <li>
+          <span>Mobility</span>
+          <span>10m</span>
+        </li>
+
+        <li>
+          <span>Sleep</span>
+          <span>8h</span>
+        </li>
+
+        <li>
+          <span>Hydration</span>
+          <span>✓</span>
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- PROGRESS -->
+
+<section
+  id="page-progress"
+  class="page hidden">
+
+  <div class="section-head">
+
+    <h2 data-i18n="progressTitle">
+      Progress
+    </h2>
+
+    <p data-i18n="progressSub">
+      Your current performance.
+    </p>
+
+  </div>
+
+
+  <div class="progress-layout">
+
+
+    <div class="progress-card glass">
+
+      <div class="big-progress">
+        68%
+      </div>
+
+      <p style="color:var(--muted)">
+        Weekly plan completion
+      </p>
+
+      <div class="progress-bar">
+
+        <div class="progress-fill"></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="lift-grid">
+
+
+      <div class="lift glass">
+
+        <div class="lift-name">
+          Bench Press
+        </div>
+
+        <div class="lift-value">
+          80 kg
+        </div>
+
+      </div>
+
+
+      <div class="lift glass">
+
+        <div class="lift-name">
+          Deadlift
+        </div>
+
+        <div class="lift-value">
+          140 kg
+        </div>
+
+      </div>
+
+
+      <div class="lift glass">
+
+        <div class="lift-name">
+          Squat
+        </div>
+
+        <div class="lift-value">
+          100 kg
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- GOALS -->
+
+<section
+  id="page-goals"
+  class="page hidden">
+
+  <div class="section-head">
+
+    <h2 data-i18n="goalsTitle">
+      Goals
+    </h2>
+
+    <p data-i18n="goalsSub">
+      Small wins build the big result.
+    </p>
+
+  </div>
+
+
+  <div class="goals">
+
+
+    <div class="goal glass">
+
+      <div class="goal-info">
+
+        <h3 data-i18n="goal1">
+          Complete 4 workouts
+        </h3>
+
+        <p data-i18n="goal1sub">
+          This week
+        </p>
+
+      </div>
+
+      <div class="goal-check done">
+        ✓
+      </div>
+
+    </div>
+
+
+    <div class="goal glass">
+
+      <div class="goal-info">
+
+        <h3 data-i18n="goal2">
+          Improve bench press
+        </h3>
+
+        <p data-i18n="goal2sub">
+          Reach the next training milestone
+        </p>
+
+      </div>
+
+      <div class="goal-check"></div>
+
+    </div>
+
+
+    <div class="goal glass">
+
+      <div class="goal-info">
+
+        <h3 data-i18n="goal3">
+          Stay consistent
+        </h3>
+
+        <p data-i18n="goal3sub">
+          Keep nutrition on target
+        </p>
+
+      </div>
+
+      <div class="goal-check"></div>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- ACCOUNT -->
+
+<section
+  id="page-account"
+  class="page hidden">
+
+  <div class="section-head">
+
+    <h2 data-i18n="accountTitle">
+      Account
+    </h2>
+
+    <p data-i18n="accountSub">
+      Your IRONX profile.
+    </p>
+
+  </div>
+
+
+  <div class="account-card glass">
+
+
+    <div class="account-row">
+
+      <span
+        class="account-label"
+        data-i18n="name">
+
+        Name
+
+      </span>
+
+      <strong id="accountName">
+        -
+      </strong>
+
+    </div>
+
+
+    <div class="account-row">
+
+      <span class="account-label">
+        Email
+      </span>
+
+      <strong id="accountEmail">
+        -
+      </strong>
+
+    </div>
+
+
+    <div class="account-row">
+
+      <span
+        class="account-label"
+        data-i18n="status">
+
+        Status
+
+      </span>
+
+      <strong
+        style="color:var(--green)"
+        data-i18n="active">
+
+        Active
+
+      </strong>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+
+  <button
+    class="active"
+    data-page="home">
+
+    <span class="mobile-icon">
+      ⌂
+    </span>
+
+    <span data-i18n="home">
+      Home
+    </span>
+
+  </button>
+
+
+  <button data-page="plan">
+
+    <span class="mobile-icon">
+      ▣
+    </span>
+
+    <span data-i18n="plan">
+      Plan
+    </span>
+
+  </button>
+
+
+  <button data-page="progress">
+
+    <span class="mobile-icon">
+      ↗
+    </span>
+
+    <span data-i18n="progress">
+      Progress
+    </span>
+
+  </button>
+
+
+  <button data-page="goals">
+
+    <span class="mobile-icon">
+      ◎
+    </span>
+
+    <span data-i18n="goals">
+      Goals
+    </span>
+
+  </button>
+
+
+  <button data-page="account">
+
+    <span class="mobile-icon">
+      ◉
+    </span>
+
+    <span data-i18n="account">
+      Account
+    </span>
+
+  </button>
+
+</nav>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+const SUPABASE_URL =
+  "https://uibzmqioeumuhczljolu.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_rSRn52GyErhIZbjGicxfYw_3myRbrbx";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let currentUser = null;
+
+let authMode = "login";
+
+let language =
+  localStorage.getItem("ironx-language") || "en";
+
+
+/* =========================================================
+   TRANSLATIONS
+   ========================================================= */
+
+const translations = {
+
+  en: {
+
+    home: "Home",
+    plan: "My Plan",
+    progress: "Progress",
+    goals: "Goals",
+    account: "Account",
+    logout: "Log out",
+
+    welcomeBack: "WELCOME BACK",
+
+    kicker: "PERSONAL COACHING",
+
+    heroDescription:
+      "Training, nutrition and progress built around your goals. No unnecessary noise. Just consistent work.",
+
+    viewPlan: "View my plan",
+    viewProgress: "View progress",
+
+    workouts: "Workouts / week",
+    completion: "Plan completion",
+    weeks: "Weeks active",
+    sessions: "Sessions",
+
+    focus: "Your focus",
+    focusSub:
+      "Keep the important things simple.",
+
+    strength: "Strength",
+    strengthText:
+      "Progressive overload with controlled technique.",
+
+    nutrition: "Nutrition",
+    nutritionText:
+      "Simple targets that fit your lifestyle.",
+
+    tracking: "Tracking",
+    trackingText:
+      "Measure your work and adjust intelligently.",
+
+    planTitle: "My Training Plan",
+    planSub: "This week's sessions.",
+
+    progressTitle: "Progress",
+    progressSub:
+      "Your current performance.",
+
+    goalsTitle: "Goals",
+    goalsSub:
+      "Small wins build the big result.",
+
+    goal1: "Complete 4 workouts",
+    goal1sub: "This week",
+
+    goal2: "Improve bench press",
+    goal2sub:
+      "Reach the next training milestone",
+
+    goal3: "Stay consistent",
+    goal3sub:
+      "Keep nutrition on target",
+
+    accountTitle: "Account",
+    accountSub:
+      "Your IRONX profile.",
+
+    name: "Name",
+    status: "Status",
+    active: "Active"
+
+  },
+
+
+  ar: {
+
+    home: "الرئيسية",
+    plan: "خطتي",
+    progress: "التقدم",
+    goals: "الأهداف",
+    account: "الحساب",
+    logout: "تسجيل الخروج",
+
+    welcomeBack: "مرحبًا بعودتك",
+
+    kicker: "تدريب شخصي",
+
+    heroDescription:
+      "تدريب وتغذية ومتابعة مصممة حول أهدافك. بدون تعقيد. فقط شغل مستمر.",
+
+    viewPlan: "عرض خطتي",
+    viewProgress: "عرض التقدم",
+
+    workouts: "تمرين / أسبوع",
+    completion: "إكمال الخطة",
+    weeks: "أسابيع نشطة",
+    sessions: "جلسات",
+
+    focus: "تركيزك",
+    focusSub:
+      "خلّي المهم بسيط.",
+
+    strength: "القوة",
+    strengthText:
+      "زيادة تدريجية في الحمل مع أداء متحكم.",
+
+    nutrition: "التغذية",
+    nutritionText:
+      "أهداف بسيطة تناسب أسلوب حياتك.",
+
+    tracking: "المتابعة",
+    trackingText:
+      "قِس شغلك وعدّل خطتك بذكاء.",
+
+    planTitle: "خطة التدريب",
+    planSub:
+      "جلسات هذا الأسبوع.",
+
+    progressTitle: "التقدم",
+    progressSub:
+      "مستواك الحالي.",
+
+    goalsTitle: "الأهداف",
+    goalsSub:
+      "الانتصارات الصغيرة تصنع النتيجة الكبيرة.",
+
+    goal1: "إكمال 4 تمارين",
+    goal1sub: "هذا الأسبوع",
+
+    goal2: "تطوير البنش",
+    goal2sub:
+      "الوصول للمرحلة التدريبية القادمة",
+
+    goal3: "الاستمرارية",
+    goal3sub:
+      "الحفاظ على التغذية",
+
+    accountTitle: "الحساب",
+    accountSub:
+      "ملفك في IRONX.",
+
+    name: "الاسم",
+    status: "الحالة",
+    active: "نشط"
+
+  }
+
+};
+
+
+/* =========================================================
+   LANGUAGE
+   ========================================================= */
+
+function setLanguage(lang) {
+
+  language = lang;
+
+  localStorage.setItem(
+    "ironx-language",
+    lang
+  );
+
+  document.documentElement.lang =
+    lang;
+
+  document.documentElement.dir =
+    lang === "ar"
+      ? "rtl"
+      : "ltr";
+
+
+  document
+    .getElementById("enBtn")
+    ?.classList.toggle(
+      "active",
+      lang === "en"
+    );
+
+
+  document
+    .getElementById("arBtn")
+    ?.classList.toggle(
+      "active",
+      lang === "ar"
+    );
+
+
+  const dict =
+    translations[lang];
+
+
+  document
+    .querySelectorAll("[data-i18n]")
+    .forEach(function(el) {
+
+      const key =
+        el.getAttribute("data-i18n");
+
+      if (dict[key]) {
+
+        el.textContent =
+          dict[key];
+
+      }
+
+    });
+
+
+  updateAuthLanguage();
+
+}
+
+
+/* =========================================================
+   AUTH LANGUAGE
+   ========================================================= */
+
+function updateAuthLanguage() {
+
+  const isArabic =
+    language === "ar";
+
+
+  const title =
+    document.getElementById(
+      "authTitle"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "authSubtitle"
+    );
+
+  const mode =
+    document.getElementById(
+      "authModeLabel"
+    );
+
+  const nameLabel =
+    document.getElementById(
+      "nameLabel"
+    );
+
+  const emailLabel =
+    document.getElementById(
+      "emailLabel"
+    );
+
+  const passwordLabel =
+    document.getElementById(
+      "passwordLabel"
+    );
+
+  const switchText =
+    document.getElementById(
+      "switchText"
+    );
+
+  const switchButton =
+    document.getElementById(
+      "switchButton"
+    );
+
+  const authButton =
+    document.getElementById(
+      "authButton"
+    );
+
+
+  if (isArabic) {
+
+    mode.textContent =
+      authMode === "login"
+        ? "دخول الأعضاء"
+        : "إنشاء حساب";
+
+
+    title.textContent =
+      authMode === "login"
+        ? "مرحبًا بعودتك."
+        : "ابدأ رحلتك.";
+
+
+    subtitle.textContent =
+      authMode === "login"
+        ? "سجّل الدخول لمتابعة تدريبك."
+        : "أنشئ حسابك وابدأ التدريب.";
+
+
+    nameLabel.textContent =
+      "الاسم";
+
+
+    emailLabel.textContent =
+      "البريد الإلكتروني";
+
+
+    passwordLabel.textContent =
+      "كلمة المرور";
+
+
+    authButton.textContent =
+      authMode === "login"
+        ? "تسجيل الدخول"
+        : "إنشاء الحساب";
+
+
+    switchText.textContent =
+      authMode === "login"
+        ? "ليس لديك حساب؟"
+        : "لديك حساب بالفعل؟";
+
+
+    switchButton.textContent =
+      authMode === "login"
+        ? "إنشاء حساب"
+        : "تسجيل الدخول";
+
+  } else {
+
+    mode.textContent =
+      authMode === "login"
+        ? "MEMBER ACCESS"
+        : "CREATE ACCOUNT";
+
+
+    title.textContent =
+      authMode === "login"
+        ? "Welcome back."
+        : "Start your journey.";
+
+
+    subtitle.textContent =
+      authMode === "login"
+        ? "Sign in to continue your training."
+        : "Create your account and start training.";
+
+
+    nameLabel.textContent =
+      "Name";
+
+
+    emailLabel.textContent =
+      "Email";
+
+
+    passwordLabel.textContent =
+      "Password";
+
+
+    authButton.textContent =
+      authMode === "login"
+        ? "Sign In"
+        : "Create Account";
+
+
+    switchText.textContent =
+      authMode === "login"
+        ? "Don't have an account?"
+        : "Already have an account?";
+
+
+    switchButton.textContent =
+      authMode === "login"
+        ? "Create account"
+        : "Sign in";
+
+  }
+
+}
+
+
+/* =========================================================
+   TOGGLE AUTH MODE
+   ========================================================= */
+
+function toggleAuthMode() {
+
+  authMode =
+    authMode === "login"
+      ? "register"
+      : "login";
+
+
+  const nameField =
+    document.getElementById(
+      "nameField"
+    );
+
+
+  const passwordInput =
+    document.getElementById(
+      "passwordInput"
+    );
+
+
+  const authMessage =
+    document.getElementById(
+      "authMessage"
+    );
+
+
+  nameField.classList.toggle(
+    "hidden",
+    authMode === "login"
+  );
+
+
+  passwordInput.autocomplete =
+    authMode === "login"
+      ? "current-password"
+      : "new-password";
+
+
+  authMessage.textContent = "";
+
+
+  updateAuthLanguage();
+
+}
+
+
+/* =========================================================
+   AUTH MESSAGE
+   ========================================================= */
+
+function showAuthMessage(
+  message,
+  type = "error"
+) {
+
+  const box =
+    document.getElementById(
+      "authMessage"
+    );
+
+
+  box.textContent =
+    message;
+
+
+  box.style.color =
+    type === "success"
+      ? "var(--green)"
+      : "var(--red)";
+
+}
+
+
+/* =========================================================
+   REGISTER
+   ========================================================= */
+
+async function registerUser(
+  name,
+  email,
+  password
+) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signUp({
+
+      email,
+      password,
+
+      options: {
+
+        data: {
+          full_name: name
+        },
+
+        emailRedirectTo:
+          window.location.origin
+
+      }
+
+    });
+
+
+  if (error) {
+    throw error;
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+async function loginUser(
+  email,
+  password
+) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
+
+
+  if (error) {
+    throw error;
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   AUTH FORM
+   ========================================================= */
+
+document
+  .getElementById("authForm")
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const name =
+        document
+          .getElementById("nameInput")
+          .value
+          .trim();
+
+
+      const email =
+        document
+          .getElementById("emailInput")
+          .value
+          .trim();
+
+
+      const password =
+        document
+          .getElementById("passwordInput")
+          .value;
+
+
+      const button =
+        document.getElementById(
+          "authButton"
+        );
+
+
+      showAuthMessage("");
+
+
+      if (
+        authMode === "register" &&
+        !name
+      ) {
+
+        showAuthMessage(
+          language === "ar"
+            ? "اكتب اسمك."
+            : "Please enter your name."
+        );
+
+        return;
+
+      }
+
+
+      button.disabled = true;
+
+      button.style.opacity = ".65";
+
+
+      try {
+
+        if (
+          authMode === "register"
+        ) {
+
+          const data =
+            await registerUser(
+              name,
+              email,
+              password
+            );
+
+
+          if (
+            data.user &&
+            !data.session
+          ) {
+
+            showAuthMessage(
+
+              language === "ar"
+
+                ? "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيد الحساب."
+
+                : "Account created. Check your email to confirm your account.",
+
+              "success"
+
+            );
+
+            button.disabled = false;
+
+            button.style.opacity = "1";
+
+            return;
+
+          }
+
+
+          if (data.session) {
+
+            await loadUser();
+
+            openApp();
+
+          }
+
+        } else {
+
+          await loginUser(
+            email,
+            password
+          );
+
+          await loadUser();
+
+          openApp();
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Auth error:",
+          error
+        );
+
+
+        showAuthMessage(
+          error.message ||
+          (
+            language === "ar"
+              ? "حدث خطأ. حاول مرة أخرى."
+              : "Something went wrong."
+          )
+        );
+
+      }
+
+
+      button.disabled = false;
+
+      button.style.opacity = "1";
+
+    }
+  );
+
+
+/* =========================================================
+   LOAD USER
+   ========================================================= */
+
+async function loadUser() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (error) {
+
+    console.error(
+      "User error:",
+      error
+    );
+
+    return null;
+
+  }
+
+
+  currentUser =
+    data.user;
+
+
+  updateCurrentUserUI();
+
+
+  return currentUser;
+
+}
+
+
+/* =========================================================
+   UPDATE USER UI
+   ========================================================= */
+
+function updateCurrentUserUI() {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  const metadata =
+    currentUser.user_metadata || {};
+
+
+  const name =
+    metadata.full_name ||
+    currentUser.email
+      ?.split("@")[0] ||
+    "Athlete";
+
+
+  const firstLetter =
+    name
+      .charAt(0)
+      .toUpperCase();
+
+
+  document
+    .getElementById("profileName")
+    .textContent =
+      name;
+
+
+  document
+    .getElementById("welcomeTitle")
+    .textContent =
+      name + ".";
+
+
+  document
+    .getElementById("avatar")
+    .textContent =
+      firstLetter;
+
+
+  document
+    .getElementById("accountName")
+    .textContent =
+      name;
+
+
+  document
+    .getElementById("accountEmail")
+    .textContent =
+      currentUser.email || "-";
+
+}
+
+
+/* =========================================================
+   OPEN APP
+   ========================================================= */
+
+function openApp() {
+
+  document
+    .getElementById("authScreen")
+    .classList.add("hidden");
+
+
+  document
+    .getElementById("app")
+    .classList.remove("hidden");
+
+
+  updateCurrentUserUI();
+
+}
+
+
+/* =========================================================
+   CLOSE APP
+   ========================================================= */
+
+function closeApp() {
+
+  document
+    .getElementById("authScreen")
+    .classList.remove("hidden");
+
+
+  document
+    .getElementById("app")
+    .classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+async function logout() {
+
+  const {
+    error
+  } =
+    await supabaseClient.auth.signOut();
+
+
+  if (error) {
+
+    console.error(
+      error
+    );
+
+    return;
+
+  }
+
+
+  currentUser = null;
+
+  closeApp();
+
+}
+
+
+/* =========================================================
+   SESSION
+   ========================================================= */
+
+async function checkSession() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.getSession();
+
+
+  if (error) {
+
+    console.error(
+      "Session error:",
+      error
+    );
+
+    return;
+
+  }
+
+
+  if (data.session) {
+
+    await loadUser();
+
+    openApp();
+
+  } else {
+
+    closeApp();
+
+  }
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+   ========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event, session) {
+
+    if (
+      event === "SIGNED_IN" &&
+      session
+    ) {
+
+      setTimeout(
+        function() {
+
+          loadUser().then(
+            function() {
+
+              openApp();
+
+            }
+          );
+
+        },
+        0
+      );
+
+    }
+
+
+    if (
+      event === "SIGNED_OUT"
+    ) {
+
+      currentUser = null;
+
+      closeApp();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function showPage(page) {
+
+  document
+    .querySelectorAll(".page")
+    .forEach(function(section) {
+
+      section.classList.add(
+        "hidden"
+      );
+
+    });
+
+
+  const target =
+    document.getElementById(
+      "page-" + page
+    );
+
+
+  if (target) {
+
+    target.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".nav-button, .mobile-nav button"
+    )
+    .forEach(function(button) {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === page
+      );
+
+    });
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================================================
+   NAV EVENTS
+   ========================================================= */
+
+document
+  .querySelectorAll(
+    ".nav-button, .mobile-nav button"
+  )
+  .forEach(function(button) {
+
+    button.addEventListener(
+      "click",
+      function() {
+
+        showPage(
+          button.dataset.page
+        );
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+setLanguage(
+  language
+);
+
+checkSession();
+
+</script>
+
+</body>
+</html>
