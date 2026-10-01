@@ -3043,6 +3043,9 @@ body::after {
         <div class="profile-field"><label>Gender *</label><select id="cpGender" required><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></div>
         <div class="profile-field"><label>Weight (kg) *</label><input id="cpWeight" type="number" step="0.1" min="20" max="400" required></div>
         <div class="profile-field"><label>Height (cm) *</label><input id="cpHeight" type="number" step="0.1" min="100" max="250" required></div>
+        <div class="profile-field"><label>Waist (cm)</label><input id="cpWaist" type="number" step="0.1" min="30" max="250"></div>
+        <div class="profile-field"><label>Neck (cm)</label><input id="cpNeck" type="number" step="0.1" min="20" max="100"></div>
+        <div class="profile-field"><label>Hip (cm, female)</label><input id="cpHip" type="number" step="0.1" min="40" max="250"></div>
         <div class="profile-field"><label>Activity level *</label><select id="cpActivity" required><option value="1.2">Sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option><option value="1.9">Extremely active</option></select></div>
         <div class="profile-field"><label>Goal *</label><select id="cpGoal" required><option value="cut">Fat loss</option><option value="maintain">Maintain</option><option value="bulk">Muscle gain</option></select></div>
         <div class="profile-field"><label>Average daily steps</label><input id="cpSteps" type="number" min="0" max="100000"></div>
@@ -3064,6 +3067,7 @@ body::after {
       <div class="calc-card"><span>Maintenance</span><strong id="calcTdee">-</strong></div>
       <div class="calc-card"><span>Target calories</span><strong id="calcCalories">-</strong></div>
       <div class="calc-card"><span>BMI</span><strong id="calcBmi">-</strong></div>
+      <div class="calc-card"><span>Body fat %</span><strong id="calcBodyFat">-</strong></div>
     </div>
     <p style="color:var(--muted);font-size:12px;margin-top:12px">Calories and BMI are estimates. Body-fat percentage requires additional measurements or a body-composition method.</p>
   </div>
@@ -4377,7 +4381,7 @@ async function loadSelectedClientProfile(clientId){
   if(error){console.error(error);box.innerHTML='<span style="color:var(--red)">Could not load client profile.</span>';return;}
   if(!data){box.innerHTML='<span style="color:var(--muted)">Client has not completed the intake yet.</span>';return;}
   const items=[
-    ["Weight",data.weight_kg?data.weight_kg+" kg":"-"],["Height",data.height_cm?data.height_cm+" cm":"-"],["Age",data.age||"-"],["Goal",data.goal||"-"],["Activity",data.activity_level||"-"],["Steps",data.steps_per_day||"-"],["Sleep",data.sleep_hours?data.sleep_hours+" h":"-"],["WhatsApp",data.whatsapp||"-"],["Medications",data.takes_medications?"Yes":"No"],["Food allergy",data.food_allergy?"Yes":"No"],["Work",data.works?"Yes":"No"],["Injuries",data.injuries||"-"],["Experience",data.training_experience||"-"],["Training days",data.training_days_per_week||"-"]
+    ["Weight",data.weight_kg?data.weight_kg+" kg":"-"],["Height",data.height_cm?data.height_cm+" cm":"-"],["Waist",data.waist_cm?data.waist_cm+" cm":"-"],["Neck",data.neck_cm?data.neck_cm+" cm":"-"],["Hip",data.hip_cm?data.hip_cm+" cm":"-"],["Age",data.age||"-"],["Goal",data.goal||"-"],["Activity",data.activity_level||"-"],["Steps",data.steps_per_day||"-"],["Sleep",data.sleep_hours?data.sleep_hours+" h":"-"],["WhatsApp",data.whatsapp||"-"],["Medications",data.takes_medications?"Yes":"No"],["Food allergy",data.food_allergy?"Yes":"No"],["Work",data.works?"Yes":"No"],["Injuries",data.injuries||"-"],["Experience",data.training_experience||"-"],["Training days",data.training_days_per_week||"-"]
   ];
   box.innerHTML=items.map(x=>'<div class="client-info-item"><small>'+escapeHtml(x[0])+'</small><strong>'+escapeHtml(x[1])+'</strong></div>').join("");
 }
@@ -4386,29 +4390,32 @@ async function loadClientProfile(){
   if(!currentUser || currentProfile?.role === "coach") return;
   const {data,error}=await supabaseClient.from("client_profiles").select("*").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.error("Client profile error:",error);return;}
-  if(!data){showPage("profile");return;}
+  const completion=document.getElementById("profileCompletionCard");
+  if(!data){if(completion)completion.style.display="block";showPage("profile");return;}
+  if(completion)completion.style.display="none";
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v??"";};
-  set("cpFullName",data.full_name||currentUser.user_metadata?.full_name||""); set("cpAge",data.age); set("cpGender",data.gender); set("cpWeight",data.weight_kg); set("cpHeight",data.height_cm); set("cpActivity",data.activity_level); set("cpGoal",data.goal); set("cpSteps",data.steps_per_day); set("cpWorks",data.works?"yes":"no"); set("cpSleep",data.sleep_hours); set("cpMedications",data.takes_medications?"yes":"no"); set("cpAllergy",data.food_allergy?"yes":"no"); set("cpMedicalNotes",data.medical_notes); set("cpInjuries",data.injuries); set("cpExperience",data.training_experience); set("cpTrainingDays",data.training_days_per_week); set("cpWhatsapp",data.whatsapp);
-  calculateClientStats(data.weight_kg,data.height_cm,data.age,data.gender,data.activity_level,data.goal);
+  set("cpFullName",data.full_name||currentUser.user_metadata?.full_name||""); set("cpAge",data.age); set("cpGender",data.gender); set("cpWeight",data.weight_kg); set("cpHeight",data.height_cm); set("cpWaist",data.waist_cm); set("cpNeck",data.neck_cm); set("cpHip",data.hip_cm); set("cpActivity",data.activity_level); set("cpGoal",data.goal); set("cpSteps",data.steps_per_day); set("cpWorks",data.works?"yes":"no"); set("cpSleep",data.sleep_hours); set("cpMedications",data.takes_medications?"yes":"no"); set("cpAllergy",data.food_allergy?"yes":"no"); set("cpMedicalNotes",data.medical_notes); set("cpInjuries",data.injuries); set("cpExperience",data.training_experience); set("cpTrainingDays",data.training_days_per_week); set("cpWhatsapp",data.whatsapp);
+  calculateClientStats(data.weight_kg,data.height_cm,data.age,data.gender,data.activity_level,data.goal,data.waist_cm,data.neck_cm,data.hip_cm);
   const pw=document.getElementById("progressWeight");if(pw)pw.textContent=data.weight_kg+" kg"; const ph=document.getElementById("progressHeight");if(ph)ph.textContent=data.height_cm+" cm"; const pb=document.getElementById("progressBmi");if(pb)pb.textContent=(data.weight_kg/((data.height_cm/100)**2)).toFixed(1);
   const hw=document.getElementById("homeWorkouts");if(hw)hw.textContent=data.training_days_per_week||"0"; const hs=document.getElementById("homeSessions");if(hs)hs.textContent="0"; const hc=document.getElementById("homeCompletion");if(hc)hc.textContent="--"; const hweeks=document.getElementById("homeWeeks");if(hweeks)hweeks.textContent="0";
 }
 
-function calculateClientStats(weight,height,age,gender,activity,goal){
+function calculateClientStats(weight,height,age,gender,activity,goal,waist,neck,hip){
   weight=Number(weight);height=Number(height);age=Number(age);activity=Number(activity); if(!weight||!height||!age||!activity)return;
   const bmr=gender==="female"?(10*weight+6.25*height-5*age-161):(10*weight+6.25*height-5*age+5);
   const tdee=bmr*activity; const target=goal==="cut"?tdee-300:goal==="bulk"?tdee+250:tdee; const bmi=weight/((height/100)**2);
-  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;}; set("calcBmr",Math.round(bmr)+" kcal");set("calcTdee",Math.round(tdee)+" kcal");set("calcCalories",Math.round(target)+" kcal");set("calcBmi",bmi.toFixed(1));
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;}; set("calcBmr",Math.round(bmr)+" kcal");set("calcTdee",Math.round(tdee)+" kcal");set("calcCalories",Math.round(target)+" kcal");set("calcBmi",bmi.toFixed(1));set("calcBodyFat",bodyFat===null?"Add waist + neck":bodyFat.toFixed(1)+"%");
 }
 
 document.getElementById("clientProfileForm")?.addEventListener("submit",async function(event){
   event.preventDefault(); if(!currentUser||currentProfile?.role==="coach")return;
   const message=document.getElementById("profileMessage"); message.textContent="Saving...";
-  const payload={user_id:currentUser.id,full_name:document.getElementById("cpFullName").value.trim(),age:Number(document.getElementById("cpAge").value),gender:document.getElementById("cpGender").value,weight_kg:Number(document.getElementById("cpWeight").value),height_cm:Number(document.getElementById("cpHeight").value),activity_level:Number(document.getElementById("cpActivity").value),goal:document.getElementById("cpGoal").value,steps_per_day:Number(document.getElementById("cpSteps").value)||0,works:document.getElementById("cpWorks").value==="yes",sleep_hours:Number(document.getElementById("cpSleep").value),takes_medications:document.getElementById("cpMedications").value==="yes",food_allergy:document.getElementById("cpAllergy").value==="yes",medical_notes:document.getElementById("cpMedicalNotes").value.trim(),injuries:document.getElementById("cpInjuries").value.trim(),training_experience:document.getElementById("cpExperience").value,training_days_per_week:Number(document.getElementById("cpTrainingDays").value)||0,whatsapp:document.getElementById("cpWhatsapp").value.trim()};
+  const payload={user_id:currentUser.id,full_name:document.getElementById("cpFullName").value.trim(),age:Number(document.getElementById("cpAge").value),gender:document.getElementById("cpGender").value,weight_kg:Number(document.getElementById("cpWeight").value),height_cm:Number(document.getElementById("cpHeight").value),activity_level:Number(document.getElementById("cpActivity").value),goal:document.getElementById("cpGoal").value,steps_per_day:Number(document.getElementById("cpSteps").value)||0,works:document.getElementById("cpWorks").value==="yes",sleep_hours:Number(document.getElementById("cpSleep").value),takes_medications:document.getElementById("cpMedications").value==="yes",food_allergy:document.getElementById("cpAllergy").value==="yes",medical_notes:document.getElementById("cpMedicalNotes").value.trim(),injuries:document.getElementById("cpInjuries").value.trim(),training_experience:document.getElementById("cpExperience").value,training_days_per_week:Number(document.getElementById("cpTrainingDays").value)||0,whatsapp:document.getElementById("cpWhatsapp").value.trim(),waist_cm:Number(document.getElementById("cpWaist").value)||null,neck_cm:Number(document.getElementById("cpNeck").value)||null,hip_cm:Number(document.getElementById("cpHip").value)||null};
   const {error}=await supabaseClient.from("client_profiles").upsert(payload,{onConflict:"user_id"});
   if(error){console.error(error);message.textContent=error.message;return;}
-  calculateClientStats(payload.weight_kg,payload.height_cm,payload.age,payload.gender,payload.activity_level,payload.goal);
+  calculateClientStats(payload.weight_kg,payload.height_cm,payload.age,payload.gender,payload.activity_level,payload.goal,payload.waist_cm,payload.neck_cm,payload.hip_cm);
   message.textContent="Profile saved successfully.";
+  const completion=document.getElementById("profileCompletionCard"); if(completion)completion.style.display="none";
 });
 
 async function loadClientPlan(clientId){
