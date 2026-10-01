@@ -3765,10 +3765,7 @@ async function registerUser(
 
         data: {
           full_name: name
-        },
-
-        emailRedirectTo:
-          window.location.origin
+        }
 
       }
 
@@ -3906,6 +3903,17 @@ document
             );
 
 
+          if (data.session) {
+
+            await loadUser();
+
+            openApp();
+
+            return;
+
+          }
+
+
           if (
             data.user &&
             !data.session
@@ -3914,31 +3922,16 @@ document
             showAuthMessage(
 
               language === "ar"
+                ? "تم إنشاء الحساب، لكن تسجيل الدخول التلقائي غير متاح. تأكد من إيقاف تأكيد البريد الإلكتروني في Supabase."
 
-                ? "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيد الحساب."
-
-                : "Account created. Check your email to confirm your account.",
-
-              "success"
+                : "Account created, but automatic login is unavailable. Make sure email confirmation is disabled in Supabase."
 
             );
-
-            button.disabled = false;
-
-            button.style.opacity = "1";
 
             return;
 
           }
 
-
-          if (data.session) {
-
-            await loadUser();
-
-            openApp();
-
-          }
 
         } else {
 
@@ -3950,6 +3943,8 @@ document
           await loadUser();
 
           openApp();
+
+          return;
 
         }
 
@@ -3974,8 +3969,8 @@ document
 
           message =
             language === "ar"
-              ? "البريد الإلكتروني غير مؤكد. راجع بريدك أولًا."
-              : "Email not confirmed. Check your inbox first.";
+              ? "تأكيد البريد الإلكتروني ما زال مفعّلًا في Supabase."
+              : "Email confirmation is still enabled in Supabase.";
 
         }
 
