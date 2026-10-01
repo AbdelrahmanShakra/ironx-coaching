@@ -145,6 +145,15 @@
 
 <style>
 
+.password-wrap { position: relative; width: 100%; }
+.password-wrap input { padding-right: 52px; }
+.password-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border: 0; outline: none; background: transparent; color: #777f89; display: grid; place-items: center; padding: 0; cursor: pointer; transition: .25s var(--ease); }
+.password-toggle svg { width: 19px; height: 19px; }
+.password-toggle:hover { color: #fff; }
+.password-toggle:active { transform: translateY(-50%) scale(.92); }
+[dir="rtl"] .password-wrap input { padding-right: 17px; padding-left: 52px; }
+[dir="rtl"] .password-toggle { right: auto; left: 15px; }
+
 :root {
 
   --bg: #020304;
@@ -2344,21 +2353,54 @@ body::after {
           required>
 
       </div>
-
-
       <div class="field">
 
         <label id="passwordLabel">
           Password
         </label>
 
-        <input
-          id="passwordInput"
-          type="password"
-          autocomplete="current-password"
-          placeholder="••••••••"
-          minlength="6"
-          required>
+        <div class="password-wrap">
+
+          <input
+            id="passwordInput"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            minlength="6"
+            required>
+
+          <button
+            type="button"
+            class="password-toggle"
+            id="passwordToggle"
+            onclick="togglePassword()"
+            aria-label="Show password">
+
+            <svg
+              id="passwordEye"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+
+              <path
+                d="M2.5 12C2.5 12 6 6 12 6C18 6 21.5 12 21.5 12C21.5 12 18 18 12 18C6 18 2.5 12 2.5 12Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+              <circle
+                cx="12"
+                cy="12"
+                r="2.7"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+
+            </svg>
+
+          </button>
+
+        </div>
 
       </div>
 
@@ -3746,6 +3788,25 @@ function showAuthMessage(
    REGISTER
    ========================================================= */
 
+function togglePassword() {
+  const input = document.getElementById("passwordInput");
+  const button = document.getElementById("passwordToggle");
+  const eye = document.getElementById("passwordEye");
+  if (!input || !button || !eye) return;
+  const isHidden = input.type === "password";
+  input.type = isHidden ? "text" : "password";
+  eye.innerHTML = isHidden ? `
+    <path d="M3 3L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M10.6 6.2C11.05 6.07 11.52 6 12 6C18 6 21.5 12 21.5 12C21.5 12 20.35 13.97 18.4 15.55" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6.1 8.45C3.8 10.25 2.5 12 2.5 12C2.5 12 6 18 12 18C13.45 18 14.75 17.68 15.9 17.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9.9 9.9C9.35 10.45 9 11.2 9 12C9 13.66 10.34 15 12 15C12.8 15 13.55 14.65 14.1 14.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  ` : `
+    <path d="M2.5 12C2.5 12 6 6 12 6C18 6 21.5 12 21.5 12C21.5 12 18 18 12 18C6 18 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="2.7" stroke="currentColor" stroke-width="1.8"/>
+  `;
+  button.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+}
+
 async function registerUser(
   name,
   email,
@@ -3765,7 +3826,10 @@ async function registerUser(
 
         data: {
           full_name: name
-        }
+        },
+
+        emailRedirectTo:
+          window.location.origin
 
       }
 
@@ -3903,17 +3967,6 @@ document
             );
 
 
-          if (data.session) {
-
-            await loadUser();
-
-            openApp();
-
-            return;
-
-          }
-
-
           if (
             data.user &&
             !data.session
@@ -3922,16 +3975,31 @@ document
             showAuthMessage(
 
               language === "ar"
-                ? "تم إنشاء الحساب، لكن تسجيل الدخول التلقائي غير متاح. تأكد من إيقاف تأكيد البريد الإلكتروني في Supabase."
 
-                : "Account created, but automatic login is unavailable. Make sure email confirmation is disabled in Supabase."
+                ? "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيد الحساب."
+
+                : "Account created. Check your email to confirm your account.",
+
+              "success"
 
             );
+
+            button.disabled = false;
+
+            button.style.opacity = "1";
 
             return;
 
           }
 
+
+          if (data.session) {
+
+            await loadUser();
+
+            openApp();
+
+          }
 
         } else {
 
@@ -3943,8 +4011,6 @@ document
           await loadUser();
 
           openApp();
-
-          return;
 
         }
 
@@ -3969,8 +4035,8 @@ document
 
           message =
             language === "ar"
-              ? "تأكيد البريد الإلكتروني ما زال مفعّلًا في Supabase."
-              : "Email confirmation is still enabled in Supabase.";
+              ? "البريد الإلكتروني غير مؤكد. راجع بريدك أولًا."
+              : "Email not confirmed. Check your inbox first.";
 
         }
 
