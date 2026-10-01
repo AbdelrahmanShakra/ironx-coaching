@@ -2256,7 +2256,7 @@ body::after {
    COACH DASHBOARD
    ========================================================= */
 
-.coach-only { display:none !important; }
+.coach-only { display:none; }
 .coach-dashboard { display:grid; grid-template-columns:300px 1fr; gap:18px; }
 .coach-panel { border:1px solid var(--border); border-radius:24px; padding:20px; }
 .client-list { display:flex; flex-direction:column; gap:8px; margin-top:15px; max-height:560px; overflow:auto; }
@@ -4076,9 +4076,22 @@ document
 
           if (data.session) {
 
-            await loadUser();
+            currentUser = data.user;
 
+            await ensureProfile();
+            updateCurrentUserUI();
+            applyRoleUI();
+            await loadClientPlans();
             openApp();
+
+          } else {
+
+            showAuthMessage(
+              language === "ar"
+                ? "تم إنشاء الحساب، لكن لم يتم تسجيل الدخول تلقائيًا. حاول تسجيل الدخول الآن."
+                : "Account created, but automatic sign-in was not completed. Please sign in now.",
+              "success"
+            );
 
           }
 
@@ -4407,12 +4420,65 @@ let selectedClient = null;
 
 async function ensureProfile() {
   if (!currentUser) return null;
-  const { data: existing, error: readError } = await supabaseClient.from("profiles").select("id, full_name, role").eq("id", currentUser.id).maybeSingle();
-  if (readError) { console.error("Profile read error:", readError); return null; }
-  if (existing) { currentProfile = existing; return existing; }
-  const name = currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "Athlete";
-  const { data: created, error: createError } = await supabaseClient.from("profiles").insert({ id:currentUser.id, full_name:name, role:"client" }).select("id, full_name, role").single();
-  if (createError) { console.error("Profile creation error:", createError); return null; }
+
+  const { data: existing, error: readError } =
+    await supabaseClient
+      .from("profiles")
+      .select("id, full_name, role")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+  if (readError) {
+    console.error("Profile read error:", readError);
+    throw new Error("Could not read your profile: " + (readError.message || "database error"));
+  }
+
+  if (existing) {
+    currentProfile = existing;
+    return existing;
+  }
+
+  const name =
+    currentUser.user_metadata?.full_name ||
+    currentUser.email?.split("@")[0] ||
+    "Athlete";
+
+  const { data: created, error: createError } =
+    await supabaseClient
+      .from("profiles")
+      .insert({
+        id: currentUser.id,
+        full_name: name,
+        role: "client"
+      })
+      .select("id, full_name, role")
+      .single();
+
+  if (createError) {
+    console.error("Profile creation error:", createError);
+
+    // A second auth event can run this function at the same time.
+    // If another request created the profile first, load it instead of failing.
+    if (createError.code === "23505") {
+      const { data: retryProfile, error: retryError } =
+        await supabaseClient
+          .from("profiles")
+          .select("id, full_name, role")
+          .eq("id", currentUser.id)
+          .maybeSingle();
+
+      if (!retryError && retryProfile) {
+        currentProfile = retryProfile;
+        return retryProfile;
+      }
+    }
+
+    throw new Error(
+      "Could not create your profile: " +
+      (createError.message || "database error")
+    );
+  }
+
   currentProfile = created;
   return created;
 }
