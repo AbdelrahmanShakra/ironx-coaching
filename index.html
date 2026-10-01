@@ -2251,6 +2251,27 @@ body::after {
 
 }
 
+
+/* =========================================================
+   COACH DASHBOARD
+   ========================================================= */
+
+.coach-only { display:none !important; }
+.coach-dashboard { display:grid; grid-template-columns:300px 1fr; gap:18px; }
+.coach-panel { border:1px solid var(--border); border-radius:24px; padding:20px; }
+.client-list { display:flex; flex-direction:column; gap:8px; margin-top:15px; max-height:560px; overflow:auto; }
+.client-item { width:100%; border:1px solid var(--border2); background:rgba(255,255,255,.025); color:var(--text); border-radius:15px; padding:13px; text-align:left; cursor:pointer; }
+.client-item.active { background:rgba(255,255,255,.085); border-color:rgba(255,255,255,.14); }
+.client-item small { display:block; color:var(--muted); margin-top:4px; }
+.coach-form { display:grid; gap:12px; }
+.coach-form input,.coach-form textarea,.coach-form select { width:100%; border:1px solid var(--border); background:rgba(255,255,255,.035); color:var(--text); border-radius:13px; padding:13px; outline:none; }
+.coach-form textarea { min-height:90px; resize:vertical; }
+.exercise-editor { display:grid; gap:9px; }
+.exercise-row { display:grid; grid-template-columns:1.5fr .6fr .6fr .7fr auto; gap:7px; align-items:center; }
+.exercise-row button { height:42px; width:42px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.035); color:var(--text); cursor:pointer; }
+.coach-message { min-height:20px; color:var(--muted); font-size:13px; }
+@media (max-width:900px) { .coach-dashboard{grid-template-columns:1fr;} .exercise-row{grid-template-columns:1fr 1fr;} .exercise-row input:first-child{grid-column:1/-1;} }
+
 </style>
 
 </head>
@@ -2518,6 +2539,12 @@ body::after {
 
     </button>
 
+
+
+    <button class="nav-button coach-only" id="coachNavButton" data-page="coach">
+      <span class="nav-icon">◆</span>
+      <span>Coach Dashboard</span>
+    </button>
 
     <button
       class="nav-button"
@@ -3139,6 +3166,48 @@ body::after {
 
 
 
+
+<!-- COACH DASHBOARD -->
+<section id="page-coach" class="page hidden">
+  <div class="section-head">
+    <h2>Coach Dashboard</h2>
+    <p>Manage clients and publish their training plans.</p>
+  </div>
+  <div class="coach-dashboard">
+    <div class="coach-panel glass">
+      <h3>Clients</h3>
+      <p style="color:var(--muted);font-size:13px;margin-top:5px;">Select a client to manage their plan.</p>
+      <div id="clientList" class="client-list"></div>
+    </div>
+    <div class="coach-panel glass">
+      <div id="coachEmptyState">
+        <h3>Select a client</h3>
+        <p style="color:var(--muted);margin-top:8px;">Choose a client from the list to create or edit their training plan.</p>
+      </div>
+      <div id="coachEditor" class="hidden">
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:var(--dim);letter-spacing:1.5px;">SELECTED CLIENT</div>
+          <h3 id="selectedClientName" style="margin-top:6px;">Client</h3>
+          <p id="selectedClientEmail" style="color:var(--muted);font-size:13px;margin-top:4px;"></p>
+        </div>
+        <form id="planEditorForm" class="coach-form">
+          <input id="planTitleInput" type="text" placeholder="Plan title" required>
+          <textarea id="planDescriptionInput" placeholder="Plan description"></textarea>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+              <strong>Exercises</strong>
+              <button type="button" class="secondary-button" onclick="addExerciseRow()">+ Add exercise</button>
+            </div>
+            <div id="exerciseEditor" class="exercise-editor"></div>
+          </div>
+          <button class="primary" type="submit">Save plan</button>
+          <div id="coachMessage" class="coach-message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ACCOUNT -->
 
 <section
@@ -3188,6 +3257,12 @@ body::after {
         -
       </strong>
 
+    </div>
+
+
+    <div class="account-row">
+      <span class="account-label">Role</span>
+      <strong id="accountRole">Client</strong>
     </div>
 
 
@@ -3278,6 +3353,12 @@ body::after {
 
   </button>
 
+
+
+  <button class="coach-only" id="coachMobileButton" data-page="coach">
+    <span class="mobile-icon">◆</span>
+    <span>Coach</span>
+  </button>
 
   <button data-page="account">
 
@@ -4089,9 +4170,11 @@ async function loadUser() {
   currentUser =
     data.user;
 
+  await ensureProfile();
 
   updateCurrentUserUI();
-
+  applyRoleUI();
+  await loadClientPlans();
 
   return currentUser;
 
@@ -4154,6 +4237,9 @@ function updateCurrentUserUI() {
     .getElementById("accountEmail")
     .textContent =
       currentUser.email || "-";
+
+  const roleBadge = document.getElementById("accountRole");
+  if (roleBadge) roleBadge.textContent = currentProfile?.role === "coach" ? "Coach" : "Client";
 
 }
 
@@ -4311,6 +4397,116 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
+
+/* =========================================================
+   COACH / CLIENT DATA
+   ========================================================= */
+
+let currentProfile = null;
+let selectedClient = null;
+
+async function ensureProfile() {
+  if (!currentUser) return null;
+  const { data: existing, error: readError } = await supabaseClient.from("profiles").select("id, full_name, role").eq("id", currentUser.id).maybeSingle();
+  if (readError) { console.error("Profile read error:", readError); return null; }
+  if (existing) { currentProfile = existing; return existing; }
+  const name = currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "Athlete";
+  const { data: created, error: createError } = await supabaseClient.from("profiles").insert({ id:currentUser.id, full_name:name, role:"client" }).select("id, full_name, role").single();
+  if (createError) { console.error("Profile creation error:", createError); return null; }
+  currentProfile = created;
+  return created;
+}
+
+function applyRoleUI() {
+  const isCoach = currentProfile?.role === "coach";
+  document.querySelectorAll(".coach-only").forEach(el => { el.style.display = isCoach ? "" : "none"; });
+  if (isCoach) loadClients();
+}
+
+async function loadClients() {
+  const list=document.getElementById("clientList");
+  if (!list || currentProfile?.role !== "coach") return;
+  list.innerHTML='<div style="color:var(--muted);font-size:13px;">Loading clients...</div>';
+  const { data, error }=await supabaseClient.from("profiles").select("id, full_name, role, created_at").eq("role","client").order("created_at",{ascending:false});
+  if(error){console.error("Clients error:",error);list.innerHTML='<div style="color:var(--red);font-size:13px;">Could not load clients.</div>';return;}
+  if(!data?.length){list.innerHTML='<div style="color:var(--muted);font-size:13px;">No clients yet. New client accounts will appear here.</div>';return;}
+  list.innerHTML="";
+  data.forEach(client=>{
+    const button=document.createElement("button"); button.type="button"; button.className="client-item"; button.dataset.clientId=client.id;
+    button.innerHTML='<strong>'+escapeHtml(client.full_name||"Unnamed client")+'</strong><small>Client account</small>';
+    button.addEventListener("click",()=>selectClient(client)); list.appendChild(button);
+  });
+}
+
+function escapeHtml(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+
+async function selectClient(client){
+  selectedClient=client;
+  document.querySelectorAll(".client-item").forEach(button=>button.classList.toggle("active",button.dataset.clientId===client.id));
+  document.getElementById("coachEmptyState").classList.add("hidden");
+  document.getElementById("coachEditor").classList.remove("hidden");
+  document.getElementById("selectedClientName").textContent=client.full_name||"Client";
+  document.getElementById("selectedClientEmail").textContent="Client ID: "+client.id;
+  document.getElementById("coachMessage").textContent="";
+  await loadClientPlan(client.id);
+}
+
+async function loadClientPlan(clientId){
+  const {data:plan,error}=await supabaseClient.from("plans").select("id,title,description,updated_at").eq("client_id",clientId).eq("coach_id",currentUser.id).order("updated_at",{ascending:false}).limit(1).maybeSingle();
+  if(error){console.error("Plan load error:",error);return;}
+  const editor=document.getElementById("exerciseEditor"); editor.innerHTML="";
+  if(!plan){document.getElementById("planTitleInput").value="";document.getElementById("planDescriptionInput").value="";addExerciseRow();return;}
+  document.getElementById("planTitleInput").value=plan.title||""; document.getElementById("planDescriptionInput").value=plan.description||"";
+  const {data:workouts,error:workoutError}=await supabaseClient.from("workouts").select("id,day_number,exercise,sets,reps,rest,notes").eq("plan_id",plan.id).order("day_number",{ascending:true}).order("id",{ascending:true});
+  if(workoutError){console.error("Workout load error:",workoutError);addExerciseRow();return;}
+  if(!workouts?.length){addExerciseRow();return;} workouts.forEach(item=>addExerciseRow(item));
+}
+
+function addExerciseRow(data={}){
+  const editor=document.getElementById("exerciseEditor"); if(!editor)return;
+  const row=document.createElement("div"); row.className="exercise-row";
+  row.innerHTML='<input type="text" class="exercise-name" placeholder="Exercise" value="'+escapeHtml(data.exercise||"")+'" required><input type="text" class="exercise-day" placeholder="Day" value="'+escapeHtml(data.day_number||1)+'"><input type="text" class="exercise-sets" placeholder="Sets" value="'+escapeHtml(data.sets||"")+'"><input type="text" class="exercise-reps" placeholder="Reps" value="'+escapeHtml(data.reps||"")+'"><button type="button" title="Remove" onclick="this.parentElement.remove()">×</button>';
+  editor.appendChild(row);
+}
+
+async function saveClientPlan(event){
+  event.preventDefault(); if(!selectedClient||currentProfile?.role!=="coach")return;
+  const message=document.getElementById("coachMessage"); message.textContent="Saving...";
+  const title=document.getElementById("planTitleInput").value.trim(); const description=document.getElementById("planDescriptionInput").value.trim();
+  const rows=Array.from(document.querySelectorAll("#exerciseEditor .exercise-row"));
+  const exercises=rows.map(row=>({exercise:row.querySelector(".exercise-name")?.value.trim()||"",day_number:parseInt(row.querySelector(".exercise-day")?.value||"1",10)||1,sets:row.querySelector(".exercise-sets")?.value.trim()||"",reps:row.querySelector(".exercise-reps")?.value.trim()||""})).filter(x=>x.exercise);
+  if(!title){message.textContent="Enter a plan title.";return;} if(!exercises.length){message.textContent="Add at least one exercise.";return;}
+  const {data:existing,error:existingError}=await supabaseClient.from("plans").select("id").eq("client_id",selectedClient.id).eq("coach_id",currentUser.id).order("updated_at",{ascending:false}).limit(1).maybeSingle();
+  if(existingError){console.error(existingError);message.textContent="Could not load the existing plan.";return;}
+  let planId;
+  if(existing){
+    const {error}=await supabaseClient.from("plans").update({title,description,updated_at:new Date().toISOString()}).eq("id",existing.id).eq("coach_id",currentUser.id);
+    if(error){console.error(error);message.textContent="Could not update the plan.";return;} planId=existing.id;
+    const {error:deleteError}=await supabaseClient.from("workouts").delete().eq("plan_id",planId); if(deleteError){console.error(deleteError);message.textContent="Plan updated, but exercises could not be replaced.";return;}
+  }else{
+    const {data:created,error}=await supabaseClient.from("plans").insert({client_id:selectedClient.id,coach_id:currentUser.id,title,description}).select("id").single();
+    if(error){console.error(error);message.textContent="Could not create the plan.";return;} planId=created.id;
+  }
+  const {error:workoutError}=await supabaseClient.from("workouts").insert(exercises.map(x=>({plan_id:planId,day_number:x.day_number,exercise:x.exercise,sets:x.sets,reps:x.reps})));
+  if(workoutError){console.error(workoutError);message.textContent="Plan saved, but exercises failed to save.";return;}
+  message.textContent="Plan saved successfully.";
+}
+
+async function loadClientPlans(){
+  if(!currentUser||currentProfile?.role==="coach")return;
+  const {data:plans,error}=await supabaseClient.from("plans").select("id,title,description,updated_at").eq("client_id",currentUser.id).order("updated_at",{ascending:false});
+  if(error){console.error("Client plans error:",error);return;}
+  const container=document.querySelector("#page-plan .plan-grid"); if(!container)return; container.innerHTML="";
+  if(!plans?.length){container.innerHTML='<div class="plan-card glass"><h3>No plan yet</h3><p style="color:var(--muted);margin-top:8px;">Your coach has not published a plan yet.</p></div>';return;}
+  for(const plan of plans){
+    const {data:workouts}=await supabaseClient.from("workouts").select("day_number,exercise,sets,reps,rest,notes").eq("plan_id",plan.id).order("day_number",{ascending:true}).order("id",{ascending:true});
+    const card=document.createElement("div"); card.className="plan-card glass";
+    let html='<div class="plan-day">TRAINING PLAN</div><h3>'+escapeHtml(plan.title)+'</h3>';
+    if(plan.description)html+='<p style="color:var(--muted);margin:8px 0 15px;">'+escapeHtml(plan.description)+'</p>';
+    html+='<ul class="exercise-list">'; (workouts||[]).forEach(item=>{html+='<li><span>Day '+escapeHtml(item.day_number)+' · '+escapeHtml(item.exercise)+'</span><span>'+escapeHtml(item.sets||"")+(item.reps?"×"+escapeHtml(item.reps):"")+'</span></li>';}); html+='</ul>'; card.innerHTML=html; container.appendChild(card);
+  }
+}
+
 /* =========================================================
    NAVIGATION
    ========================================================= */
@@ -4392,6 +4588,8 @@ document
 /* =========================================================
    INITIALIZE
    ========================================================= */
+
+document.getElementById("planEditorForm")?.addEventListener("submit", saveClientPlan);
 
 setLanguage(
   language
