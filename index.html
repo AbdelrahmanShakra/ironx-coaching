@@ -4341,7 +4341,7 @@ async function ensureProfile() {
 function applyRoleUI() {
   const isCoach = currentProfile?.role === "coach";
   document.querySelectorAll(".coach-only").forEach(el => { el.style.display = isCoach ? "" : "none"; });
-  document.querySelectorAll(".client-only").forEach(el => { el.style.display = !isCoach ? "" : "none"; });
+  document.querySelectorAll(".client-only").forEach(el => { el.style.display = isCoach ? "none" : "block"; });
   if (isCoach) loadClients();
   else loadClientProfile();
 }
@@ -4404,7 +4404,14 @@ function calculateClientStats(weight,height,age,gender,activity,goal,waist,neck,
   weight=Number(weight);height=Number(height);age=Number(age);activity=Number(activity); if(!weight||!height||!age||!activity)return;
   const bmr=gender==="female"?(10*weight+6.25*height-5*age-161):(10*weight+6.25*height-5*age+5);
   const tdee=bmr*activity; const target=goal==="cut"?tdee-300:goal==="bulk"?tdee+250:tdee; const bmi=weight/((height/100)**2);
-  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;}; set("calcBmr",Math.round(bmr)+" kcal");set("calcTdee",Math.round(tdee)+" kcal");set("calcCalories",Math.round(target)+" kcal");set("calcBmi",bmi.toFixed(1));set("calcBodyFat",bodyFat===null?"Add waist + neck":bodyFat.toFixed(1)+"%");
+  let bodyFat=null;
+  if (gender === "male" && waist && neck) {
+    bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(Number(waist)-Number(neck)) + 0.15456 * Math.log10(age)) - 450;
+  } else if (gender === "female" && waist && neck && hip) {
+    bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(Number(waist)+Number(hip)-Number(neck)) + 0.22100 * Math.log10(age)) - 450;
+  }
+  if (!Number.isFinite(bodyFat) || bodyFat < 1 || bodyFat > 70) bodyFat=null;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;}; set("calcBmr",Math.round(bmr)+" kcal");set("calcTdee",Math.round(tdee)+" kcal");set("calcCalories",Math.round(target)+" kcal");set("calcBmi",bmi.toFixed(1));set("calcBodyFat",bodyFat===null?"Add measurements":bodyFat.toFixed(1)+"%");
 }
 
 document.getElementById("clientProfileForm")?.addEventListener("submit",async function(event){
