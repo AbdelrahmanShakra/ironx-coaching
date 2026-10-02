@@ -1,14 +1,7 @@
 {
   "name": "ironx-coaching",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^5.1.0",
-    "helmet": "^8.1.0",
-    "express-rate-limit": "^8.1.0"
-  }
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" }
 }
