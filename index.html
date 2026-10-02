@@ -484,6 +484,54 @@ body::after {
 
 }
 
+/* APP LANGUAGE SWITCH */
+.app-language {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  margin-right: 8px;
+}
+.app-language button {
+  border: 0;
+  background: transparent;
+  color: #777e89;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+}
+.app-language button.active {
+  background: rgba(255,255,255,.92);
+  color: #000;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.profile-shortcut {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  color: #fff;
+  border-radius: 999px;
+  padding: 8px 13px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+.profile-shortcut:hover { background: rgba(255,255,255,.06); }
+@media (max-width: 760px) {
+  .topbar-right { gap: 5px; }
+  .profile-shortcut { padding: 7px 9px; }
+  .app-language { margin-right: 0; }
+}
+
 .auth-card {
 
   width: min(440px,100%);
@@ -2563,7 +2611,7 @@ body::after {
 
     <button class="nav-button client-only" id="profileNavButton" data-page="profile">
       <span class="nav-icon">◇</span>
-      <span>My Profile</span>
+      <span data-i18n="profileShortcut">My Profile</span>
     </button>
 
     <button
@@ -2626,23 +2674,21 @@ body::after {
   </div>
 
 
-  <div class="profile">
+  <div class="topbar-right">
 
-    <div
-      class="avatar"
-      id="avatar">
-
-      I
-
+    <div class="app-language" aria-label="Language">
+      <button id="appEnBtn" type="button" onclick="setLanguage('en')">EN</button>
+      <button id="appArBtn" type="button" onclick="setLanguage('ar')">عربي</button>
     </div>
 
-    <span
-      class="profile-name"
-      id="profileName">
+    <button class="profile-shortcut client-only" type="button" onclick="showPage('profile')" data-i18n="profileShortcut">
+      Profile
+    </button>
 
-      Athlete
-
-    </span>
+    <div class="profile">
+      <div class="avatar" id="avatar">I</div>
+      <span class="profile-name" id="profileName">Athlete</span>
+    </div>
 
   </div>
 
@@ -3267,7 +3313,7 @@ body::after {
 
   <button class="client-only" id="profileMobileButton" data-page="profile">
     <span class="mobile-icon">◇</span>
-    <span>Profile</span>
+    <span data-i18n="profileShortcut">Profile</span>
   </button>
 
   <button data-page="account">
@@ -3392,6 +3438,8 @@ const translations = {
     accountSub:
       "Your IRONX profile.",
 
+    profileShortcut: "Profile",
+
     profileTitle: "My Profile & Calculator", profileSub: "Enter your details once. Your calculations and progress belong to your account only.", fullName: "Full name *", age: "Age *", gender: "Gender *", select: "Select", male: "Male", female: "Female", weight: "Weight (kg) *", height: "Height (cm) *", activity: "Activity level *", sedentary: "Sedentary", light: "Lightly active", moderate: "Moderately active", veryActive: "Very active", extreme: "Extremely active", goal: "Goal *", fatLoss: "Fat loss", maintain: "Maintain", muscleGain: "Muscle gain", steps: "Average daily steps", works: "Do you work? *", sleep: "How many hours do you sleep? *", medications: "Do you take medications? *", allergy: "Food allergy? *", medicalDetails: "Medications / allergies details", injuries: "Injuries / problems", experience: "Training experience", beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced", trainingDays: "Training days per week", whatsapp: "WhatsApp number *", saveProfile: "Save profile & calculate", bmr: "BMR", maintenance: "Maintenance", targetCalories: "Target calories", bmi: "BMI", bodyFat: "Body fat", calculatorNote: "Calories and BMI are estimates. Body-fat percentage is estimated only when the required measurements are provided.", medicalPlaceholder: "If yes, write the details here", injuryPlaceholder: "Any issue affecting training or daily life",
 
     name: "Name",
@@ -3468,6 +3516,8 @@ const translations = {
     accountSub:
       "ملفك في IRONX.",
 
+    profileShortcut: "البروفايل",
+
     profileTitle: "الملف الشخصي والحاسبة", profileSub: "اكتب بياناتك مرة واحدة، وحساباتك وتقدمك يفضلوا خاصين بحسابك.", fullName: "الاسم الكامل *", age: "السن *", gender: "النوع *", select: "اختار", male: "ذكر", female: "أنثى", weight: "الوزن (كجم) *", height: "الطول (سم) *", activity: "مستوى النشاط *", sedentary: "قليل الحركة", light: "نشاط خفيف", moderate: "نشاط متوسط", veryActive: "نشاط عالي", extreme: "نشاط عالي جدًا", goal: "الهدف *", fatLoss: "خسارة دهون", maintain: "ثبات الوزن", muscleGain: "زيادة عضل", steps: "متوسط خطواتك اليومية", works: "بتشتغل؟ *", sleep: "بتنام كام ساعة؟ *", medications: "بتاخد أدوية؟ *", allergy: "عندك حساسية من أكل معين؟ *", medicalDetails: "تفاصيل الأدوية / الحساسية", injuries: "إصابات / مشاكل", experience: "خبرة التدريب", beginner: "مبتدئ", intermediate: "متوسط", advanced: "متقدم", trainingDays: "أيام التمرين في الأسبوع", whatsapp: "رقم واتساب للتواصل *", saveProfile: "حفظ البيانات وحساب النتائج", bmr: "معدل الأيض الأساسي", maintenance: "سعرات الثبات", targetCalories: "السعرات المستهدفة", bmi: "مؤشر كتلة الجسم", bodyFat: "نسبة الدهون", calculatorNote: "السعرات وBMI تقديرات. نسبة الدهون تقديرية فقط عند إدخال القياسات المطلوبة.", medicalPlaceholder: "لو أيوه، اكتب التفاصيل هنا", injuryPlaceholder: "أي مشكلة بتأثر على التمرين أو حياتك اليومية",
 
     name: "الاسم",
@@ -3515,6 +3565,9 @@ function setLanguage(lang) {
       "active",
       lang === "ar"
     );
+
+  document.getElementById("appEnBtn")?.classList.toggle("active", lang === "en");
+  document.getElementById("appArBtn")?.classList.toggle("active", lang === "ar");
 
 
   const dict =
@@ -4358,10 +4411,18 @@ async function ensureProfile() {
 
 function applyRoleUI() {
   const isCoach = currentProfile?.role === "coach";
-  document.querySelectorAll(".coach-only").forEach(el => { el.style.display = isCoach ? "" : "none"; });
-  document.querySelectorAll(".client-only").forEach(el => { el.style.display = !isCoach ? "" : "none"; });
-  if (isCoach) loadClients();
-  else loadClientProfile();
+  updateCurrentUserUI();
+  document.querySelectorAll(".coach-only").forEach(el => {
+    el.style.display = isCoach ? "" : "none";
+  });
+  document.querySelectorAll(".client-only").forEach(el => {
+    el.style.display = isCoach ? "none" : (el.classList.contains("page") ? "block" : "flex");
+  });
+  if (isCoach) {
+    loadClients();
+  } else {
+    loadClientProfile();
+  }
 }
 async function loadClients() {
   const list=document.getElementById("clientList");
@@ -4524,6 +4585,13 @@ async function loadClientPlans(){
    ========================================================= */
 
 function showPage(page) {
+
+  if (page === "profile" && currentProfile?.role === "coach") {
+    page = "coach";
+  }
+  if (page === "coach" && currentProfile?.role !== "coach") {
+    page = "profile";
+  }
 
   document
     .querySelectorAll(".page")
