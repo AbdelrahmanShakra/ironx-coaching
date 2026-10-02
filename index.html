@@ -2263,7 +2263,8 @@ body::after {
 .profile-form input,.profile-form select,.profile-form textarea { width:100%; border:1px solid var(--border); background:rgba(255,255,255,.035); color:var(--text); border-radius:13px; padding:13px; outline:none; }
 .profile-form textarea { min-height:90px; resize:vertical; }
 .profile-field label { display:block; color:var(--muted); font-size:12px; margin-bottom:7px; }
-.calc-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
+.profile-note { color:var(--muted); font-size:12px; line-height:1.6; margin-top:10px; }
+.calc-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-top:16px; }
 .calc-card { padding:16px; border:1px solid var(--border); border-radius:16px; background:rgba(255,255,255,.025); }
 .calc-card strong { display:block; font-size:22px; margin-top:6px; }
 .client-info-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:14px 0; }
@@ -3032,44 +3033,41 @@ body::after {
 <!-- CLIENT PROFILE -->
 <section id="page-profile" class="page hidden client-only">
   <div class="section-head">
-    <h2>My Profile & Calculator</h2>
-    <p>Enter your details once. Your calculations and progress belong to your account only.</p>
+    <h2 data-i18n="profileTitle">My Profile & Calculator</h2>
+    <p data-i18n="profileSub">Enter your details once. Your calculations and progress belong to your account only.</p>
   </div>
   <div class="account-card glass">
     <form id="clientProfileForm" class="profile-form">
       <div class="profile-grid">
-        <div class="profile-field"><label>Full name *</label><input id="cpFullName" required></div>
-        <div class="profile-field"><label>Age *</label><input id="cpAge" type="number" min="10" max="100" required></div>
-        <div class="profile-field"><label>Gender *</label><select id="cpGender" required><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></div>
-        <div class="profile-field"><label>Weight (kg) *</label><input id="cpWeight" type="number" step="0.1" min="20" max="400" required></div>
-        <div class="profile-field"><label>Height (cm) *</label><input id="cpHeight" type="number" step="0.1" min="100" max="250" required></div>
-        <div class="profile-field"><label>Waist (cm)</label><input id="cpWaist" type="number" step="0.1" min="30" max="250"></div>
-        <div class="profile-field"><label>Neck (cm)</label><input id="cpNeck" type="number" step="0.1" min="20" max="100"></div>
-        <div class="profile-field"><label>Hip (cm, female)</label><input id="cpHip" type="number" step="0.1" min="40" max="250"></div>
-        <div class="profile-field"><label>Activity level *</label><select id="cpActivity" required><option value="1.2">Sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option><option value="1.9">Extremely active</option></select></div>
-        <div class="profile-field"><label>Goal *</label><select id="cpGoal" required><option value="cut">Fat loss</option><option value="maintain">Maintain</option><option value="bulk">Muscle gain</option></select></div>
-        <div class="profile-field"><label>Average daily steps</label><input id="cpSteps" type="number" min="0" max="100000"></div>
-        <div class="profile-field"><label>Do you work? *</label><select id="cpWorks" required><option value="no">No</option><option value="yes">Yes</option></select></div>
-        <div class="profile-field"><label>How many hours do you sleep? *</label><input id="cpSleep" type="number" step="0.5" min="0" max="24" required></div>
-        <div class="profile-field"><label>Do you take medications? *</label><select id="cpMedications" required><option value="no">No</option><option value="yes">Yes</option></select></div>
-        <div class="profile-field"><label>Food allergy? *</label><select id="cpAllergy" required><option value="no">No</option><option value="yes">Yes</option></select></div>
-        <div class="profile-field full"><label>Medications / allergies details</label><textarea id="cpMedicalNotes" placeholder="If yes, write the details here"></textarea></div>
-        <div class="profile-field"><label>Injuries / problems</label><textarea id="cpInjuries" placeholder="Any issue affecting training or daily life"></textarea></div>
-        <div class="profile-field"><label>Training experience</label><select id="cpExperience"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div>
-        <div class="profile-field"><label>Training days per week</label><input id="cpTrainingDays" type="number" min="0" max="14"></div>
-        <div class="profile-field"><label>WhatsApp number *</label><input id="cpWhatsapp" type="tel" required placeholder="01xxxxxxxxx"></div>
+        <div class="profile-field"><label data-i18n="fullName">Full name *</label><input id="cpFullName" required></div>
+        <div class="profile-field"><label data-i18n="age">Age *</label><input id="cpAge" type="number" min="10" max="100" required></div>
+        <div class="profile-field"><label data-i18n="gender">Gender *</label><select id="cpGender" required><option value="" data-i18n="select">Select</option><option value="male" data-i18n="male">Male</option><option value="female" data-i18n="female">Female</option></select></div>
+        <div class="profile-field"><label data-i18n="weight">Weight (kg) *</label><input id="cpWeight" type="number" step="0.1" min="20" max="400" required></div>
+        <div class="profile-field"><label data-i18n="height">Height (cm) *</label><input id="cpHeight" type="number" step="0.1" min="100" max="250" required></div>
+        <div class="profile-field"><label data-i18n="activity">Activity level *</label><select id="cpActivity" required><option value="1.2" data-i18n="sedentary">Sedentary</option><option value="1.375" data-i18n="light">Lightly active</option><option value="1.55" selected data-i18n="moderate">Moderately active</option><option value="1.725" data-i18n="veryActive">Very active</option><option value="1.9" data-i18n="extreme">Extremely active</option></select></div>
+        <div class="profile-field"><label data-i18n="goal">Goal *</label><select id="cpGoal" required><option value="cut" data-i18n="fatLoss">Fat loss</option><option value="maintain" data-i18n="maintain">Maintain</option><option value="bulk" data-i18n="muscleGain">Muscle gain</option></select></div>
+        <div class="profile-field"><label data-i18n="steps">Average daily steps</label><input id="cpSteps" type="number" min="0" max="100000"></div>
+        <div class="profile-field"><label data-i18n="works">Do you work? *</label><select id="cpWorks" required><option value="no" data-i18n="no">No</option><option value="yes" data-i18n="yes">Yes</option></select></div>
+        <div class="profile-field"><label data-i18n="sleep">How many hours do you sleep? *</label><input id="cpSleep" type="number" step="0.5" min="0" max="24" required></div>
+        <div class="profile-field"><label data-i18n="medications">Do you take medications? *</label><select id="cpMedications" required><option value="no" data-i18n="no">No</option><option value="yes" data-i18n="yes">Yes</option></select></div>
+        <div class="profile-field"><label data-i18n="allergy">Food allergy? *</label><select id="cpAllergy" required><option value="no" data-i18n="no">No</option><option value="yes" data-i18n="yes">Yes</option></select></div>
+        <div class="profile-field full"><label data-i18n="medicalDetails">Medications / allergies details</label><textarea id="cpMedicalNotes" data-i18n-placeholder="medicalPlaceholder" placeholder="If yes, write the details here"></textarea></div>
+        <div class="profile-field"><label data-i18n="injuries">Injuries / problems</label><textarea id="cpInjuries" data-i18n-placeholder="injuryPlaceholder" placeholder="Any issue affecting training or daily life"></textarea></div>
+        <div class="profile-field"><label data-i18n="experience">Training experience</label><select id="cpExperience"><option value="beginner" data-i18n="beginner">Beginner</option><option value="intermediate" data-i18n="intermediate">Intermediate</option><option value="advanced" data-i18n="advanced">Advanced</option></select></div>
+        <div class="profile-field"><label data-i18n="trainingDays">Training days per week</label><input id="cpTrainingDays" type="number" min="0" max="14"></div>
+        <div class="profile-field"><label data-i18n="whatsapp">WhatsApp number *</label><input id="cpWhatsapp" type="tel" required placeholder="01xxxxxxxxx"></div>
       </div>
-      <button class="primary" type="submit" style="margin-top:16px">Save profile & calculate</button>
+      <button class="primary" type="submit" style="margin-top:16px" data-i18n="saveProfile">Save profile & calculate</button>
       <div id="profileMessage" class="coach-message"></div>
     </form>
     <div class="calc-grid">
-      <div class="calc-card"><span>BMR</span><strong id="calcBmr">-</strong></div>
-      <div class="calc-card"><span>Maintenance</span><strong id="calcTdee">-</strong></div>
-      <div class="calc-card"><span>Target calories</span><strong id="calcCalories">-</strong></div>
-      <div class="calc-card"><span>BMI</span><strong id="calcBmi">-</strong></div>
-      <div class="calc-card"><span>Body fat %</span><strong id="calcBodyFat">-</strong></div>
+      <div class="calc-card"><span data-i18n="bmr">BMR</span><strong id="calcBmr">-</strong></div>
+      <div class="calc-card"><span data-i18n="maintenance">Maintenance</span><strong id="calcTdee">-</strong></div>
+      <div class="calc-card"><span data-i18n="targetCalories">Target calories</span><strong id="calcCalories">-</strong></div>
+      <div class="calc-card"><span data-i18n="bmi">BMI</span><strong id="calcBmi">-</strong></div>
+      <div class="calc-card"><span data-i18n="bodyFat">Body fat</span><strong id="calcBodyFat">-</strong></div>
     </div>
-    <p style="color:var(--muted);font-size:12px;margin-top:12px">Calories and BMI are estimates. Body-fat percentage requires additional measurements or a body-composition method.</p>
+    <p class="profile-note" data-i18n="calculatorNote">Calories and BMI are estimates. Body-fat percentage is estimated only when the required measurements are provided.</p>
   </div>
 </section>
 
@@ -3394,6 +3392,8 @@ const translations = {
     accountSub:
       "Your IRONX profile.",
 
+    profileTitle: "My Profile & Calculator", profileSub: "Enter your details once. Your calculations and progress belong to your account only.", fullName: "Full name *", age: "Age *", gender: "Gender *", select: "Select", male: "Male", female: "Female", weight: "Weight (kg) *", height: "Height (cm) *", activity: "Activity level *", sedentary: "Sedentary", light: "Lightly active", moderate: "Moderately active", veryActive: "Very active", extreme: "Extremely active", goal: "Goal *", fatLoss: "Fat loss", maintain: "Maintain", muscleGain: "Muscle gain", steps: "Average daily steps", works: "Do you work? *", sleep: "How many hours do you sleep? *", medications: "Do you take medications? *", allergy: "Food allergy? *", medicalDetails: "Medications / allergies details", injuries: "Injuries / problems", experience: "Training experience", beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced", trainingDays: "Training days per week", whatsapp: "WhatsApp number *", saveProfile: "Save profile & calculate", bmr: "BMR", maintenance: "Maintenance", targetCalories: "Target calories", bmi: "BMI", bodyFat: "Body fat", calculatorNote: "Calories and BMI are estimates. Body-fat percentage is estimated only when the required measurements are provided.", medicalPlaceholder: "If yes, write the details here", injuryPlaceholder: "Any issue affecting training or daily life",
+
     name: "Name",
     status: "Status",
     active: "Active"
@@ -3468,6 +3468,8 @@ const translations = {
     accountSub:
       "ملفك في IRONX.",
 
+    profileTitle: "الملف الشخصي والحاسبة", profileSub: "اكتب بياناتك مرة واحدة، وحساباتك وتقدمك يفضلوا خاصين بحسابك.", fullName: "الاسم الكامل *", age: "السن *", gender: "النوع *", select: "اختار", male: "ذكر", female: "أنثى", weight: "الوزن (كجم) *", height: "الطول (سم) *", activity: "مستوى النشاط *", sedentary: "قليل الحركة", light: "نشاط خفيف", moderate: "نشاط متوسط", veryActive: "نشاط عالي", extreme: "نشاط عالي جدًا", goal: "الهدف *", fatLoss: "خسارة دهون", maintain: "ثبات الوزن", muscleGain: "زيادة عضل", steps: "متوسط خطواتك اليومية", works: "بتشتغل؟ *", sleep: "بتنام كام ساعة؟ *", medications: "بتاخد أدوية؟ *", allergy: "عندك حساسية من أكل معين؟ *", medicalDetails: "تفاصيل الأدوية / الحساسية", injuries: "إصابات / مشاكل", experience: "خبرة التدريب", beginner: "مبتدئ", intermediate: "متوسط", advanced: "متقدم", trainingDays: "أيام التمرين في الأسبوع", whatsapp: "رقم واتساب للتواصل *", saveProfile: "حفظ البيانات وحساب النتائج", bmr: "معدل الأيض الأساسي", maintenance: "سعرات الثبات", targetCalories: "السعرات المستهدفة", bmi: "مؤشر كتلة الجسم", bodyFat: "نسبة الدهون", calculatorNote: "السعرات وBMI تقديرات. نسبة الدهون تقديرية فقط عند إدخال القياسات المطلوبة.", medicalPlaceholder: "لو أيوه، اكتب التفاصيل هنا", injuryPlaceholder: "أي مشكلة بتأثر على التمرين أو حياتك اليومية",
+
     name: "الاسم",
     status: "الحالة",
     active: "نشط"
@@ -3535,6 +3537,11 @@ function setLanguage(lang) {
 
     });
 
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){
+    const key=el.getAttribute("data-i18n-placeholder");
+    if(dict[key]) el.setAttribute("placeholder",dict[key]);
+  });
 
   updateAuthLanguage();
 
@@ -4173,7 +4180,7 @@ function updateCurrentUserUI() {
    OPEN APP
    ========================================================= */
 
-function openApp() {
+async function openApp() {
 
   document
     .getElementById("authScreen")
@@ -4186,6 +4193,17 @@ function openApp() {
 
 
   updateCurrentUserUI();
+
+  try {
+    await ensureProfile();
+    applyRoleUI();
+    if (currentProfile?.role !== "coach") {
+      await loadClientPlanForDashboard();
+    }
+  } catch (error) {
+    console.error("App data error:", error);
+    showPage(currentProfile?.role === "coach" ? "coach" : "profile");
+  }
 
 }
 
@@ -4341,7 +4359,7 @@ async function ensureProfile() {
 function applyRoleUI() {
   const isCoach = currentProfile?.role === "coach";
   document.querySelectorAll(".coach-only").forEach(el => { el.style.display = isCoach ? "" : "none"; });
-  document.querySelectorAll(".client-only").forEach(el => { el.style.display = isCoach ? "none" : "block"; });
+  document.querySelectorAll(".client-only").forEach(el => { el.style.display = !isCoach ? "" : "none"; });
   if (isCoach) loadClients();
   else loadClientProfile();
 }
@@ -4381,7 +4399,7 @@ async function loadSelectedClientProfile(clientId){
   if(error){console.error(error);box.innerHTML='<span style="color:var(--red)">Could not load client profile.</span>';return;}
   if(!data){box.innerHTML='<span style="color:var(--muted)">Client has not completed the intake yet.</span>';return;}
   const items=[
-    ["Weight",data.weight_kg?data.weight_kg+" kg":"-"],["Height",data.height_cm?data.height_cm+" cm":"-"],["Waist",data.waist_cm?data.waist_cm+" cm":"-"],["Neck",data.neck_cm?data.neck_cm+" cm":"-"],["Hip",data.hip_cm?data.hip_cm+" cm":"-"],["Age",data.age||"-"],["Goal",data.goal||"-"],["Activity",data.activity_level||"-"],["Steps",data.steps_per_day||"-"],["Sleep",data.sleep_hours?data.sleep_hours+" h":"-"],["WhatsApp",data.whatsapp||"-"],["Medications",data.takes_medications?"Yes":"No"],["Food allergy",data.food_allergy?"Yes":"No"],["Work",data.works?"Yes":"No"],["Injuries",data.injuries||"-"],["Experience",data.training_experience||"-"],["Training days",data.training_days_per_week||"-"]
+    ["Weight",data.weight_kg?data.weight_kg+" kg":"-"],["Height",data.height_cm?data.height_cm+" cm":"-"],["Age",data.age||"-"],["Goal",data.goal||"-"],["Activity",data.activity_level||"-"],["Steps",data.steps_per_day||"-"],["Sleep",data.sleep_hours?data.sleep_hours+" h":"-"],["WhatsApp",data.whatsapp||"-"],["Body fat",(estimateBodyFat(data.weight_kg,data.height_cm,data.age,data.gender)===null?"-":estimateBodyFat(data.weight_kg,data.height_cm,data.age,data.gender).toFixed(1)+"%")],["Medications",data.takes_medications?"Yes":"No"],["Food allergy",data.food_allergy?"Yes":"No"],["Work",data.works?"Yes":"No"],["Injuries",data.injuries||"-"],["Experience",data.training_experience||"-"],["Training days",data.training_days_per_week||"-"]
   ];
   box.innerHTML=items.map(x=>'<div class="client-info-item"><small>'+escapeHtml(x[0])+'</small><strong>'+escapeHtml(x[1])+'</strong></div>').join("");
 }
@@ -4390,39 +4408,59 @@ async function loadClientProfile(){
   if(!currentUser || currentProfile?.role === "coach") return;
   const {data,error}=await supabaseClient.from("client_profiles").select("*").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.error("Client profile error:",error);return;}
-  const completion=document.getElementById("profileCompletionCard");
-  if(!data){if(completion)completion.style.display="block";showPage("profile");return;}
-  if(completion)completion.style.display="none";
+  if(!data){showPage("profile");return;}
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v??"";};
-  set("cpFullName",data.full_name||currentUser.user_metadata?.full_name||""); set("cpAge",data.age); set("cpGender",data.gender); set("cpWeight",data.weight_kg); set("cpHeight",data.height_cm); set("cpWaist",data.waist_cm); set("cpNeck",data.neck_cm); set("cpHip",data.hip_cm); set("cpActivity",data.activity_level); set("cpGoal",data.goal); set("cpSteps",data.steps_per_day); set("cpWorks",data.works?"yes":"no"); set("cpSleep",data.sleep_hours); set("cpMedications",data.takes_medications?"yes":"no"); set("cpAllergy",data.food_allergy?"yes":"no"); set("cpMedicalNotes",data.medical_notes); set("cpInjuries",data.injuries); set("cpExperience",data.training_experience); set("cpTrainingDays",data.training_days_per_week); set("cpWhatsapp",data.whatsapp);
-  calculateClientStats(data.weight_kg,data.height_cm,data.age,data.gender,data.activity_level,data.goal,data.waist_cm,data.neck_cm,data.hip_cm);
+  set("cpFullName",data.full_name||currentUser.user_metadata?.full_name||""); set("cpAge",data.age); set("cpGender",data.gender); set("cpWeight",data.weight_kg); set("cpHeight",data.height_cm); set("cpActivity",data.activity_level); set("cpGoal",data.goal); set("cpSteps",data.steps_per_day); set("cpWorks",data.works?"yes":"no"); set("cpSleep",data.sleep_hours); set("cpMedications",data.takes_medications?"yes":"no"); set("cpAllergy",data.food_allergy?"yes":"no"); set("cpMedicalNotes",data.medical_notes); set("cpInjuries",data.injuries); set("cpExperience",data.training_experience); set("cpTrainingDays",data.training_days_per_week); set("cpWhatsapp",data.whatsapp); set("cpWaist",data.waist_cm); set("cpNeck",data.neck_cm); set("cpHip",data.hip_cm);
+  calculateClientStats(data.weight_kg,data.height_cm,data.age,data.gender,data.activity_level,data.goal);
   const pw=document.getElementById("progressWeight");if(pw)pw.textContent=data.weight_kg+" kg"; const ph=document.getElementById("progressHeight");if(ph)ph.textContent=data.height_cm+" cm"; const pb=document.getElementById("progressBmi");if(pb)pb.textContent=(data.weight_kg/((data.height_cm/100)**2)).toFixed(1);
   const hw=document.getElementById("homeWorkouts");if(hw)hw.textContent=data.training_days_per_week||"0"; const hs=document.getElementById("homeSessions");if(hs)hs.textContent="0"; const hc=document.getElementById("homeCompletion");if(hc)hc.textContent="--"; const hweeks=document.getElementById("homeWeeks");if(hweeks)hweeks.textContent="0";
 }
 
-function calculateClientStats(weight,height,age,gender,activity,goal,waist,neck,hip){
+function estimateBodyFat(weight,height,age,gender){
+  weight=Number(weight); height=Number(height); age=Number(age);
+  if(!weight||!height||!age) return null;
+  const bmi=weight/((height/100)**2);
+  // Deurenberg-style estimate. Useful as a rough screening estimate, not a measurement.
+  const sex=gender==="male"?1:0;
+  const bf=1.20*bmi+0.23*age-10.8*sex-5.4;
+  if(!Number.isFinite(bf)||bf<2||bf>70)return null;
+  return bf;
+}
+
+function calculateClientStats(weight,height,age,gender,activity,goal){
   weight=Number(weight);height=Number(height);age=Number(age);activity=Number(activity); if(!weight||!height||!age||!activity)return;
   const bmr=gender==="female"?(10*weight+6.25*height-5*age-161):(10*weight+6.25*height-5*age+5);
   const tdee=bmr*activity; const target=goal==="cut"?tdee-300:goal==="bulk"?tdee+250:tdee; const bmi=weight/((height/100)**2);
-  let bodyFat=null;
-  if (gender === "male" && waist && neck) {
-    bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(Number(waist)-Number(neck)) + 0.15456 * Math.log10(age)) - 450;
-  } else if (gender === "female" && waist && neck && hip) {
-    bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(Number(waist)+Number(hip)-Number(neck)) + 0.22100 * Math.log10(age)) - 450;
+  const bf=estimateBodyFat(weight,height,age,gender);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;}; set("calcBmr",Math.round(bmr)+" kcal");set("calcTdee",Math.round(tdee)+" kcal");set("calcCalories",Math.round(target)+" kcal");set("calcBmi",bmi.toFixed(1));set("calcBodyFat",bf===null?"-":bf.toFixed(1)+"%");
+}
+
+async function loadClientPlanForDashboard(){
+  if(!currentUser || currentProfile?.role === "coach") return;
+  const {data:plans,error}=await supabaseClient.from("plans").select("id,title,description,updated_at").eq("client_id",currentUser.id).order("updated_at",{ascending:false}).limit(1);
+  if(error) { console.error("Dashboard plan error:",error); return; }
+  const container=document.querySelector("#page-plan .plan-grid");
+  if(!container) return;
+  container.innerHTML="";
+  if(!plans?.length){ container.innerHTML='<div class="plan-card glass"><h3>'+escapeHtml(language==="ar"?"مفيش خطة لسه":"No plan yet")+'</h3><p style="color:var(--muted);margin-top:8px;">'+escapeHtml(language==="ar"?"الكوتش لسه ما نشرش خطة ليك.":"Your coach has not published a plan yet.")+'</p></div>'; return; }
+  for(const plan of plans){
+    const {data:workouts}=await supabaseClient.from("workouts").select("day_number,exercise,sets,reps,rest,notes").eq("plan_id",plan.id).order("day_number",{ascending:true}).order("id",{ascending:true});
+    const card=document.createElement("div"); card.className="plan-card glass";
+    let html='<div class="plan-day">'+escapeHtml(language==="ar"?"خطة التدريب":"TRAINING PLAN")+'</div><h3>'+escapeHtml(plan.title||"")+'</h3>';
+    if(plan.description) html+='<p style="color:var(--muted);margin:8px 0 15px;">'+escapeHtml(plan.description)+'</p>';
+    html+='<ul class="exercise-list">'; (workouts||[]).forEach(item=>{html+='<li><span>'+escapeHtml((language==="ar"?"يوم ":"Day ")+item.day_number+' · '+item.exercise)+'</span><span>'+escapeHtml(item.sets||"")+(item.reps?"×"+escapeHtml(item.reps):"")+'</span></li>';}); html+='</ul>';
+    card.innerHTML=html; container.appendChild(card);
   }
-  if (!Number.isFinite(bodyFat) || bodyFat < 1 || bodyFat > 70) bodyFat=null;
-  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;}; set("calcBmr",Math.round(bmr)+" kcal");set("calcTdee",Math.round(tdee)+" kcal");set("calcCalories",Math.round(target)+" kcal");set("calcBmi",bmi.toFixed(1));set("calcBodyFat",bodyFat===null?"Add measurements":bodyFat.toFixed(1)+"%");
 }
 
 document.getElementById("clientProfileForm")?.addEventListener("submit",async function(event){
   event.preventDefault(); if(!currentUser||currentProfile?.role==="coach")return;
   const message=document.getElementById("profileMessage"); message.textContent="Saving...";
-  const payload={user_id:currentUser.id,full_name:document.getElementById("cpFullName").value.trim(),age:Number(document.getElementById("cpAge").value),gender:document.getElementById("cpGender").value,weight_kg:Number(document.getElementById("cpWeight").value),height_cm:Number(document.getElementById("cpHeight").value),activity_level:Number(document.getElementById("cpActivity").value),goal:document.getElementById("cpGoal").value,steps_per_day:Number(document.getElementById("cpSteps").value)||0,works:document.getElementById("cpWorks").value==="yes",sleep_hours:Number(document.getElementById("cpSleep").value),takes_medications:document.getElementById("cpMedications").value==="yes",food_allergy:document.getElementById("cpAllergy").value==="yes",medical_notes:document.getElementById("cpMedicalNotes").value.trim(),injuries:document.getElementById("cpInjuries").value.trim(),training_experience:document.getElementById("cpExperience").value,training_days_per_week:Number(document.getElementById("cpTrainingDays").value)||0,whatsapp:document.getElementById("cpWhatsapp").value.trim(),waist_cm:Number(document.getElementById("cpWaist").value)||null,neck_cm:Number(document.getElementById("cpNeck").value)||null,hip_cm:Number(document.getElementById("cpHip").value)||null};
+  const payload={user_id:currentUser.id,full_name:document.getElementById("cpFullName").value.trim(),age:Number(document.getElementById("cpAge").value),gender:document.getElementById("cpGender").value,weight_kg:Number(document.getElementById("cpWeight").value),height_cm:Number(document.getElementById("cpHeight").value),activity_level:Number(document.getElementById("cpActivity").value),goal:document.getElementById("cpGoal").value,steps_per_day:Number(document.getElementById("cpSteps").value)||0,works:document.getElementById("cpWorks").value==="yes",sleep_hours:Number(document.getElementById("cpSleep").value),takes_medications:document.getElementById("cpMedications").value==="yes",food_allergy:document.getElementById("cpAllergy").value==="yes",medical_notes:document.getElementById("cpMedicalNotes").value.trim(),injuries:document.getElementById("cpInjuries").value.trim(),training_experience:document.getElementById("cpExperience").value,training_days_per_week:Number(document.getElementById("cpTrainingDays").value)||0,whatsapp:document.getElementById("cpWhatsapp").value.trim()};
   const {error}=await supabaseClient.from("client_profiles").upsert(payload,{onConflict:"user_id"});
   if(error){console.error(error);message.textContent=error.message;return;}
-  calculateClientStats(payload.weight_kg,payload.height_cm,payload.age,payload.gender,payload.activity_level,payload.goal,payload.waist_cm,payload.neck_cm,payload.hip_cm);
-  message.textContent="Profile saved successfully.";
-  const completion=document.getElementById("profileCompletionCard"); if(completion)completion.style.display="none";
+  calculateClientStats(payload.weight_kg,payload.height_cm,payload.age,payload.gender,payload.activity_level,payload.goal);
+  message.textContent=language==="ar"?"تم حفظ البروفايل وحساب النتائج.":"Profile saved successfully.";
 });
 
 async function loadClientPlan(clientId){
