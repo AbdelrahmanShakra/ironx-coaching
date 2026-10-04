@@ -1,5 +1,3 @@
-const crypto = require("crypto");
-
 const SUPABASE_URL =
   process.env.SUPABASE_URL ||
   "https://uibzmqioeumuhczljolu.supabase.co";
@@ -7,11 +5,11 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   process.env.SUPABASE_PUBLISHABLE_KEY || "";
 
-const OPENAI_API_KEY =
-  process.env.OPENAI_API_KEY || "";
+const GEMINI_API_KEY =
+  process.env.GEMINI_API_KEY || "";
 
-const OPENAI_MODEL =
-  process.env.OPENAI_MODEL || "gpt-5-mini";
+const GEMINI_MODEL =
+  process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 
 const rateLimits = new Map();
@@ -23,7 +21,6 @@ function send(res, status, body) {
 
 
 function allowed(userId) {
-
   const now = Date.now();
 
   const old =
@@ -32,29 +29,23 @@ function allowed(userId) {
       count: 0
     };
 
-
   if (now - old.time > 60000) {
     old.time = now;
     old.count = 0;
   }
 
-
   old.count++;
 
   rateLimits.set(userId, old);
-
 
   return old.count <= 15;
 }
 
 
-
 async function getUser(token) {
-
   if (!token || !SUPABASE_PUBLISHABLE_KEY) {
     return null;
   }
-
 
   const response = await fetch(
     `${SUPABASE_URL}/auth/v1/user`,
@@ -66,111 +57,108 @@ async function getUser(token) {
     }
   );
 
-
   if (!response.ok) {
     return null;
   }
 
-
   return response.json();
-
 }
 
 
+function buildHistory(history) {
+  if (!Array.isArray(history)) {
+    return [];
+  }
 
-module.exports = async function handler(req,res){
+  return history
+    .filter(item =>
+      item &&
+      typeof item.content === "string" &&
+      (item.role === "user" || item.role === "assistant")
+    )
+    .slice(-24)
+    .map(item => ({
+      role: item.role === "assistant" ? "model" : "user",
+      parts: [
+        {
+          text: item.content.slice(0, 4000)
+        }
+      ]
+    }));
+}
 
 
-  if(req.method !== "POST"){
-    return send(res,405,{
-      error:"METHOD_NOT_ALLOWED"
+module.exports = async function handler(req, res) {
+
+  if (req.method !== "POST") {
+    return send(res, 405, {
+      error: "METHOD_NOT_ALLOWED"
     });
   }
 
 
+  if (!GEMINI_API_KEY) {
+    console.error(
+      "GEMINI_API_KEY is missing from the server environment."
+    );
 
-  if(!OPENAI_API_KEY){
-
-    return send(res,503,{
-      error:"AI_NOT_CONFIGURED"
+    return send(res, 503, {
+      error: "AI_NOT_CONFIGURED"
     });
-
   }
 
 
-
-  try{
-
+  try {
 
     const auth =
       req.headers.authorization || "";
 
-
     const token =
       auth.startsWith("Bearer ")
-      ? auth.substring(7)
-      : "";
-
+        ? auth.substring(7)
+        : "";
 
 
     const user =
       await getUser(token);
 
 
-
-    if(!user?.id){
-
-      return send(res,401,{
-        error:"UNAUTHORIZED"
+    if (!user?.id) {
+      return send(res, 401, {
+        error: "UNAUTHORIZED"
       });
-
     }
 
 
-
-
-    if(!allowed(user.id)){
-
-      return send(res,429,{
-        error:"RATE_LIMITED"
+    if (!allowed(user.id)) {
+      return send(res, 429, {
+        error: "RATE_LIMITED"
       });
-
     }
-
-
 
 
     const body =
       req.body || {};
 
 
-
     const message =
       typeof body.message === "string"
-      ? body.message.trim()
-      : "";
+        ? body.message.trim()
+        : "";
 
 
-
-    if(!message){
-
-      return send(res,400,{
-        error:"MESSAGE_REQUIRED"
+    if (!message) {
+      return send(res, 400, {
+        error: "MESSAGE_REQUIRED"
       });
-
     }
 
 
-
-    if(message.length > 4000){
-
-      return send(res,400,{
-        error:"MESSAGE_TOO_LONG"
+    if (message.length > 4000) {
+      return send(res, 400, {
+        error: "MESSAGE_TOO_LONG"
       });
-
     }
-
-
 
 
     const profile =
@@ -179,125 +167,153 @@ module.exports = async function handler(req,res){
     const language =
       body.language || "en";
 
+    const history =
+      buildHistory(body.history);
 
 
-
-    const aiResponse =
-      await fetch(
-        "https://api.openai.com/v1/responses",
-        {
-
-          method:"POST",
-
-          headers:{
-            "Content-Type":"application/json",
-
-            Authorization:
-              `Bearer ${OPENAI_API_KEY}`
-          },
-
-
-          body:JSON.stringify({
-
-            model:OPENAI_MODEL,
-
-
-            instructions:
-            `
+    const systemInstruction = `
 You are IRONX AI Coach.
 
-You help users with:
-- training
-- nutrition
-- recovery
-- fitness planning
+You are an AI fitness assistant for the IRONX coaching platform.
 
-Give short practical answers.
+Help users with:
+- workout planning
+- exercise technique
+- training progression
+- nutrition
+- calories and macros
+- recovery
+- sleep
+- general fitness questions
+
+Give practical, clear, concise answers.
 
 Do not diagnose medical conditions.
-Do not replace doctors.
+Do not pretend to be a doctor.
+Do not replace a qualified medical professional.
 
-If the user reports serious pain, injury,
-chest pain, fainting, or dangerous symptoms,
-recommend professional medical help.
+If the user reports serious pain, significant injury,
+chest pain, fainting, severe dizziness, difficulty breathing,
+or another dangerous symptom, recommend professional medical care.
 
 Never pretend to be a human coach.
+Always be honest that you are an AI assistant.
+
+Answer in the user's requested language.
 
 User language:
 ${language}
 
 User profile:
 ${JSON.stringify(profile)}
-            `,
+`;
 
 
-            input:[
-              {
-                role:"user",
-                content:message
-              }
-            ],
+    const contents = [
+      ...history,
+      {
+        role: "user",
+        parts: [
+          {
+            text: message
+          }
+        ]
+      }
+    ];
 
 
-            max_output_tokens:700
+    const apiUrl =
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+        GEMINI_MODEL
+      )}:generateContent?key=${encodeURIComponent(
+        GEMINI_API_KEY
+      )}`;
+
+
+    const aiResponse =
+      await fetch(
+        apiUrl,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+
+            systemInstruction: {
+              parts: [
+                {
+                  text: systemInstruction
+                }
+              ]
+            },
+
+            contents,
+
+            generationConfig: {
+              maxOutputTokens: 700,
+              temperature: 0.7
+            }
 
           })
-
         }
-
       );
-
-
 
 
     const data =
       await aiResponse.json();
 
 
-
-
-    if(!aiResponse.ok){
+    if (!aiResponse.ok) {
 
       console.error(
-        "OpenAI Error:",
+        "Gemini Error:",
         data
       );
 
-
-      return send(res,502,{
-        error:"AI_REQUEST_FAILED"
+      return send(res, 502, {
+        error: "AI_PROVIDER_ERROR"
       });
-
     }
 
 
+    const reply =
+      data?.candidates?.[0]?.content?.parts
+        ?.map(part => part?.text || "")
+        .join("")
+        .trim();
 
 
-    return send(res,200,{
+    if (!reply) {
 
-      reply:
-        data.output_text ||
-        "No response."
+      console.error(
+        "Gemini returned no usable response:",
+        data
+      );
 
+      return send(res, 502, {
+        error: "AI_EMPTY_RESPONSE"
+      });
+    }
+
+
+    return send(res, 200, {
+      reply
     });
 
 
-
-  }catch(error){
-
+  } catch (error) {
 
     console.error(
-      "API ERROR:",
+      "AI SERVER ERROR:",
       error
     );
 
-
-    return send(res,500,{
-      error:"SERVER_ERROR"
+    return send(res, 500, {
+      error: "AI_SERVER_ERROR"
     });
-
-
   }
-
 
 };
