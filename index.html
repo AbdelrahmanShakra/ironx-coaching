@@ -4471,18 +4471,26 @@ async function ensureProfile() {
 
 function applyRoleUI() {
   const isCoach = currentProfile?.role === "coach";
+
   updateCurrentUserUI();
+
   document.querySelectorAll(".coach-only").forEach(el => {
     el.style.display = isCoach ? "" : "none";
   });
+
   document.querySelectorAll(".client-only").forEach(el => {
-    el.style.display = isCoach ? "none" : (el.classList.contains("page") ? "block" : "flex");
+    el.style.display = isCoach
+      ? "none"
+      : (el.classList.contains("page") ? "block" : "flex");
   });
+
   if (isCoach) {
     loadClients();
+    showPage("coach");
   } else {
     loadClientProfile();
   }
+}
 }
 async function loadClients() {
   const list=document.getElementById("clientList");
