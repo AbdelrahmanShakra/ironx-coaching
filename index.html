@@ -4808,7 +4808,26 @@ document
     }
   );
 
+async function loadClientPlans(){
+  console.log("loadClientPlans loaded");
 
+  if(!currentUser || currentProfile?.role==="coach") return;
+
+  const {data:plans,error}=await supabaseClient
+    .from("plans")
+    .select("id,title,description,updated_at")
+    .eq("client_id",currentUser.id)
+    .order("updated_at",{ascending:false});
+
+  if(error){
+    console.error("Client plans error:",error);
+    return;
+  }
+
+  console.log("Plans:", plans);
+
+}
+  
 /* =========================================================
    LOAD USER
    ========================================================= */
