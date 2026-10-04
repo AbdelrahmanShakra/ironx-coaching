@@ -3559,44 +3559,252 @@ body::after {
 <section id="page-coach" class="page hidden">
   <div class="section-head">
     <h2>Coach Dashboard</h2>
-    <p>Manage clients and publish their training plans.</p>
+    <p>Manage training and nutrition plans for each client.</p>
   </div>
+
   <div class="coach-dashboard">
+
     <div class="coach-panel glass">
       <h3>Clients</h3>
-      <p style="color:var(--muted);font-size:13px;margin-top:5px;">Select a client to manage their plan.</p>
+      <p style="color:var(--muted);font-size:13px;margin-top:5px;">
+        Select a client to manage their plans.
+      </p>
+
       <div id="clientList" class="client-list"></div>
     </div>
+
     <div class="coach-panel glass">
+
       <div id="coachEmptyState">
         <h3>Select a client</h3>
-        <p style="color:var(--muted);margin-top:8px;">Choose a client from the list to create or edit their training plan.</p>
+        <p style="color:var(--muted);margin-top:8px;">
+          Choose a client from the list to create or edit training and nutrition plans.
+        </p>
       </div>
+
       <div id="coachEditor" class="hidden">
+
         <div style="margin-bottom:18px;">
-          <div style="font-size:11px;color:var(--dim);letter-spacing:1.5px;">SELECTED CLIENT</div>
-          <h3 id="selectedClientName" style="margin-top:6px;">Client</h3>
-          <p id="selectedClientEmail" style="color:var(--muted);font-size:13px;margin-top:4px;"></p>
+          <div style="font-size:11px;color:var(--dim);letter-spacing:1.5px;">
+            SELECTED CLIENT
+          </div>
+
+          <h3 id="selectedClientName" style="margin-top:6px;">
+            Client
+          </h3>
+
+          <p id="selectedClientEmail"
+             style="color:var(--muted);font-size:13px;margin-top:4px;">
+          </p>
+
           <div id="selectedClientInfo" class="client-info-grid"></div>
         </div>
-        <form id="planEditorForm" class="coach-form">
-          <input id="planTitleInput" type="text" placeholder="Plan title" required>
-          <textarea id="planDescriptionInput" placeholder="Plan description"></textarea>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
-              <strong>Exercises</strong>
-              <button type="button" class="secondary-button" onclick="addExerciseRow()">+ Add exercise</button>
-            </div>
-            <div id="exerciseEditor" class="exercise-editor"></div>
-          </div>
-          <button class="primary" type="submit">Save plan</button>
-          <div id="coachMessage" class="coach-message"></div>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
 
+
+        <!-- COACH TABS -->
+        <div class="coach-tabs">
+
+          <button
+            type="button"
+            class="coach-tab active"
+            data-coach-tab="training">
+            Training Plan
+          </button>
+
+          <button
+            type="button"
+            class="coach-tab"
+            data-coach-tab="nutrition">
+            Nutrition Plan
+          </button>
+
+        </div>
+
+
+        <!-- TRAINING EDITOR -->
+        <div id="coachTrainingEditor">
+
+          <form id="planEditorForm" class="coach-form">
+
+            <input
+              id="planTitleInput"
+              type="text"
+              placeholder="Plan title"
+              required>
+
+            <textarea
+              id="planDescriptionInput"
+              placeholder="Plan description">
+            </textarea>
+
+
+            <div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+
+                <strong>Exercises</strong>
+
+                <button
+                  type="button"
+                  class="secondary-button"
+                  onclick="addExerciseRow()">
+                  + Add exercise
+                </button>
+
+              </div>
+
+              <div
+                id="exerciseEditor"
+                class="exercise-editor">
+              </div>
+
+            </div>
+
+
+            <button
+              class="primary"
+              type="submit">
+              Save training plan
+            </button>
+
+            <div
+              id="coachMessage"
+              class="coach-message">
+            </div>
+
+          </form>
+
+        </div>
+
+
+        <!-- NUTRITION EDITOR -->
+        <div
+          id="coachNutritionEditor"
+          class="hidden">
+
+          <form
+            id="nutritionEditorForm"
+            class="coach-form">
+
+
+            <input
+              id="nutritionTitleInput"
+              type="text"
+              placeholder="Nutrition plan title"
+              required>
+
+
+            <div class="coach-nutrition-grid">
+
+              <input
+                id="nutritionCaloriesInput"
+                type="number"
+                min="0"
+                placeholder="Calories">
+
+              <input
+                id="nutritionProteinInput"
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="Protein (g)">
+
+              <input
+                id="nutritionCarbsInput"
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="Carbs (g)">
+
+              <input
+                id="nutritionFatsInput"
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="Fats (g)">
+
+              <input
+                id="nutritionMealsInput"
+                type="number"
+                min="1"
+                max="8"
+                placeholder="Meals / day">
+
+              <input
+                id="nutritionWaterInput"
+                type="number"
+                min="1"
+                max="6"
+                step="0.1"
+                placeholder="Water (L)">
+
+            </div>
+
+
+            <textarea
+              id="nutritionNotesInput"
+              placeholder="Nutrition notes">
+            </textarea>
+
+
+            <div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+
+                <strong>Meals</strong>
+
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+                  <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="addNutritionMealRow()">
+                    + Add meal
+                  </button>
+
+                  <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="generateSelectedClientNutrition()">
+                    ✦ Generate with AI
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <div
+                id="nutritionMealEditor"
+                class="nutrition-meal-editor">
+              </div>
+
+            </div>
+
+
+            <button
+              class="primary"
+              type="submit">
+              Save nutrition plan
+            </button>
+
+
+            <div
+              id="nutritionCoachMessage"
+              class="coach-message">
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 <!-- AI CHAT -->
 <section id="page-ai-chat" class="page hidden">
   <div class="section-head"><h2>AI Coach</h2><p>Ask about training, nutrition, recovery, or your calculated stats.</p></div>
