@@ -4916,12 +4916,31 @@ async function sendAIMessage(){
     await saveAIMessage('assistant',reply);
     renderAIMessage('assistant',reply);
   }catch(err){
-    console.error('AI error:',err);
-    const msg=err.message==='AI_NOT_CONFIGURED'
-      ?(language==='ar'?'الـ AI لسه مش متوصل بالسيرفر.':'AI is not configured on the server yet.')
-      :(language==='ar'?'الـ AI مش متاح حاليًا، جرّب تاني.':'AI is temporarily unavailable. Try again.');
-    renderAIMessage('assistant',msg);
-    aiHistory.pop();
+}catch(err){
+  console.error('AI error:',err);
+
+  const msg=err.message==='AI_NOT_CONFIGURED'
+    ?(language==='ar'
+      ?'السيرفر شغال، لكن GEMINI_API_KEY مش موجود في Vercel Production.'
+      :'The server is running, but GEMINI_API_KEY is missing in Vercel Production.')
+    :err.message==='AI_PROVIDER_ERROR'
+    ?(language==='ar'
+      ?'السيرفر وصل لـ Gemini لكن Gemini رفض الطلب. راجع GEMINI_API_KEY والموديل.'
+      :'The server reached Gemini, but Gemini rejected the request. Check GEMINI_API_KEY and the model.')
+    :err.message==='AI_EMPTY_RESPONSE'
+    ?(language==='ar'
+      ?'Gemini وصل لكن مفيش رد راجع منه.'
+      :'Gemini responded without a usable answer.')
+    :err.message==='AI_SERVER_ERROR'
+    ?(language==='ar'
+      ?'حصل خطأ داخل سيرفر الـ AI.'
+      :'An internal AI server error occurred.')
+    :(language==='ar'
+      ?'حصل خطأ في اتصال الـ AI بالسيرفر.'
+      :'The AI request failed on the server.');
+
+  renderAIMessage('assistant',msg);
+  aiHistory.pop();
   }finally{
     status.textContent='';
     box.scrollTop=box.scrollHeight;
