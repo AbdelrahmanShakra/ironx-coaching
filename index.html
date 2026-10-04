@@ -4915,7 +4915,6 @@ async function sendAIMessage(){
     aiHistory.push({role:'assistant',content:reply});
     await saveAIMessage('assistant',reply);
     renderAIMessage('assistant',reply);
-  }catch(err){
 }catch(err){
   console.error('AI error:',err);
 
