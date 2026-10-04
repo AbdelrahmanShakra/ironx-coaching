@@ -4994,8 +4994,22 @@ document.getElementById('aiSendButton')?.addEventListener('click',sendAIMessage)
 document.getElementById('aiInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMessage()}});
 
 // Hook chat loading into page navigation without breaking the existing app.
-const _showPage=window.showPage; if(typeof _showPage==='function'){window.showPage=function(page){const r=_showPage.apply(this,arguments);if(page==='coach-chat')loadChatUsers();if(page==='ai-chat')loadAIHistory();return r;}}
+const _showPage=window.showPage;
+if(typeof _showPage==='function'){
+  window.showPage=function(page){
+    const r=_showPage.apply(this,arguments);
 
+    if(page==='coach-chat'){
+      setTimeout(()=>loadChatUsers(),100);
+    }
+
+    if(page==='ai-chat'){
+      setTimeout(()=>loadAIHistory(),100);
+    }
+
+    return r;
+  };
+}
 </script>
 
 </body>
