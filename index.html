@@ -5132,14 +5132,29 @@ function escapeHtml(value){return String(value??"").replace(/&/g,"&amp;").replac
 
 async function selectClient(client){
   selectedClient=client;
-  document.querySelectorAll(".client-item").forEach(button=>button.classList.toggle("active",button.dataset.clientId===client.id));
+
+  document.querySelectorAll(".client-item").forEach(button=>{
+    button.classList.toggle(
+      "active",
+      button.dataset.clientId===client.id
+    );
+  });
+
   document.getElementById("coachEmptyState").classList.add("hidden");
   document.getElementById("coachEditor").classList.remove("hidden");
-  document.getElementById("selectedClientName").textContent=client.full_name||"Client";
-  document.getElementById("selectedClientEmail").textContent="Client account";
+
+  document.getElementById("selectedClientName").textContent =
+    client.full_name || "Client";
+
+  document.getElementById("selectedClientEmail").textContent =
+    "Client account";
+
   document.getElementById("coachMessage").textContent="";
+  document.getElementById("nutritionCoachMessage").textContent="";
+
   await loadSelectedClientProfile(client.id);
   await loadClientPlan(client.id);
+  await loadCoachNutritionPlan(client.id);
 }
 
 async function loadSelectedClientProfile(clientId){
