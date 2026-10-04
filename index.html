@@ -2334,7 +2334,178 @@ body::after {
 .exercise-row button { height:42px; width:42px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.035); color:var(--text); cursor:pointer; }
 .coach-message { min-height:20px; color:var(--muted); font-size:13px; }
 @media (max-width:900px) { .coach-dashboard{grid-template-columns:1fr;} .exercise-row{grid-template-columns:1fr 1fr;} .exercise-row input:first-child{grid-column:1/-1;} }
+/* ===== NUTRITION PLAN ===== */
+.nutrition-summary{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:14px;
+}
 
+.nutrition-stat{
+  padding:20px;
+  border-radius:22px;
+}
+
+.nutrition-stat span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.nutrition-stat strong{
+  display:block;
+  font-size:28px;
+  margin-top:7px;
+}
+
+.nutrition-stat small{
+  display:block;
+  color:var(--dim);
+  font-size:10px;
+  margin-top:4px;
+}
+
+.nutrition-layout{
+  display:grid;
+  grid-template-columns:1fr 1.6fr;
+  gap:14px;
+}
+
+.nutrition-card{
+  padding:24px;
+  border-radius:24px;
+}
+
+.nutrition-card h3{
+  font-size:18px;
+  margin-bottom:12px;
+}
+
+.macro-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:14px;
+}
+
+.macro-item{
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+}
+
+.macro-item span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.macro-item strong{
+  display:block;
+  font-size:18px;
+  margin-top:5px;
+}
+
+.meal-list{
+  display:grid;
+  gap:10px;
+}
+
+.meal-item{
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(255,255,255,.025);
+}
+
+.meal-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.meal-name{
+  font-size:15px;
+  font-weight:850;
+}
+
+.meal-time{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.meal-foods{
+  color:#aeb5bf;
+  font-size:12px;
+  line-height:1.65;
+  margin-top:10px;
+  white-space:pre-wrap;
+}
+
+.meal-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:11px;
+}
+
+.meal-pill{
+  padding:6px 9px;
+  border:1px solid var(--border2);
+  border-radius:999px;
+  color:#d7dbe0;
+  font-size:10px;
+  background:rgba(255,255,255,.025);
+}
+
+.nutrition-note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+  white-space:pre-wrap;
+}
+
+.nutrition-empty{
+  padding:35px;
+  text-align:center;
+  border-radius:24px;
+}
+
+.nutrition-water{
+  margin-top:15px;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:rgba(255,255,255,.025);
+}
+
+@media(max-width:900px){
+  .nutrition-layout{
+    grid-template-columns:1fr;
+  }
+
+  .nutrition-summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:500px){
+  .nutrition-summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .macro-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .nutrition-card{
+    padding:18px;
+  }
+}
 
 /* ===== CHAT SYSTEM ===== */
 .chat-layout{display:grid;grid-template-columns:280px 1fr;gap:16px}
@@ -2421,7 +2592,17 @@ body::after {
 
     </p>
 
+    <button
+      class="nav-button"
+      data-page="nutrition">
 
+      <span class="nav-icon">🥗</span>
+
+      <span data-i18n="nutrition">
+        Nutrition Plan
+      </span>
+
+    </button>
     <form id="authForm">
 
       <div
@@ -2579,8 +2760,19 @@ body::after {
         Home
       </span>
 
-    </button>
+       </button>
+    
+<button data-page="nutrition">
 
+  <span class="mobile-icon">
+    ◒
+  </span>
+
+  <span data-i18n="nutritionPlan">
+    Nutrition
+  </span>
+
+</button>
 
     <button
       class="nav-button"
@@ -2959,7 +3151,237 @@ body::after {
 
 </section>
 
+<!-- NUTRITION PLAN -->
 
+<section
+  id="page-nutrition"
+  class="page hidden client-only"
+>
+
+  <div class="section-head">
+
+    <h2 data-i18n="nutritionPlan">
+      Nutrition Plan
+    </h2>
+
+    <p data-i18n="nutritionPlanSub">
+      Your daily calories, macros and meals.
+    </p>
+
+  </div>
+
+  <div
+    id="nutritionEmptyState"
+    class="nutrition-empty glass hidden"
+  >
+
+    <h3 data-i18n="nutritionNoPlan">
+      No nutrition plan yet
+    </h3>
+
+    <p
+      class="profile-note"
+      data-i18n="nutritionNoPlanSub"
+    >
+      Complete your profile and IRONX will generate your nutrition plan automatically.
+    </p>
+
+    <button
+      class="secondary-button"
+      type="button"
+      onclick="showPage('profile')"
+      data-i18n="goToProfile"
+    >
+      Complete profile
+    </button>
+
+  </div>
+
+
+  <div
+    id="nutritionContent"
+    class="hidden"
+  >
+
+    <div class="nutrition-summary">
+
+      <div class="nutrition-stat glass">
+
+        <span data-i18n="calories">
+          Calories
+        </span>
+
+        <strong id="nutritionCalories">
+          -
+        </strong>
+
+        <small>
+          kcal / day
+        </small>
+
+      </div>
+
+
+      <div class="nutrition-stat glass">
+
+        <span data-i18n="protein">
+          Protein
+        </span>
+
+        <strong id="nutritionProtein">
+          -
+        </strong>
+
+        <small>
+          g / day
+        </small>
+
+      </div>
+
+
+      <div class="nutrition-stat glass">
+
+        <span data-i18n="carbs">
+          Carbs
+        </span>
+
+        <strong id="nutritionCarbs">
+          -
+        </strong>
+
+        <small>
+          g / day
+        </small>
+
+      </div>
+
+
+      <div class="nutrition-stat glass">
+
+        <span data-i18n="fats">
+          Fats
+        </span>
+
+        <strong id="nutritionFats">
+          -
+        </strong>
+
+        <small>
+          g / day
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <div class="nutrition-layout">
+
+
+      <div class="nutrition-card glass">
+
+        <div
+          class="plan-day"
+          data-i18n="nutritionOverview"
+        >
+          NUTRITION OVERVIEW
+        </div>
+
+        <h3 id="nutritionTitle">
+          -
+        </h3>
+
+        <p
+          id="nutritionGoal"
+          class="profile-note"
+        ></p>
+
+
+        <div class="macro-grid">
+
+          <div class="macro-item">
+
+            <span data-i18n="mealsPerDay">
+              Meals / day
+            </span>
+
+            <strong id="nutritionMealsPerDay">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="macro-item">
+
+            <span data-i18n="water">
+              Water
+            </span>
+
+            <strong id="nutritionWater">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="macro-item">
+
+            <span data-i18n="lastUpdated">
+              Updated
+            </span>
+
+            <strong id="nutritionUpdated">
+              -
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="nutrition-water">
+
+          <div
+            class="plan-day"
+            data-i18n="nutritionNotes"
+          >
+            NOTES
+          </div>
+
+          <div
+            id="nutritionNotes"
+            class="nutrition-note"
+          >
+            -
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="nutrition-card glass">
+
+        <div
+          class="plan-day"
+          data-i18n="dailyMeals"
+        >
+          DAILY MEALS
+        </div>
+
+        <div
+          id="nutritionMeals"
+          class="meal-list"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
 <!-- PROGRESS -->
 
@@ -4679,7 +5101,732 @@ async function loadClientPlans(){
     html+='<ul class="exercise-list">'; (workouts||[]).forEach(item=>{html+='<li><span>Day '+escapeHtml(item.day_number)+' · '+escapeHtml(item.exercise)+'</span><span>'+escapeHtml(item.sets||"")+(item.reps?"×"+escapeHtml(item.reps):"")+'</span></li>';}); html+='</ul>'; card.innerHTML=html; container.appendChild(card);
   }
 }
+/* =========================================================
+   NUTRITION PLAN + AUTO ONBOARDING
+   ========================================================= */
 
+function nutritionGoalLabel(goal){
+
+  const map = {
+
+    cut:
+      language === "ar"
+        ? "خسارة دهون"
+        : "Fat loss",
+
+    maintain:
+      language === "ar"
+        ? "ثبات الوزن"
+        : "Maintain",
+
+    bulk:
+      language === "ar"
+        ? "زيادة عضل"
+        : "Muscle gain"
+
+  };
+
+  return (
+    map[String(goal || "").toLowerCase()]
+    || goal
+    || "-"
+  );
+}
+
+
+async function loadNutritionPlan(){
+
+  if(
+    !currentUser ||
+    currentProfile?.role === "coach"
+  ) return;
+
+  const empty =
+    document.getElementById(
+      "nutritionEmptyState"
+    );
+
+  const content =
+    document.getElementById(
+      "nutritionContent"
+    );
+
+  if(!empty || !content) return;
+
+
+  const {
+    data:plan,
+    error
+  } = await supabaseClient
+    .from("nutrition_plans")
+    .select(`
+      id,
+      client_id,
+      coach_id,
+      title,
+      calories,
+      protein,
+      carbs,
+      fats,
+      notes,
+      created_at,
+      updated_at,
+      meals_per_day,
+      water_liters,
+      goal,
+      auto_generated
+    `)
+    .eq(
+      "client_id",
+      currentUser.id
+    )
+    .order(
+      "updated_at",
+      {ascending:false}
+    )
+    .limit(1)
+    .maybeSingle();
+
+
+  if(error){
+
+    console.error(
+      "Nutrition plan error:",
+      error
+    );
+
+    empty.classList.remove("hidden");
+    content.classList.add("hidden");
+
+    return;
+  }
+
+
+  if(!plan){
+
+    empty.classList.remove("hidden");
+    content.classList.add("hidden");
+
+    return;
+  }
+
+
+  const {
+    data:meals,
+    error:mealError
+  } = await supabaseClient
+    .from("nutrition_meals")
+    .select(`
+      id,
+      meal_number,
+      name,
+      time,
+      foods,
+      calories,
+      protein_g,
+      carbs_g,
+      fat_g,
+      fiber_g,
+      notes
+    `)
+    .eq(
+      "plan_id",
+      plan.id
+    )
+    .order(
+      "meal_number",
+      {ascending:true}
+    );
+
+
+  if(mealError){
+
+    console.error(
+      "Nutrition meals error:",
+      mealError
+    );
+
+  }
+
+
+  empty.classList.add("hidden");
+  content.classList.remove("hidden");
+
+
+  const set = (
+    id,
+    value
+  ) => {
+
+    const element =
+      document.getElementById(id);
+
+    if(element){
+
+      element.textContent =
+        value ?? "-";
+
+    }
+
+  };
+
+
+  set(
+    "nutritionCalories",
+    Math.round(
+      Number(plan.calories || 0)
+    )
+  );
+
+  set(
+    "nutritionProtein",
+    Math.round(
+      Number(plan.protein || 0)
+    )
+  );
+
+  set(
+    "nutritionCarbs",
+    Math.round(
+      Number(plan.carbs || 0)
+    )
+  );
+
+  set(
+    "nutritionFats",
+    Math.round(
+      Number(plan.fats || 0)
+    )
+  );
+
+  set(
+    "nutritionTitle",
+    plan.title ||
+    "IRONX Nutrition Plan"
+  );
+
+  set(
+    "nutritionGoal",
+    nutritionGoalLabel(
+      plan.goal
+    )
+  );
+
+  set(
+    "nutritionMealsPerDay",
+    plan.meals_per_day ||
+    meals?.length ||
+    "-"
+  );
+
+  set(
+    "nutritionWater",
+    Number(
+      plan.water_liters || 0
+    ).toFixed(1) + " L"
+  );
+
+  set(
+    "nutritionUpdated",
+    plan.updated_at
+      ? new Date(
+          plan.updated_at
+        ).toLocaleDateString(
+          language === "ar"
+            ? "ar-EG"
+            : "en-US"
+        )
+      : "-"
+  );
+
+  set(
+    "nutritionNotes",
+    plan.notes ||
+    (
+      language === "ar"
+        ? "اتبع الكميات المكتوبة في الوجبات ووزّع المياه على مدار اليوم."
+        : "Follow the listed portions and spread your water intake across the day."
+    )
+  );
+
+
+  const box =
+    document.getElementById(
+      "nutritionMeals"
+    );
+
+  if(!box) return;
+
+  box.innerHTML = "";
+
+
+  if(!meals?.length){
+
+    box.innerHTML =
+      `<div class="meal-item">
+        <div class="profile-note">
+          ${
+            language === "ar"
+              ? "مفيش وجبات مضافة للخطة لسه."
+              : "No meals have been added to this plan yet."
+          }
+        </div>
+      </div>`;
+
+    return;
+
+  }
+
+
+  meals.forEach(
+    (meal,index) => {
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+      element.className =
+        "meal-item";
+
+
+      element.innerHTML = `
+
+        <div class="meal-head">
+
+          <div>
+
+            <div class="meal-name">
+
+              ${
+                escapeHtml(
+                  meal.name ||
+                  (
+                    language === "ar"
+                      ? "وجبة " + (index + 1)
+                      : "Meal " + (index + 1)
+                  )
+                )
+              }
+
+            </div>
+
+            ${
+              meal.time
+                ? `
+                  <div class="meal-time">
+                    ${escapeHtml(meal.time)}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+
+          <div class="meal-pill">
+
+            ${Math.round(
+              Number(
+                meal.calories || 0
+              )
+            )} kcal
+
+          </div>
+
+        </div>
+
+
+        ${
+          meal.foods
+            ? `
+              <div class="meal-foods">
+                ${escapeHtml(meal.foods)}
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="meal-meta">
+
+          <span class="meal-pill">
+            P ${Number(
+              meal.protein_g || 0
+            ).toFixed(1)}g
+          </span>
+
+          <span class="meal-pill">
+            C ${Number(
+              meal.carbs_g || 0
+            ).toFixed(1)}g
+          </span>
+
+          <span class="meal-pill">
+            F ${Number(
+              meal.fat_g || 0
+            ).toFixed(1)}g
+          </span>
+
+          ${
+            Number(
+              meal.fiber_g || 0
+            ) > 0
+              ? `
+                <span class="meal-pill">
+                  Fiber ${Number(
+                    meal.fiber_g
+                  ).toFixed(1)}g
+                </span>
+              `
+              : ""
+          }
+
+        </div>
+
+
+        ${
+          meal.notes
+            ? `
+              <div class="profile-note">
+                ${escapeHtml(meal.notes)}
+              </div>
+            `
+            : ""
+        }
+
+      `;
+
+
+      box.appendChild(
+        element
+      );
+
+    }
+  );
+
+}
+
+  async function saveGeneratedNutritionPlan(
+  clientId,
+  generated
+){
+
+  const nutrition =
+    generated?.nutrition || {};
+
+  const meals =
+    Array.isArray(
+      nutrition.meals
+    )
+      ? nutrition.meals
+      : [];
+
+
+  if(
+    !nutrition.title &&
+    !meals.length
+  ){
+
+    return null;
+
+  }
+
+
+  const {
+    data:existing,
+    error:existingError
+  } = await supabaseClient
+    .from("nutrition_plans")
+    .select("id")
+    .eq(
+      "client_id",
+      clientId
+    )
+    .eq(
+      "auto_generated",
+      true
+    )
+    .maybeSingle();
+
+
+  if(existingError){
+
+    throw existingError;
+
+  }
+
+
+  const planPayload = {
+
+    client_id:
+      clientId,
+
+    coach_id:
+      null,
+
+    title:
+      nutrition.title ||
+      "IRONX Nutrition Plan",
+
+    calories:
+      Math.round(
+        Number(
+          nutrition.daily_calories ||
+          generated?.calculations
+            ?.target_calories ||
+          0
+        )
+      ),
+
+    protein:
+      Math.round(
+        Number(
+          nutrition.protein_g ||
+          generated?.calculations
+            ?.macros?.protein_g ||
+          0
+        )
+      ),
+
+    carbs:
+      Math.round(
+        Number(
+          nutrition.carbs_g ||
+          generated?.calculations
+            ?.macros?.carbs_g ||
+          0
+        )
+      ),
+
+    fats:
+      Math.round(
+        Number(
+          nutrition.fat_g ||
+          generated?.calculations
+            ?.macros?.fat_g ||
+          0
+        )
+      ),
+
+    notes:
+      nutrition.notes || "",
+
+    meals_per_day:
+      Math.max(
+        1,
+        Math.min(
+          8,
+          Math.round(
+            Number(
+              nutrition.meals_per_day ||
+              meals.length ||
+              4
+            )
+          )
+        )
+      ),
+
+    water_liters:
+      Math.max(
+        1,
+        Math.min(
+          6,
+          Number(
+            nutrition.water_liters ||
+            2.5
+          )
+        )
+      ),
+
+    goal:
+      nutrition.goal ||
+      document.getElementById(
+        "cpGoal"
+      )?.value ||
+      "maintain",
+
+    auto_generated:
+      true,
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+
+  let planId =
+    existing?.id;
+
+
+  if(planId){
+
+    const {error} =
+      await supabaseClient
+        .from("nutrition_plans")
+        .update(
+          planPayload
+        )
+        .eq(
+          "id",
+          planId
+        );
+
+    if(error)
+      throw error;
+
+
+    const {
+      error:deleteError
+    } =
+      await supabaseClient
+        .from(
+          "nutrition_meals"
+        )
+        .delete()
+        .eq(
+          "plan_id",
+          planId
+        );
+
+    if(deleteError)
+      throw deleteError;
+
+  }
+
+  else{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from(
+          "nutrition_plans"
+        )
+        .insert(
+          planPayload
+        )
+        .select("id")
+        .single();
+
+
+    if(error)
+      throw error;
+
+
+    planId =
+      data.id;
+
+  }
+
+
+  if(meals.length){
+
+    const rows =
+      meals
+        .slice(0,8)
+        .map(
+          (meal,index) => ({
+
+            plan_id:
+              planId,
+
+            meal_number:
+              Number(
+                meal.meal_number ||
+                index + 1
+              ),
+
+            name:
+              String(
+                meal.name ||
+                (
+                  language === "ar"
+                    ? "وجبة " + (index + 1)
+                    : "Meal " + (index + 1)
+                )
+              ),
+
+            time:
+              String(
+                meal.time || ""
+              ),
+
+            foods:
+              String(
+                meal.foods || ""
+              ),
+
+            calories:
+              Math.max(
+                0,
+                Math.round(
+                  Number(
+                    meal.calories || 0
+                  )
+                )
+              ),
+
+            protein_g:
+              Math.max(
+                0,
+                Number(
+                  meal.protein_g || 0
+                )
+              ),
+
+            carbs_g:
+              Math.max(
+                0,
+                Number(
+                  meal.carbs_g || 0
+                )
+              ),
+
+            fat_g:
+              Math.max(
+                0,
+                Number(
+                  meal.fat_g || 0
+                )
+              ),
+
+            fiber_g:
+              Math.max(
+                0,
+                Number(
+                  meal.fiber_g || 0
+                )
+              ),
+
+            notes:
+              String(
+                meal.notes || ""
+              )
+
+          })
+        );
+
+
+    const {error} =
+      await supabaseClient
+        .from(
+          "nutrition_meals"
+        )
+        .insert(rows);
+
+
+    if(error)
+      throw error;
+
+  }
+
+
+  return planId;
+
+}
+  
 /* =========================================================
    NAVIGATION
    ========================================================= */
