@@ -5247,180 +5247,155 @@ async function loadClientPlanForDashboard(){
 }
 
 document.getElementById("clientProfileForm")?.addEventListener("submit",async function(event){
-  event.preventDefault(); if(!currentUser||currentProfile?.role==="coach")return;
-  const message=document.getElementById("profileMessage"); message.textContent="Saving...";
-  const payload={user_id:currentUser.id,full_name:document.getElementById("cpFullName").value.trim(),age:Number(document.getElementById("cpAge").value),gender:document.getElementById("cpGender").value,weight_kg:Number(document.getElementById("cpWeight").value),height_cm:Number(document.getElementById("cpHeight").value),activity_level:Number(document.getElementById("cpActivity").value),goal:document.getElementById("cpGoal").value,steps_per_day:Number(document.getElementById("cpSteps").value)||0,works:document.getElementById("cpWorks").value==="yes",sleep_hours:Number(document.getElementById("cpSleep").value),takes_medications:document.getElementById("cpMedications").value==="yes",food_allergy:document.getElementById("cpAllergy").value==="yes",medical_notes:document.getElementById("cpMedicalNotes").value.trim(),injuries:document.getElementById("cpInjuries").value.trim(),training_experience:document.getElementById("cpExperience").value,training_days_per_week:Number(document.getElementById("cpTrainingDays").value)||0,whatsapp:document.getElementById("cpWhatsapp").value.trim(),waist_cm:Number(document.getElementById("cpWaist").value)||null,neck_cm:Number(document.getElementById("cpNeck").value)||null,hip_cm:Number(document.getElementById("cpHip").value)||null};
-  const {error}=await supabaseClient.from("client_profiles").upsert(payload,{onConflict:"user_id"});
-  if(error){console.error(error);message.textContent=error.message;return;}
-  calculateClientStats(payload.weight_kg,payload.height_cm,payload.age,payload.gender,payload.activity_level,payload.goal,payload.waist_cm,payload.neck_cm,payload.hip_cm);
-  message.textContent=language==="ar"?"تم حفظ البروفايل وحساب النتائج.":"Profile saved successfully.";
-});
 
-async function loadClientPlan(clientId){
-  const {data:plan,error}=await supabaseClient.from("plans").select("id,title,description,updated_at").eq("client_id",clientId).eq("coach_id",currentUser.id).order("updated_at",{ascending:false}).limit(1).maybeSingle();
-  if(error){console.error("Plan load error:",error);return;}
-  const editor=document.getElementById("exerciseEditor"); editor.innerHTML="";
-  if(!plan){document.getElementById("planTitleInput").value="";document.getElementById("planDescriptionInput").value="";addExerciseRow();return;}
-  document.getElementById("planTitleInput").value=plan.title||""; document.getElementById("planDescriptionInput").value=plan.description||"";
-  const {data:workouts,error:workoutError}=await supabaseClient.from("workouts").select("id,day_number,exercise,sets,reps,rest,notes").eq("plan_id",plan.id).order("day_number",{ascending:true}).order("id",{ascending:true});
-  if(workoutError){console.error("Workout load error:",workoutError);addExerciseRow();return;}
-  if(!workouts?.length){addExerciseRow();return;} workouts.forEach(item=>addExerciseRow(item));
-}
-
-async function saveClientPlan(event){
   event.preventDefault();
 
-  if(!selectedClient || currentProfile?.role!=="coach") return;
+  if(!currentUser || currentProfile?.role==="coach") return;
 
-  const message=document.getElementById("coachMessage");
-  message.textContent="Saving...";
+  const message=document.getElementById("profileMessage");
 
-  const title=document.getElementById("planTitleInput").value.trim();
-  const description=document.getElementById("planDescriptionInput").value.trim();
-
-  const rows=Array.from(
-    document.querySelectorAll("#exerciseEditor .exercise-row")
-  );
-
-  const exercises=rows
-    .map(row=>({
-      exercise:row.querySelector(".exercise-name")?.value.trim()||"",
-      day_number:
-        parseInt(
-          row.querySelector(".exercise-day")?.value||"1",
-          10
-        )||1,
-      sets:
-        row.querySelector(".exercise-sets")?.value.trim()||"",
-      reps:
-        row.querySelector(".exercise-reps")?.value.trim()||""
-    }))
-    .filter(x=>x.exercise);
-
-  if(!title){
-    message.textContent="Enter a plan title.";
-    return;
-  }
-
-  if(!exercises.length){
-    message.textContent="Add at least one exercise.";
-    return;
-  }
+  message.textContent=
+    language==="ar"
+      ? "جاري حفظ البيانات..."
+      : "Saving profile...";
 
 
-  const {
-    data:existing,
-    error:existingError
-  }=await supabaseClient
-    .from("plans")
-    .select("id")
-    .eq("client_id",selectedClient.id)
-    .eq("coach_id",currentUser.id)
-    .order("updated_at",{ascending:false})
-    .limit(1)
-    .maybeSingle();
+  const payload={
+    user_id:currentUser.id,
 
+    full_name:
+      document.getElementById("cpFullName").value.trim(),
 
-  if(existingError){
-    console.error(existingError);
-    message.textContent="Could not load the existing plan.";
-    return;
-  }
+    age:
+      Number(document.getElementById("cpAge").value),
 
+    gender:
+      document.getElementById("cpGender").value,
 
-  let planId;
+    weight_kg:
+      Number(document.getElementById("cpWeight").value),
 
+    height_cm:
+      Number(document.getElementById("cpHeight").value),
 
-  if(existing){
+    activity_level:
+      Number(document.getElementById("cpActivity").value),
 
-    const {
-      error
-    }=await supabaseClient
-      .from("plans")
-      .update({
-        title,
-        description,
-        auto_generated:false,
-        updated_at:new Date().toISOString()
-      })
-      .eq("id",existing.id)
-      .eq("coach_id",currentUser.id);
+    goal:
+      document.getElementById("cpGoal").value,
 
-    if(error){
-      console.error(error);
-      message.textContent="Could not update the plan.";
-      return;
-    }
+    steps_per_day:
+      Number(document.getElementById("cpSteps").value)||0,
 
-    planId=existing.id;
+    works:
+      document.getElementById("cpWorks").value==="yes",
 
+    sleep_hours:
+      Number(document.getElementById("cpSleep").value),
 
-    const {
-      error:deleteError
-    }=await supabaseClient
-      .from("workouts")
-      .delete()
-      .eq("plan_id",planId);
+    takes_medications:
+      document.getElementById("cpMedications").value==="yes",
 
-    if(deleteError){
-      console.error(deleteError);
-      message.textContent=
-        "Plan updated, but exercises could not be replaced.";
-      return;
-    }
+    food_allergy:
+      document.getElementById("cpAllergy").value==="yes",
 
-  }else{
+    medical_notes:
+      document.getElementById("cpMedicalNotes").value.trim(),
 
-    const {
-      data:created,
-      error
-    }=await supabaseClient
-      .from("plans")
-      .insert({
-        client_id:selectedClient.id,
-        coach_id:currentUser.id,
-        title,
-        description,
-        auto_generated:false
-      })
-      .select("id")
-      .single();
+    injuries:
+      document.getElementById("cpInjuries").value.trim(),
 
-    if(error){
-      console.error(error);
-      message.textContent="Could not create the plan.";
-      return;
-    }
+    training_experience:
+      document.getElementById("cpExperience").value,
 
-    planId=created.id;
-  }
+    training_days_per_week:
+      Number(document.getElementById("cpTrainingDays").value)||0,
+
+    whatsapp:
+      document.getElementById("cpWhatsapp").value.trim(),
+
+    waist_cm:
+      Number(document.getElementById("cpWaist").value)||null,
+
+    neck_cm:
+      Number(document.getElementById("cpNeck").value)||null,
+
+    hip_cm:
+      Number(document.getElementById("cpHip").value)||null
+  };
 
 
   const {
-    error:workoutError
+    error
   }=await supabaseClient
-    .from("workouts")
-    .insert(
-      exercises.map(x=>({
-        plan_id:planId,
-        day_number:x.day_number,
-        exercise:x.exercise,
-        sets:x.sets,
-        reps:x.reps
-      }))
+    .from("client_profiles")
+    .upsert(
+      payload,
+      {onConflict:"user_id"}
     );
 
 
-  if(workoutError){
-    console.error(workoutError);
-    message.textContent=
-      "Plan saved, but exercises failed to save.";
+  if(error){
+
+    console.error("Profile save error:",error);
+
+    message.textContent=error.message;
+
     return;
   }
 
 
-  message.textContent="Plan saved successfully.";
-}
+  calculateClientStats(
+    payload.weight_kg,
+    payload.height_cm,
+    payload.age,
+    payload.gender,
+    payload.activity_level,
+    payload.goal,
+    payload.waist_cm,
+    payload.neck_cm,
+    payload.hip_cm
+  );
+
+
+  message.textContent=
+    language==="ar"
+      ? "تم حفظ البروفايل. جاري إنشاء خطتك..."
+      : "Profile saved. Generating your plans...";
+
+
+  try{
+
+    await generateAndSaveOnboardingPlans(payload);
+
+
+    message.textContent=
+      language==="ar"
+        ? "تم حفظ البروفايل وإنشاء خطة التدريب والتغذية بنجاح."
+        : "Profile saved and your training and nutrition plans were generated successfully.";
+
+
+    await loadClientPlans();
+
+    if(typeof loadNutritionPlan==="function"){
+      await loadNutritionPlan();
+    }
+
+  }catch(error){
+
+    console.error(
+      "Automatic plan generation error:",
+      error
+    );
+
+    message.textContent=
+      language==="ar"
+        ? "تم حفظ البروفايل، لكن حصلت مشكلة أثناء إنشاء الخطط: "+(error.message||"Unknown error")
+        : "Profile saved, but plan generation failed: "+(error.message||"Unknown error");
+
+  }
+
+});
 /* =========================================================
    NUTRITION PLAN + AUTO ONBOARDING
    ========================================================= */
