@@ -4803,16 +4803,62 @@ setTimeout(renderVerifiedStats,100);
 let selectedChatUserId=null;
 function chatRole(){return currentProfile?.role==='coach'?'coach':'client'}
 async function loadChatUsers(){
-  const box=document.getElementById('chatUserList'); if(!box||!currentUser)return;
+  const box=document.getElementById('chatUserList');
+  if(!box || !currentUser)return;
+
+  box.innerHTML='<div class="profile-note">Loading clients...</div>';
+
   if(chatRole()==='coach'){
-    const {data,error}=await supabaseClient.from('profiles').select('id,full_name').eq('role','client').order('created_at',{ascending:false});
-    if(error){box.textContent='Could not load clients.';return;}
-    box.innerHTML=''; (data||[]).forEach(u=>{const b=document.createElement('button');b.className='chat-user'+(u.id===selectedChatUserId?' active':'');b.dataset.userId=u.id;b.innerHTML='<strong>'+escapeHtml(u.full_name||'Client')+'</strong>';b.onclick=()=>openChat(u);box.appendChild(b)});
+    const {data,error}=await supabaseClient
+      .from('profiles')
+      .select('id,full_name')
+      .eq('role','client')
+      .order('created_at',{ascending:false});
+
+    if(error){
+      console.error('Chat clients error:',error);
+      box.innerHTML='<div class="profile-note">Could not load clients.</div>';
+      return;
+    }
+
+    if(!data || data.length===0){
+      box.innerHTML='<div class="profile-note">No clients found.</div>';
+      return;
+    }
+
+    box.innerHTML='';
+
+    data.forEach(u=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='chat-user'+(u.id===selectedChatUserId?' active':'');
+      b.dataset.userId=u.id;
+      b.innerHTML='<strong>'+escapeHtml(u.full_name||'Client')+'</strong>';
+      b.onclick=()=>openChat(u);
+      box.appendChild(b);
+    });
   }else{
-    const b=document.createElement('button');b.className='chat-user active';b.dataset.userId='';b.innerHTML='<strong>Coach</strong>';b.onclick=()=>openChat({id:awaitCoachId(),full_name:'Coach'});box.appendChild(b);
-    // Replace placeholder after resolving the coach profile.
-    const {data}=await supabaseClient.from('profiles').select('id,full_name').eq('role','coach').limit(1).maybeSingle();
-    if(data){b.dataset.userId=data.id;b.onclick=()=>openChat(data);b.innerHTML='<strong>'+escapeHtml(data.full_name||'Coach')+'</strong>';if(!selectedChatUserId)openChat(data);}
+    const {data,error}=await supabaseClient
+      .from('profiles')
+      .select('id,full_name')
+      .eq('role','coach')
+      .limit(1)
+      .maybeSingle();
+
+    if(error || !data){
+      box.innerHTML='<div class="profile-note">Coach account not found.</div>';
+      return;
+    }
+
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='chat-user active';
+    b.dataset.userId=data.id;
+    b.innerHTML='<strong>'+escapeHtml(data.full_name||'Coach')+'</strong>';
+    b.onclick=()=>openChat(data);
+    box.appendChild(b);
+
+    if(!selectedChatUserId)openChat(data);
   }
 }
 function awaitCoachId(){return null}
