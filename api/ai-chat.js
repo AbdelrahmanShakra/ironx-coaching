@@ -11,7 +11,6 @@ const GEMINI_API_KEY =
 const GEMINI_MODEL =
   process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
-
 const rateLimits = new Map();
 
 
@@ -78,7 +77,9 @@ function buildHistory(history) {
     )
     .slice(-24)
     .map(item => ({
-      role: item.role === "assistant" ? "model" : "user",
+      role: item.role === "assistant"
+        ? "model"
+        : "user",
       parts: [
         {
           text: item.content.slice(0, 4000)
@@ -98,6 +99,7 @@ module.exports = async function handler(req, res) {
 
 
   if (!GEMINI_API_KEY) {
+
     console.error(
       "GEMINI_API_KEY is missing from the server environment."
     );
@@ -124,6 +126,7 @@ module.exports = async function handler(req, res) {
 
 
     if (!user?.id) {
+
       return send(res, 401, {
         error: "UNAUTHORIZED"
       });
@@ -131,6 +134,7 @@ module.exports = async function handler(req, res) {
 
 
     if (!allowed(user.id)) {
+
       return send(res, 429, {
         error: "RATE_LIMITED"
       });
@@ -148,6 +152,7 @@ module.exports = async function handler(req, res) {
 
 
     if (!message) {
+
       return send(res, 400, {
         error: "MESSAGE_REQUIRED"
       });
@@ -155,6 +160,7 @@ module.exports = async function handler(req, res) {
 
 
     if (message.length > 4000) {
+
       return send(res, 400, {
         error: "MESSAGE_TOO_LONG"
       });
@@ -177,6 +183,7 @@ You are IRONX AI Coach.
 You are an AI fitness assistant for the IRONX coaching platform.
 
 Help users with:
+
 - workout planning
 - exercise technique
 - training progression
@@ -192,9 +199,14 @@ Do not diagnose medical conditions.
 Do not pretend to be a doctor.
 Do not replace a qualified medical professional.
 
-If the user reports serious pain, significant injury,
-chest pain, fainting, severe dizziness, difficulty breathing,
-or another dangerous symptom, recommend professional medical care.
+If the user reports serious pain,
+significant injury,
+chest pain,
+fainting,
+severe dizziness,
+difficulty breathing,
+or another dangerous symptom,
+recommend professional medical care.
 
 Never pretend to be a human coach.
 Always be honest that you are an AI assistant.
@@ -228,6 +240,13 @@ ${JSON.stringify(profile)}
       )}:generateContent?key=${encodeURIComponent(
         GEMINI_API_KEY
       )}`;
+
+
+    console.log("Gemini request:", {
+      model: GEMINI_MODEL,
+      historyLength: history.length,
+      messageLength: message.length
+    });
 
 
     const aiResponse =
@@ -270,11 +289,21 @@ ${JSON.stringify(profile)}
 
       console.error(
         "Gemini Error:",
-        data
+        JSON.stringify(data, null, 2)
       );
 
+
       return send(res, 502, {
-        error: "AI_PROVIDER_ERROR"
+        error: "AI_PROVIDER_ERROR",
+        details:
+          data?.error?.message ||
+          "Gemini rejected the request.",
+        status:
+          data?.error?.status ||
+          "UNKNOWN",
+        code:
+          data?.error?.code ||
+          aiResponse.status
       });
     }
 
@@ -290,11 +319,13 @@ ${JSON.stringify(profile)}
 
       console.error(
         "Gemini returned no usable response:",
-        data
+        JSON.stringify(data, null, 2)
       );
 
+
       return send(res, 502, {
-        error: "AI_EMPTY_RESPONSE"
+        error: "AI_EMPTY_RESPONSE",
+        details: "Gemini returned no usable response."
       });
     }
 
@@ -311,8 +342,12 @@ ${JSON.stringify(profile)}
       error
     );
 
+
     return send(res, 500, {
-      error: "AI_SERVER_ERROR"
+      error: "AI_SERVER_ERROR",
+      details:
+        error?.message ||
+        "Unknown server error."
     });
   }
 
