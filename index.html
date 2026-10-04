@@ -4940,62 +4940,212 @@ async function saveAIMessage(role,content){
   });
   if(error)console.warn('AI history save:',error);
 }
+async function sendAIMessage() {
+  const input = document.getElementById("aiInput");
+  const box = document.getElementById("aiMessages");
+  const status = document.getElementById("aiStatus");
 
-async function sendAIMessage(){
-  const input=document.getElementById('aiInput'),box=document.getElementById('aiMessages'),status=document.getElementById('aiStatus');
-  const text=input?.value.trim();
-  if(!text||!currentUser)return;
+  const text = input?.value.trim();
+
+  if (!text || !currentUser) {
+    return;
+  }
+
   await loadAIHistory();
-  renderAIMessage('user',text);
-  aiHistory.push({role:'user',content:text});
-  await saveAIMessage('user',text);
-  input.value='';
-  box.scrollTop=box.scrollHeight;
-  status.textContent=language==='ar'?'بيفكر...':'Thinking...';
-  try{
-    const {data:{session}}=await supabaseClient.auth.getSession();
-    const res=await fetch('/api/ai-chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json',Authorization:`Bearer ${session?.access_token||''}`},
-      body:JSON.stringify({message:text,history:aiHistory.slice(-24),profile:localClientContext(),language})
+
+  renderAIMessage("user", text);
+
+  aiHistory.push({
+    role: "user",
+    content: text
+  });
+
+  await saveAIMessage("user", text);
+
+  input.value = "";
+  box.scrollTop = box.scrollHeight;
+
+  status.textContent =
+    language === "ar"
+      ? "بيفكر..."
+      : "Thinking...";
+
+  try {
+    const {
+      data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if (!session?.access_token) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    const res = await fetch("/api/ai-chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({
+        message: text,
+        history: aiHistory.slice(-24),
+        profile: localClientContext(),
+        language
+      })
     });
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok)throw new Error(data.error||'AI_REQUEST_FAILED');
-    const reply=String(data.reply||'No response.').trim();
-    aiHistory.push({role:'assistant',content:reply});
-    await saveAIMessage('assistant',reply);
-    renderAIMessage('assistant',reply);
-}catch(err){
-  console.error('AI error:',err);
 
-  const msg=err.message==='AI_NOT_CONFIGURED'
-    ?(language==='ar'
-      ?'السيرفر شغال، لكن GEMINI_API_KEY مش موجود في Vercel Production.'
-      :'The server is running, but GEMINI_API_KEY is missing in Vercel Production.')
-    :err.message==='AI_PROVIDER_ERROR'
-    ?(language==='ar'
-      ?'السيرفر وصل لـ Gemini لكن Gemini رفض الطلب. راجع GEMINI_API_KEY والموديل.'
-      :'The server reached Gemini, but Gemini rejected the request. Check GEMINI_API_KEY and the model.')
-    :err.message==='AI_EMPTY_RESPONSE'
-    ?(language==='ar'
-      ?'Gemini وصل لكن مفيش رد راجع منه.'
-      :'Gemini responded without a usable answer.')
-    :err.message==='AI_SERVER_ERROR'
-    ?(language==='ar'
-      ?'حصل خطأ داخل سيرفر الـ AI.'
-      :'An internal AI server error occurred.')
-    :(language==='ar'
-      ?'حصل خطأ في اتصال الـ AI بالسيرفر.'
-      :'The AI request failed on the server.');
+    const data = await res.json().catch(() => ({}));
 
-  renderAIMessage('assistant',msg);
-  aiHistory.pop();
-  }finally{
-    status.textContent='';
-    box.scrollTop=box.scrollHeight;
+    console.log("AI response:", {
+      status: res.status,
+      data
+    });
+
+    if (!res.ok) {
+      const error = new Error(
+        data?.details ||
+        data?.error ||
+        "AI_REQUEST_FAILED"
+      );
+
+      error.status = data?.status;
+      error.code = data?.code;
+
+      throw error;
+    }
+
+    const reply =
+      String(data?.reply || "").trim();
+
+    if (!reply) {
+      throw new Error("AI_EMPTY_RESPONSE");
+    }
+
+    aiHistory.push({
+      role: "assistant",
+      content: reply
+    });
+
+    await saveAIMessage(
+      "assistant",
+      reply
+    );
+
+    renderAIMessage(
+      "assistant",
+      reply
+    );
+
+  } catch (err) {
+    console.error("AI error:", err);
+
+    const rawError =
+      String(
+        err?.message ||
+        "Unknown AI error"
+      );
+
+    const errorStatus =
+      String(
+        err?.status ||
+        ""
+      );
+
+    let msg;
+
+    if (
+      rawError === "UNAUTHORIZED" ||
+      errorStatus === "401"
+    ) {
+      msg =
+        language === "ar"
+          ? "جلسة تسجيل الدخول انتهت. سجّل الدخول مرة ثانية."
+          : "Your login session expired. Please sign in again.";
+
+    } else if (
+      rawError.includes("API key not valid") ||
+      rawError.includes("API_KEY_INVALID") ||
+      rawError.includes("INVALID_ARGUMENT")
+    ) {
+      msg =
+        language === "ar"
+          ? "Gemini رفض الـ API Key. المفتاح غير صالح أو غير مفعّل للمشروع."
+          : "Gemini rejected the API key. The key is invalid or not enabled for this project.";
+
+    } else if (
+      rawError.includes("PERMISSION_DENIED") ||
+      errorStatus === "PERMISSION_DENIED" ||
+      errorStatus === "403"
+    ) {
+      msg =
+        language === "ar"
+          ? "Gemini رفض صلاحية المشروع أو الـ API Key (PERMISSION_DENIED)."
+          : "Gemini denied access to the project or API key (PERMISSION_DENIED).";
+
+    } else if (
+      rawError.includes("NOT_FOUND") ||
+      errorStatus === "NOT_FOUND" ||
+      errorStatus === "404"
+    ) {
+      msg =
+        language === "ar"
+          ? "Gemini لم يجد الموديل المطلوب. اسم الموديل يحتاج تغيير."
+          : "Gemini could not find the requested model. The model name needs to be changed.";
+
+    } else if (
+      rawError.includes("RESOURCE_EXHAUSTED") ||
+      errorStatus === "RESOURCE_EXHAUSTED" ||
+      errorStatus === "429"
+    ) {
+      msg =
+        language === "ar"
+          ? "تم الوصول إلى حد استخدام Gemini الحالي."
+          : "The current Gemini usage limit has been reached.";
+
+    } else if (
+      rawError.includes("SAFETY")
+    ) {
+      msg =
+        language === "ar"
+          ? "Gemini رفض إنشاء الرد بسبب سياسات الأمان."
+          : "Gemini blocked the response because of its safety policies.";
+
+    } else if (
+      rawError === "AI_EMPTY_RESPONSE"
+    ) {
+      msg =
+        language === "ar"
+          ? "Gemini استجاب لكن لم يرجع ردًا قابلًا للعرض."
+          : "Gemini responded without a usable answer.";
+
+    } else if (
+      rawError === "AI_SERVER_ERROR"
+    ) {
+      msg =
+        language === "ar"
+          ? "حصل خطأ داخل سيرفر الـ AI."
+          : "An internal AI server error occurred.";
+
+    } else {
+      msg =
+        language === "ar"
+          ? `خطأ Gemini: ${rawError}`
+          : `Gemini error: ${rawError}`;
+    }
+
+    renderAIMessage(
+      "assistant",
+      msg
+    );
+
+    aiHistory.pop();
+
+  } finally {
+    status.textContent = "";
+
+    box.scrollTop =
+      box.scrollHeight;
   }
 }
-
 document.getElementById('aiSendButton')?.addEventListener('click',sendAIMessage);
 document.getElementById('aiInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMessage()}});
 
