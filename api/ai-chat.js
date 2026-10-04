@@ -7,9 +7,8 @@ const SUPABASE_PUBLISHABLE_KEY =
 
 const GEMINI_API_KEY =
   process.env.GEMINI_API_KEY || "";
-
 const GEMINI_MODEL =
-  process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 
 const rateLimits = new Map();
 
