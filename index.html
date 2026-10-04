@@ -5267,49 +5267,159 @@ async function loadClientPlan(clientId){
   if(!workouts?.length){addExerciseRow();return;} workouts.forEach(item=>addExerciseRow(item));
 }
 
-function addExerciseRow(data={}){
-  const editor=document.getElementById("exerciseEditor"); if(!editor)return;
-  const row=document.createElement("div"); row.className="exercise-row";
-  row.innerHTML='<input type="text" class="exercise-name" placeholder="Exercise" value="'+escapeHtml(data.exercise||"")+'" required><input type="text" class="exercise-day" placeholder="Day" value="'+escapeHtml(data.day_number||1)+'"><input type="text" class="exercise-sets" placeholder="Sets" value="'+escapeHtml(data.sets||"")+'"><input type="text" class="exercise-reps" placeholder="Reps" value="'+escapeHtml(data.reps||"")+'"><button type="button" title="Remove" onclick="this.parentElement.remove()">×</button>';
-  editor.appendChild(row);
-}
-
 async function saveClientPlan(event){
-  event.preventDefault(); if(!selectedClient||currentProfile?.role!=="coach")return;
-  const message=document.getElementById("coachMessage"); message.textContent="Saving...";
-  const title=document.getElementById("planTitleInput").value.trim(); const description=document.getElementById("planDescriptionInput").value.trim();
-  const rows=Array.from(document.querySelectorAll("#exerciseEditor .exercise-row"));
-  const exercises=rows.map(row=>({exercise:row.querySelector(".exercise-name")?.value.trim()||"",day_number:parseInt(row.querySelector(".exercise-day")?.value||"1",10)||1,sets:row.querySelector(".exercise-sets")?.value.trim()||"",reps:row.querySelector(".exercise-reps")?.value.trim()||""})).filter(x=>x.exercise);
-  if(!title){message.textContent="Enter a plan title.";return;} if(!exercises.length){message.textContent="Add at least one exercise.";return;}
-  const {data:existing,error:existingError}=await supabaseClient.from("plans").select("id").eq("client_id",selectedClient.id).eq("coach_id",currentUser.id).order("updated_at",{ascending:false}).limit(1).maybeSingle();
-  if(existingError){console.error(existingError);message.textContent="Could not load the existing plan.";return;}
-  let planId;
-  if(existing){
-    const {error}=await supabaseClient.from("plans").update({title,description,updated_at:new Date().toISOString()}).eq("id",existing.id).eq("coach_id",currentUser.id);
-    if(error){console.error(error);message.textContent="Could not update the plan.";return;} planId=existing.id;
-    const {error:deleteError}=await supabaseClient.from("workouts").delete().eq("plan_id",planId); if(deleteError){console.error(deleteError);message.textContent="Plan updated, but exercises could not be replaced.";return;}
-  }else{
-    const {data:created,error}=await supabaseClient.from("plans").insert({client_id:selectedClient.id,coach_id:currentUser.id,title,description}).select("id").single();
-    if(error){console.error(error);message.textContent="Could not create the plan.";return;} planId=created.id;
-  }
-  const {error:workoutError}=await supabaseClient.from("workouts").insert(exercises.map(x=>({plan_id:planId,day_number:x.day_number,exercise:x.exercise,sets:x.sets,reps:x.reps})));
-  if(workoutError){console.error(workoutError);message.textContent="Plan saved, but exercises failed to save.";return;}
-  message.textContent="Plan saved successfully.";
-}
+  event.preventDefault();
 
-async function loadClientPlans(){
-  if(!currentUser||currentProfile?.role==="coach")return;
-  const {data:plans,error}=await supabaseClient.from("plans").select("id,title,description,updated_at").eq("client_id",currentUser.id).order("updated_at",{ascending:false});
-  if(error){console.error("Client plans error:",error);return;}
-  const container=document.querySelector("#page-plan .plan-grid"); if(!container)return; container.innerHTML="";
-  if(!plans?.length){container.innerHTML='<div class="plan-card glass"><h3>No plan yet</h3><p style="color:var(--muted);margin-top:8px;">Your coach has not published a plan yet.</p></div>';return;}
-  for(const plan of plans){
-    const {data:workouts}=await supabaseClient.from("workouts").select("day_number,exercise,sets,reps,rest,notes").eq("plan_id",plan.id).order("day_number",{ascending:true}).order("id",{ascending:true});
-    const card=document.createElement("div"); card.className="plan-card glass";
-    let html='<div class="plan-day">TRAINING PLAN</div><h3>'+escapeHtml(plan.title)+'</h3>';
-    if(plan.description)html+='<p style="color:var(--muted);margin:8px 0 15px;">'+escapeHtml(plan.description)+'</p>';
-    html+='<ul class="exercise-list">'; (workouts||[]).forEach(item=>{html+='<li><span>Day '+escapeHtml(item.day_number)+' · '+escapeHtml(item.exercise)+'</span><span>'+escapeHtml(item.sets||"")+(item.reps?"×"+escapeHtml(item.reps):"")+'</span></li>';}); html+='</ul>'; card.innerHTML=html; container.appendChild(card);
+  if(!selectedClient || currentProfile?.role!=="coach") return;
+
+  const message=document.getElementById("coachMessage");
+  message.textContent="Saving...";
+
+  const title=document.getElementById("planTitleInput").value.trim();
+  const description=document.getElementById("planDescriptionInput").value.trim();
+
+  const rows=Array.from(
+    document.querySelectorAll("#exerciseEditor .exercise-row")
+  );
+
+  const exercises=rows
+    .map(row=>({
+      exercise:row.querySelector(".exercise-name")?.value.trim()||"",
+      day_number:
+        parseInt(
+          row.querySelector(".exercise-day")?.value||"1",
+          10
+        )||1,
+      sets:
+        row.querySelector(".exercise-sets")?.value.trim()||"",
+      reps:
+        row.querySelector(".exercise-reps")?.value.trim()||""
+    }))
+    .filter(x=>x.exercise);
+
+  if(!title){
+    message.textContent="Enter a plan title.";
+    return;
   }
+
+  if(!exercises.length){
+    message.textContent="Add at least one exercise.";
+    return;
+  }
+
+
+  const {
+    data:existing,
+    error:existingError
+  }=await supabaseClient
+    .from("plans")
+    .select("id")
+    .eq("client_id",selectedClient.id)
+    .eq("coach_id",currentUser.id)
+    .order("updated_at",{ascending:false})
+    .limit(1)
+    .maybeSingle();
+
+
+  if(existingError){
+    console.error(existingError);
+    message.textContent="Could not load the existing plan.";
+    return;
+  }
+
+
+  let planId;
+
+
+  if(existing){
+
+    const {
+      error
+    }=await supabaseClient
+      .from("plans")
+      .update({
+        title,
+        description,
+        auto_generated:false,
+        updated_at:new Date().toISOString()
+      })
+      .eq("id",existing.id)
+      .eq("coach_id",currentUser.id);
+
+    if(error){
+      console.error(error);
+      message.textContent="Could not update the plan.";
+      return;
+    }
+
+    planId=existing.id;
+
+
+    const {
+      error:deleteError
+    }=await supabaseClient
+      .from("workouts")
+      .delete()
+      .eq("plan_id",planId);
+
+    if(deleteError){
+      console.error(deleteError);
+      message.textContent=
+        "Plan updated, but exercises could not be replaced.";
+      return;
+    }
+
+  }else{
+
+    const {
+      data:created,
+      error
+    }=await supabaseClient
+      .from("plans")
+      .insert({
+        client_id:selectedClient.id,
+        coach_id:currentUser.id,
+        title,
+        description,
+        auto_generated:false
+      })
+      .select("id")
+      .single();
+
+    if(error){
+      console.error(error);
+      message.textContent="Could not create the plan.";
+      return;
+    }
+
+    planId=created.id;
+  }
+
+
+  const {
+    error:workoutError
+  }=await supabaseClient
+    .from("workouts")
+    .insert(
+      exercises.map(x=>({
+        plan_id:planId,
+        day_number:x.day_number,
+        exercise:x.exercise,
+        sets:x.sets,
+        reps:x.reps
+      }))
+    );
+
+
+  if(workoutError){
+    console.error(workoutError);
+    message.textContent=
+      "Plan saved, but exercises failed to save.";
+    return;
+  }
+
+
+  message.textContent="Plan saved successfully.";
 }
 /* =========================================================
    NUTRITION PLAN + AUTO ONBOARDING
