@@ -4480,7 +4480,7 @@ function applyRoleUI() {
   updateCurrentUserUI();
 
   document.querySelectorAll(".coach-only").forEach(el => {
-    el.style.display = isCoach ? "" : "none";
+  el.style.display = isCoach ? "flex" : "none";
   });
 
   document.querySelectorAll(".client-only").forEach(el => {
