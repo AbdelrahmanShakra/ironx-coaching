@@ -5246,6 +5246,547 @@ async function loadClientPlanForDashboard(){
   }
 }
 
+  async function saveGeneratedTrainingPlan(clientId,generated){
+
+  const training=generated?.training||{};
+
+  const exercises=
+    Array.isArray(training.exercises)
+      ? training.exercises
+      : [];
+
+
+  if(!exercises.length){
+    throw new Error("AI returned no training exercises.");
+  }
+
+
+  const {
+    data:existing,
+    error:existingError
+  }=await supabaseClient
+    .from("plans")
+    .select("id")
+    .eq("client_id",clientId)
+    .eq("auto_generated",true)
+    .maybeSingle();
+
+
+  if(existingError){
+    throw existingError;
+  }
+
+
+  let planId=existing?.id;
+
+
+  const payload={
+    client_id:clientId,
+
+    coach_id:null,
+
+    title:
+      training.title ||
+      "IRONX Training Plan",
+
+    description:
+      training.description ||
+      "",
+
+    auto_generated:true,
+
+    updated_at:
+      new Date().toISOString()
+  };
+
+
+  if(planId){
+
+    const {
+      error
+    }=await supabaseClient
+      .from("plans")
+      .update(payload)
+      .eq("id",planId);
+
+    if(error){
+      throw error;
+    }
+
+
+    const {
+      error:deleteError
+    }=await supabaseClient
+      .from("workouts")
+      .delete()
+      .eq("plan_id",planId);
+
+    if(deleteError){
+      throw deleteError;
+    }
+
+  }else{
+
+    const {
+      data,
+      error
+    }=await supabaseClient
+      .from("plans")
+      .insert(payload)
+      .select("id")
+      .single();
+
+    if(error){
+      throw error;
+    }
+
+    planId=data.id;
+  }
+
+
+  const rows=
+    exercises
+      .map((item,index)=>({
+
+        plan_id:planId,
+
+        day_number:
+          Number(
+            item.day_number ||
+            item.day ||
+            Math.floor(index/3)+1
+          ),
+
+        exercise:
+          String(
+            item.exercise ||
+            item.name ||
+            "Exercise"
+          ),
+
+        sets:
+          String(item.sets??""),
+
+        reps:
+          String(item.reps??""),
+
+        rest:
+          String(item.rest??""),
+
+        notes:
+          String(item.notes??"")
+
+      }))
+      .filter(item=>item.exercise);
+
+
+  if(rows.length){
+
+    const {
+      error
+    }=await supabaseClient
+      .from("workouts")
+      .insert(rows);
+
+    if(error){
+      throw error;
+    }
+  }
+
+
+  return planId;
+}
+
+
+async function saveGeneratedNutritionPlan(clientId,generated){
+
+  const nutrition=generated?.nutrition||{};
+
+
+  const meals=
+    Array.isArray(nutrition.meals)
+      ? nutrition.meals
+      : [];
+
+
+  const {
+    data:existing,
+    error:existingError
+  }=await supabaseClient
+    .from("nutrition_plans")
+    .select("id")
+    .eq("client_id",clientId)
+    .eq("auto_generated",true)
+    .maybeSingle();
+
+
+  if(existingError){
+    throw existingError;
+  }
+
+
+  let planId=existing?.id;
+
+
+  const payload={
+
+    client_id:clientId,
+
+    coach_id:null,
+
+    title:
+      nutrition.title ||
+      "IRONX Nutrition Plan",
+
+    calories:
+      Math.round(
+        Number(
+          nutrition.daily_calories ||
+          generated?.calculations?.target_calories ||
+          0
+        )
+      ),
+
+    protein:
+      Math.round(
+        Number(
+          nutrition.protein_g ||
+          generated?.calculations?.macros?.protein_g ||
+          0
+        )
+      ),
+
+    carbs:
+      Math.round(
+        Number(
+          nutrition.carbs_g ||
+          generated?.calculations?.macros?.carbs_g ||
+          0
+        )
+      ),
+
+    fats:
+      Math.round(
+        Number(
+          nutrition.fat_g ||
+          generated?.calculations?.macros?.fat_g ||
+          0
+        )
+      ),
+
+    notes:
+      nutrition.notes ||
+      "",
+
+    meals_per_day:
+      Math.max(
+        1,
+        Math.min(
+          8,
+          Number(
+            nutrition.meals_per_day ||
+            meals.length ||
+            4
+          )
+        )
+      ),
+
+    water_liters:
+      Math.max(
+        1,
+        Math.min(
+          6,
+          Number(
+            nutrition.water_liters ||
+            2.5
+          )
+        )
+      ),
+
+    goal:
+      nutrition.goal ||
+      "maintain",
+
+    auto_generated:true,
+
+    updated_at:
+      new Date().toISOString()
+  };
+
+
+  if(planId){
+
+    const {
+      error
+    }=await supabaseClient
+      .from("nutrition_plans")
+      .update(payload)
+      .eq("id",planId);
+
+    if(error){
+      throw error;
+    }
+
+
+    const {
+      error:deleteError
+    }=await supabaseClient
+      .from("nutrition_meals")
+      .delete()
+      .eq("plan_id",planId);
+
+    if(deleteError){
+      throw deleteError;
+    }
+
+  }else{
+
+    const {
+      data,
+      error
+    }=await supabaseClient
+      .from("nutrition_plans")
+      .insert(payload)
+      .select("id")
+      .single();
+
+    if(error){
+      throw error;
+    }
+
+    planId=data.id;
+  }
+
+
+  const rows=
+    meals
+      .map((meal,index)=>({
+
+        plan_id:planId,
+
+        meal_number:
+          Number(
+            meal.meal_number ||
+            meal.number ||
+            index+1
+          ),
+
+        name:
+          String(
+            meal.name ||
+            ("Meal "+(index+1))
+          ),
+
+        time:
+          String(meal.time||""),
+
+        foods:
+          String(
+            meal.foods ||
+            meal.description ||
+            ""
+          ),
+
+        calories:
+          Math.max(
+            0,
+            Math.round(
+              Number(meal.calories)||0
+            )
+          ),
+
+        protein_g:
+          Math.max(
+            0,
+            Number(
+              meal.protein_g ||
+              meal.protein ||
+              0
+            )
+          ),
+
+        carbs_g:
+          Math.max(
+            0,
+            Number(
+              meal.carbs_g ||
+              meal.carbs ||
+              0
+            )
+          ),
+
+        fat_g:
+          Math.max(
+            0,
+            Number(
+              meal.fat_g ||
+              meal.fats ||
+              0
+            )
+          ),
+
+        fiber_g:
+          Math.max(
+            0,
+            Number(
+              meal.fiber_g ||
+              meal.fiber ||
+              0
+            )
+          ),
+
+        notes:
+          String(meal.notes||"")
+
+      }))
+      .filter(
+        meal=>meal.name || meal.foods
+      );
+
+
+  if(rows.length){
+
+    const {
+      error
+    }=await supabaseClient
+      .from("nutrition_meals")
+      .insert(rows);
+
+    if(error){
+      throw error;
+    }
+  }
+
+
+  return planId;
+}
+
+
+async function generateAndSaveOnboardingPlans(profile){
+
+  if(!currentUser){
+    throw new Error("UNAUTHORIZED");
+  }
+
+
+  const [
+    trainingResult,
+    nutritionResult
+  ]=await Promise.all([
+
+    supabaseClient
+      .from("plans")
+      .select("id")
+      .eq("client_id",currentUser.id)
+      .eq("auto_generated",true)
+      .maybeSingle(),
+
+    supabaseClient
+      .from("nutrition_plans")
+      .select("id")
+      .eq("client_id",currentUser.id)
+      .eq("auto_generated",true)
+      .maybeSingle()
+
+  ]);
+
+
+  if(trainingResult.error){
+    throw trainingResult.error;
+  }
+
+  if(nutritionResult.error){
+    throw nutritionResult.error;
+  }
+
+
+  const trainingExisting=
+    trainingResult.data;
+
+  const nutritionExisting=
+    nutritionResult.data;
+
+
+  if(trainingExisting && nutritionExisting){
+    return true;
+  }
+
+
+  const {
+    data:{
+      session
+    }
+  }=await supabaseClient.auth.getSession();
+
+
+  if(!session?.access_token){
+    throw new Error("UNAUTHORIZED");
+  }
+
+
+  const response=
+    await fetch(
+      "/api/onboarding/generate-plan",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/json",
+
+          "Authorization":
+            "Bearer "+
+            session.access_token
+        },
+
+        body:JSON.stringify({
+          profile,
+          language
+        })
+      }
+    );
+
+
+  const generated=
+    await response
+      .json()
+      .catch(()=>({}));
+
+
+  if(!response.ok){
+
+    throw new Error(
+      generated?.details ||
+      generated?.error ||
+      "PLAN_GENERATION_FAILED"
+    );
+
+  }
+
+
+  if(!trainingExisting){
+
+    await saveGeneratedTrainingPlan(
+      currentUser.id,
+      generated
+    );
+
+  }
+
+
+  if(!nutritionExisting){
+
+    await saveGeneratedNutritionPlan(
+      currentUser.id,
+      generated
+    );
+
+  }
+
+
+  return true;
+}
+  
 document.getElementById("clientProfileForm")?.addEventListener("submit",async function(event){
 
   event.preventDefault();
