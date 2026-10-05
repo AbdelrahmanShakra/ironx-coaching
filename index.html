@@ -4346,32 +4346,19 @@ function updateAuthLanguage() {
 
 }
 
-
 /* =========================================================
    TOGGLE AUTH MODE
    ========================================================= */
 
 function toggleAuthMode() {
+  authMode = authMode === "login" ? "register" : "login";
 
-  authMode =
-    authMode === "login"
-      ? "register"
-      : "login";
-
-  const nameField =
-    document.getElementById("nameField");
-
-  const passwordInput =
-    document.getElementById("passwordInput");
-
-  const authMessage =
-    document.getElementById("authMessage");
+  const nameField = document.getElementById("nameField");
+  const passwordInput = document.getElementById("passwordInput");
+  const authMessage = document.getElementById("authMessage");
 
   if (nameField) {
-    nameField.classList.toggle(
-      "hidden",
-      authMode === "login"
-    );
+    nameField.classList.toggle("hidden", authMode === "login");
   }
 
   if (passwordInput) {
@@ -4394,79 +4381,59 @@ function toggleAuthMode() {
    ========================================================= */
 
 function togglePassword() {
+  const input = document.getElementById("passwordInput");
+  const button = document.getElementById("passwordToggle");
+  const eye = document.getElementById("passwordEye");
 
-  const input =
-    document.getElementById("passwordInput");
+  if (!input || !button || !eye) return;
 
-  const button =
-    document.getElementById("passwordToggle");
+  const isHidden = input.type === "password";
 
-  const eye =
-    document.getElementById("passwordEye");
+  input.type = isHidden ? "text" : "password";
 
-  if (!input || !button || !eye) {
-    return;
-  }
+  eye.innerHTML = isHidden
+    ? `
+      <path d="M3 3L21 21"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"/>
 
-  const isHidden =
-    input.type === "password";
+      <path d="M10.6 6.2C11.05 6.07 11.52 6 12 6C18 6 21.5 12 21.5 12C21.5 12 20.35 13.97 18.4 15.55"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 
-  input.type =
-    isHidden
-      ? "text"
-      : "password";
+      <path d="M6.1 8.45C3.8 10.25 2.5 12 2.5 12C2.5 12 6 18 12 18C13.45 18 14.75 17.68 15.9 17.2"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 
-  eye.innerHTML =
-    isHidden
-      ? `
-        <path
-          d="M3 3L21 21"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"/>
+      <path d="M9.9 9.9C9.35 10.45 9 11.2 9 12C9 13.66 10.34 15 12 15C12.8 15 13.55 14.65 14.1 14.1"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    `
+    : `
+      <path d="M2.5 12C2.5 12 6 6 12 6C18 6 21.5 12 21.5 12C21.5 12 18 18 12 18C6 18 2.5 12 2.5 12Z"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 
-        <path
-          d="M10.6 6.2C11.05 6.07 11.52 6 12 6C18 6 21.5 12 21.5 12C21.5 12 20.35 13.97 18.4 15.55"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-        <path
-          d="M6.1 8.45C3.8 10.25 2.5 12 2.5 12C2.5 12 6 18 12 18C13.45 18 14.75 17.68 15.9 17.2"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-        <path
-          d="M9.9 9.9C9.35 10.45 9 11.2 9 12C9 13.66 10.34 15 12 15C12.8 15 13.55 14.65 14.1 14.1"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-      `
-      : `
-        <path
-          d="M2.5 12C2.5 12 6 6 12 6C18 6 21.5 12 21.5 12C21.5 12 18 18 12 18C6 18 2.5 12 2.5 12Z"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-        <circle
-          cx="12"
-          cy="12"
-          r="2.7"
-          stroke="currentColor"
-          stroke-width="1.8"/>
-      `;
+      <circle
+        cx="12"
+        cy="12"
+        r="2.7"
+        stroke="currentColor"
+        stroke-width="1.8"/>
+    `;
 
   button.setAttribute(
     "aria-label",
-    isHidden
-      ? "Hide password"
-      : "Show password"
+    isHidden ? "Hide password" : "Show password"
   );
 }
 
@@ -4475,57 +4442,33 @@ function togglePassword() {
    AUTH MESSAGE
    ========================================================= */
 
-function showAuthMessage(
-  message,
-  type = "error"
-) {
+function showAuthMessage(message, type = "error") {
+  const box = document.getElementById("authMessage");
 
-  const box =
-    document.getElementById(
-      "authMessage"
-    );
+  if (!box) return;
 
-  if (!box) {
-    return;
-  }
-
-  box.textContent =
-    message;
+  box.textContent = message || "";
 
   box.style.color =
     type === "success"
       ? "var(--green)"
       : "var(--red)";
 }
-
-
 /* =========================================================
    REGISTER
    ========================================================= */
 
-async function registerUser(
-  name,
-  email,
-  password
-) {
-
-  const {
-    data,
-    error
-  } =
+async function registerUser(name, email, password) {
+  const { data, error } =
     await supabaseClient.auth.signUp({
-
       email,
       password,
 
       options: {
-
         data: {
           full_name: name
         }
-
       }
-
     });
 
   if (error) {
@@ -4540,20 +4483,11 @@ async function registerUser(
    LOGIN
    ========================================================= */
 
-async function loginUser(
-  email,
-  password
-) {
-
-  const {
-    data,
-    error
-  } =
+async function loginUser(email, password) {
+  const { data, error } =
     await supabaseClient.auth.signInWithPassword({
-
       email,
       password
-
     });
 
   if (error) {
@@ -4561,7 +4495,7 @@ async function loginUser(
   }
 
   return data;
-}
+    }
 
 
 /* =========================================================
@@ -4701,8 +4635,6 @@ if (authForm) {
           return;
 
         }
-
-        /*
            LOGIN
         */
 
@@ -4788,6 +4720,8 @@ if (authForm) {
   );
 
 }
+        /*
+
 
 
 /* =========================================================
