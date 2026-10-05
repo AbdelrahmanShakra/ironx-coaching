@@ -4841,28 +4841,51 @@ function updateCurrentUserUI() {
 
 async function openApp() {
 
-  document
-    .getElementById("authScreen")
-    .classList.add("hidden");
+document
+.getElementById("authScreen")
+.classList.add("hidden");
 
+document
+.getElementById("app")
+.classList.remove("hidden");
 
-  document
-    .getElementById("app")
-    .classList.remove("hidden");
+updateCurrentUserUI();
 
+try {
 
-  updateCurrentUserUI();
+await ensureProfile();
 
-  try {
-    await ensureProfile();
-    applyRoleUI();
-    if (currentProfile?.role !== "coach") {
-      await loadClientPlanForDashboard();
-    }
-  } catch (error) {
-    console.error("App data error:", error);
-    showPage(currentProfile?.role === "coach" ? "coach" : "profile");
-  }
+applyRoleUI();
+
+if (currentProfile?.role !== "coach") {
+
+  await Promise.allSettled([
+    loadClientPlanForDashboard(),
+    loadClientPlans(),
+    loadNutritionPlan()
+  ]);
+
+}
+
+if (
+  currentProfile?.role === "coach" &&
+  typeof loadChatUsers === "function"
+) {
+  await loadChatUsers();
+}
+
+} catch (error) {
+
+console.error(
+  "App data error:",
+  error
+);
+
+showPage(
+  currentProfile?.role === "coach"
+    ? "coach"
+    : "profile"
+);
 
 }
 
