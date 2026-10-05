@@ -1315,10 +1315,9 @@ Return EXACTLY this JSON structure:
               ],
 
               generationConfig: {
-                temperature: 0.25,
-                maxOutputTokens: 5000,
-                responseMimeType:
-                  "application/json"
+  maxOutputTokens: 5000,
+  responseMimeType: "application/json"
+}
               }
             })
           }
