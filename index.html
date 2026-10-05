@@ -4358,44 +4358,457 @@ function toggleAuthMode() {
       ? "register"
       : "login";
 
-
   const nameField =
-    document.getElementById(
-      "nameField"
-    );
-
+    document.getElementById("nameField");
 
   const passwordInput =
-    document.getElementById(
-      "passwordInput"
-    );
-
+    document.getElementById("passwordInput");
 
   const authMessage =
+    document.getElementById("authMessage");
+
+  if (nameField) {
+    nameField.classList.toggle(
+      "hidden",
+      authMode === "login"
+    );
+  }
+
+  if (passwordInput) {
+    passwordInput.autocomplete =
+      authMode === "login"
+        ? "current-password"
+        : "new-password";
+  }
+
+  if (authMessage) {
+    authMessage.textContent = "";
+  }
+
+  updateAuthLanguage();
+}
+
+
+/* =========================================================
+   PASSWORD TOGGLE
+   ========================================================= */
+
+function togglePassword() {
+
+  const input =
+    document.getElementById("passwordInput");
+
+  const button =
+    document.getElementById("passwordToggle");
+
+  const eye =
+    document.getElementById("passwordEye");
+
+  if (!input || !button || !eye) {
+    return;
+  }
+
+  const isHidden =
+    input.type === "password";
+
+  input.type =
+    isHidden
+      ? "text"
+      : "password";
+
+  eye.innerHTML =
+    isHidden
+      ? `
+        <path
+          d="M3 3L21 21"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+
+        <path
+          d="M10.6 6.2C11.05 6.07 11.52 6 12 6C18 6 21.5 12 21.5 12C21.5 12 20.35 13.97 18.4 15.55"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <path
+          d="M6.1 8.45C3.8 10.25 2.5 12 2.5 12C2.5 12 6 18 12 18C13.45 18 14.75 17.68 15.9 17.2"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <path
+          d="M9.9 9.9C9.35 10.45 9 11.2 9 12C9 13.66 10.34 15 12 15C12.8 15 13.55 14.65 14.1 14.1"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+      `
+      : `
+        <path
+          d="M2.5 12C2.5 12 6 6 12 6C18 6 21.5 12 21.5 12C21.5 12 18 18 12 18C6 18 2.5 12 2.5 12Z"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <circle
+          cx="12"
+          cy="12"
+          r="2.7"
+          stroke="currentColor"
+          stroke-width="1.8"/>
+      `;
+
+  button.setAttribute(
+    "aria-label",
+    isHidden
+      ? "Hide password"
+      : "Show password"
+  );
+}
+
+
+/* =========================================================
+   AUTH MESSAGE
+   ========================================================= */
+
+function showAuthMessage(
+  message,
+  type = "error"
+) {
+
+  const box =
     document.getElementById(
       "authMessage"
     );
 
+  if (!box) {
+    return;
+  }
 
-  nameField.classList.toggle(
-    "hidden",
-    authMode === "login"
+  box.textContent =
+    message;
+
+  box.style.color =
+    type === "success"
+      ? "var(--green)"
+      : "var(--red)";
+}
+
+
+/* =========================================================
+   REGISTER
+   ========================================================= */
+
+async function registerUser(
+  name,
+  email,
+  password
+) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signUp({
+
+      email,
+      password,
+
+      options: {
+
+        data: {
+          full_name: name
+        }
+
+      }
+
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+async function loginUser(
+  email,
+  password
+) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+
+/* =========================================================
+   AUTH FORM
+   ========================================================= */
+
+const authForm =
+  document.getElementById(
+    "authForm"
   );
 
+if (authForm) {
 
-  passwordInput.autocomplete =
-    authMode === "login"
-      ? "current-password"
-      : "new-password";
+  authForm.addEventListener(
+    "submit",
+    async function(event) {
 
+      event.preventDefault();
+      event.stopPropagation();
 
-  authMessage.textContent = "";
+      const name =
+        document
+          .getElementById("nameInput")
+          ?.value
+          .trim() || "";
 
+      const email =
+        document
+          .getElementById("emailInput")
+          ?.value
+          .trim() || "";
 
-  updateAuthLanguage();
+      const password =
+        document
+          .getElementById("passwordInput")
+          ?.value || "";
+
+      const button =
+        document.getElementById(
+          "authButton"
+        );
+
+      showAuthMessage("");
+
+      if (
+        authMode === "register" &&
+        !name
+      ) {
+
+        showAuthMessage(
+          language === "ar"
+            ? "اكتب اسمك."
+            : "Please enter your name."
+        );
+
+        return;
+      }
+
+      if (!email) {
+
+        showAuthMessage(
+          language === "ar"
+            ? "اكتب البريد الإلكتروني."
+            : "Please enter your email."
+        );
+
+        return;
+      }
+
+      if (
+        password.length < 6
+      ) {
+
+        showAuthMessage(
+          language === "ar"
+            ? "كلمة المرور يجب أن تكون 6 أحرف على الأقل."
+            : "Password must be at least 6 characters."
+        );
+
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.style.opacity = ".65";
+      }
+
+      try {
+
+        if (
+          authMode === "register"
+        ) {
+
+          const data =
+            await registerUser(
+              name,
+              email,
+              password
+            );
+
+          /*
+             Supabase may return a user without
+             a session when email confirmation is
+             enabled. We do not want the old
+             confirmation flow anymore.
+          */
+
+          if (
+            !data?.session ||
+            !data?.user
+          ) {
+
+            throw new Error(
+              language === "ar"
+                ? "الحساب اتعمل لكن Supabase لم يرجع جلسة دخول. تأكد أن Email Confirmation متوقف."
+                : "Account created, but Supabase did not return a login session. Make sure Email Confirmation is disabled."
+            );
+
+          }
+
+          currentUser =
+            data.user;
+
+          await ensureProfile();
+
+          updateCurrentUserUI();
+          applyRoleUI();
+
+          await Promise.allSettled([
+            loadClientPlans(),
+            loadClientPlanForDashboard(),
+            loadNutritionPlan()
+          ]);
+
+          await openApp();
+
+          return;
+
+        }
+
+        /*
+           LOGIN
+        */
+
+        const data =
+          await loginUser(
+            email,
+            password
+          );
+
+        currentUser =
+          data?.user || null;
+
+        if (!currentUser) {
+          throw new Error(
+            "LOGIN_FAILED"
+          );
+        }
+
+        await ensureProfile();
+
+        updateCurrentUserUI();
+        applyRoleUI();
+
+        await openApp();
+
+      } catch (error) {
+
+        console.error(
+          "Auth error:",
+          error
+        );
+
+        let message =
+          error?.message ||
+          "";
+
+        if (
+          message
+            .toLowerCase()
+            .includes(
+              "email not confirmed"
+            )
+        ) {
+
+          message =
+            language === "ar"
+              ? "تأكيد البريد الإلكتروني ما زال مفعّل في Supabase. اقفله من إعدادات Authentication."
+              : "Email confirmation is still enabled in Supabase. Disable it in Authentication settings.";
+
+        }
+
+        if (
+          message ===
+          "LOGIN_FAILED"
+        ) {
+
+          message =
+            language === "ar"
+              ? "فشل تسجيل الدخول."
+              : "Sign in failed.";
+
+        }
+
+        showAuthMessage(
+          message ||
+          (
+            language === "ar"
+              ? "حدث خطأ. حاول مرة أخرى."
+              : "Something went wrong."
+          )
+        );
+
+      } finally {
+
+        if (button) {
+          button.disabled = false;
+          button.style.opacity = "1";
+        }
+
+      }
+
+    }
+  );
 
 }
 
+
+/* =========================================================
+   PASSWORD BUTTON
+   ========================================================= */
+
+document
+  .getElementById(
+    "passwordToggle"
+  )
+  ?.addEventListener(
+    "click",
+    function(event) {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      togglePassword();
+
+    }
+  );
 
 /* =========================================================
    AUTH MESSAGE
