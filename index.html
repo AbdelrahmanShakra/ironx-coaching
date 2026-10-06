@@ -7056,10 +7056,34 @@ async function sendAIMessage() {
           ? "Gemini رفض صلاحية المشروع أو الـ API Key (PERMISSION_DENIED)."
           : "Gemini denied access to the project or API key (PERMISSION_DENIED).";
 
-    } else if (
-      rawError.includes("NOT_FOUND") ||
-      errorStatus === "NOT_FOUND" ||
-async function loadAIPlanContext(){
+  } else if (
+  rawError.includes("NOT_FOUND") ||
+  errorStatus === "NOT_FOUND"
+) {
+  msg =
+    language === "ar"
+      ? "خدمة الذكاء الاصطناعي غير متاحة حاليًا."
+      : "The AI service is currently unavailable.";
+
+} else {
+  msg =
+    language === "ar"
+      ? "حصل خطأ أثناء التواصل مع AI."
+      : "Something went wrong while contacting AI.";
+}
+
+if (status) {
+  status.textContent = msg;
+}
+
+if (box) {
+  renderAIMessage(
+    "assistant",
+    msg
+  );
+}
+
+return;
 
 if(!currentUser){
 return {
