@@ -6916,8 +6916,7 @@ async function saveAIMessage(role,content){
   if(error)console.warn('AI history save:',error);
 }
 
-  await loadAIHistory();
-
+async function loadAIPlanContext(){
   renderAIMessage("user", text);
 
   aiHistory.push({
