@@ -6915,16 +6915,6 @@ async function saveAIMessage(role,content){
   });
   if(error)console.warn('AI history save:',error);
 }
-async function sendAIMessage() {
-  const input = document.getElementById("aiInput");
-  const box = document.getElementById("aiMessages");
-  const status = document.getElementById("aiStatus");
-
-  const text = input?.value.trim();
-
-  if (!text || !currentUser) {
-    return;
-  }
 
   await loadAIHistory();
 
