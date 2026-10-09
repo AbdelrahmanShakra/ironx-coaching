@@ -2543,7 +2543,7 @@ button{
 
     </p>
     
-    <form id="authForm">
+    <form id="authForm" novalidate onsubmit="event.preventDefault(); return false;">
 
       <div
         class="field hidden"
@@ -2653,6 +2653,7 @@ button{
 
       <button
         id="switchButton"
+        type="button"
         onclick="toggleAuthMode()">
 
         Create account
@@ -4393,228 +4394,122 @@ function updateAuthLanguage() {
 }
 
 /* =========================================================
-   AUTH FORM
+   AUTH FORM — SINGLE, REFRESH-SAFE HANDLER
    ========================================================= */
 
-const authForm =
-  document.getElementById("authForm");
+const authForm = document.getElementById("authForm");
 
-if (authForm) {
+if (authForm && !authForm.dataset.ironxAuthBound) {
+  authForm.dataset.ironxAuthBound = "true";
 
-  authForm.addEventListener(
-    "submit",
-    async function(event) {
+  authForm.addEventListener("submit", async function (event) {
+    // Capture the submit before any other handler can allow a page navigation.
+    event.preventDefault();
+    event.stopImmediatePropagation();
 
-      event.preventDefault();
-      event.stopPropagation();
+    const name = document.getElementById("nameInput")?.value.trim() || "";
+    const email = document.getElementById("emailInput")?.value.trim() || "";
+    const password = document.getElementById("passwordInput")?.value || "";
+    const button = document.getElementById("authButton");
 
-      const name =
-        document
-          .getElementById("nameInput")
-          ?.value
-          .trim() || "";
+    showAuthMessage("");
 
-      const email =
-        document
-          .getElementById("emailInput")
-          ?.value
-          .trim() || "";
+    if (window.ironxAuthBusy) return;
 
-      const password =
-        document
-          .getElementById("passwordInput")
-          ?.value || "";
+    if (authMode === "register" && !name) {
+      showAuthMessage(language === "ar" ? "اكتب اسمك." : "Please enter your name.");
+      document.getElementById("nameInput")?.focus();
+      return;
+    }
 
-      const button =
-        document.getElementById("authButton");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showAuthMessage(language === "ar" ? "اكتب بريد إلكتروني صحيح." : "Please enter a valid email address.");
+      document.getElementById("emailInput")?.focus();
+      return;
+    }
 
-      showAuthMessage("");
+    if (password.length < 6) {
+      showAuthMessage(language === "ar" ? "كلمة المرور لازم تكون 6 أحرف على الأقل." : "Password must be at least 6 characters.");
+      document.getElementById("passwordInput")?.focus();
+      return;
+    }
 
-      if (
-        authMode === "register" &&
-        !name
-      ) {
+    if (!window.supabase || typeof supabaseClient === "undefined" || !supabaseClient?.auth) {
+      showAuthMessage(language === "ar" ? "خدمة تسجيل الدخول مش جاهزة. حدّث الصفحة وجرب تاني." : "Authentication is unavailable. Refresh the page and try again.");
+      return;
+    }
 
-        showAuthMessage(
-          language === "ar"
-            ? "اكتب اسمك."
-            : "Please enter your name."
-        );
+    window.ironxAuthBusy = true;
+    if (button) {
+      button.disabled = true;
+      button.style.opacity = ".65";
+      button.setAttribute("aria-busy", "true");
+    }
 
-        return;
-      }
+    try {
+      if (authMode === "register") {
+        const data = await registerUser(name, email, password);
 
-      if (!email) {
+        if (!data?.user) {
+          throw new Error(language === "ar" ? "فشل إنشاء الحساب. جرّب بريدًا إلكترونيًا آخر." : "Account creation failed. Try another email address.");
+        }
 
-        showAuthMessage(
-          language === "ar"
-            ? "اكتب البريد الإلكتروني."
-            : "Please enter your email."
-        );
-
-        return;
-      }
-
-      if (password.length < 6) {
-
-        showAuthMessage(
-          language === "ar"
-            ? "كلمة المرور يجب أن تكون 6 أحرف على الأقل."
-            : "Password must be at least 6 characters."
-        );
-
-        return;
-      }
-
-      if (button) {
-        button.disabled = true;
-        button.style.opacity = ".65";
-      }
-
-      try {
-
-        /* =========================
-           REGISTER
-           ========================= */
-
-        if (
-          authMode === "register"
-        ) {
-
-          const data =
-            await registerUser(
-              name,
-              email,
-              password
-            );
-
-          if (!data?.user) {
-
-            throw new Error(
-              language === "ar"
-                ? "فشل إنشاء الحساب."
-                : "Account creation failed."
-            );
-          }
-
-          if (!data.session) {
-
-            throw new Error(
-              language === "ar"
-                ? "تم إنشاء الحساب، لكن لم يتم تسجيل الدخول تلقائيًا. تأكد أن Email Confirmation متوقف في Supabase."
-                : "Account created, but automatic login failed. Make sure Email Confirmation is disabled in Supabase."
-            );
-          }
-
-          currentUser =
-            data.user;
-
-          await ensureProfile();
-
-          updateCurrentUserUI();
-          applyRoleUI();
-
-          await Promise.allSettled([
-            loadClientPlans(),
-            loadClientPlanForDashboard(),
-            loadNutritionPlan()
-          ]);
-
-          await openApp();
-
+        // With Supabase email confirmation enabled, signup succeeds without a session.
+        if (!data.session) {
+          showAuthMessage(
+            language === "ar"
+              ? "الحساب اتعمل. راجع بريدك الإلكتروني لتأكيده، وبعدها سجّل الدخول."
+              : "Account created. Check your email to confirm it, then sign in.",
+            "success"
+          );
           return;
         }
 
-
-        /* =========================
-           LOGIN
-           ========================= */
-
-        const data =
-          await loginUser(
-            email,
-            password
-          );
-
-        currentUser =
-          data?.user || null;
-
-        if (!currentUser) {
-
-          throw new Error(
-            "LOGIN_FAILED"
-          );
-        }
-
-        await ensureProfile();
-
-        updateCurrentUserUI();
-        applyRoleUI();
-
-        await Promise.allSettled([
-          loadClientPlans(),
-          loadClientPlanForDashboard(),
-          loadNutritionPlan()
-        ]);
-
-        await openApp();
-
-      } catch (error) {
-
-        console.error(
-          "Auth error:",
-          error
-        );
-
-        let message =
-          error?.message || "";
-
-        const lowerMessage =
-          message.toLowerCase();
-
-        if (
-          lowerMessage.includes(
-            "email not confirmed"
-          )
-        ) {
-
-          message =
-            language === "ar"
-              ? "تأكيد البريد الإلكتروني ما زال مفعّلًا في Supabase. اقفله من إعدادات Authentication."
-              : "Email confirmation is still enabled in Supabase. Disable it in Authentication settings.";
-
-        } else if (
-          message === "LOGIN_FAILED"
-        ) {
-
-          message =
-            language === "ar"
-              ? "فشل تسجيل الدخول."
-              : "Sign in failed.";
-        }
-
-        showAuthMessage(
-          message ||
-          (
-            language === "ar"
-              ? "حدث خطأ. حاول مرة أخرى."
-              : "Something went wrong."
-          )
-        );
-
-      } finally {
-
-        if (button) {
-          button.disabled = false;
-          button.style.opacity = "1";
-        }
-
+        currentUser = data.user;
+      } else {
+        const data = await loginUser(email, password);
+        currentUser = data?.user || null;
+        if (!currentUser) throw new Error("LOGIN_FAILED");
       }
 
-    }
-  );
+      // openApp handles profile loading and the app's required data.
+      await openApp();
 
+    } catch (error) {
+      console.error("Auth error:", error);
+      let message = String(error?.message || "");
+      const lowerMessage = message.toLowerCase();
+
+      if (lowerMessage.includes("email not confirmed")) {
+        message = language === "ar"
+          ? "البريد الإلكتروني لسه متأكدش. افتح رسالة التأكيد أو راجع إعدادات Supabase."
+          : "Email not confirmed. Check your inbox or review your Supabase auth settings.";
+      } else if (lowerMessage.includes("invalid login credentials")) {
+        message = language === "ar" ? "الإيميل أو كلمة المرور مش صح." : "The email or password is incorrect.";
+      } else if (message === "LOGIN_FAILED") {
+        message = language === "ar" ? "فشل تسجيل الدخول." : "Sign in failed.";
+      } else if (lowerMessage.includes("user already registered")) {
+        message = language === "ar" ? "الإيميل ده مسجل قبل كده. بدّل لتسجيل الدخول." : "This email is already registered. Switch to sign in.";
+      } else if (lowerMessage.includes("profile") && lowerMessage.includes("not created")) {
+        message = language === "ar"
+          ? "تم تسجيل الدخول لكن بيانات الحساب مش موجودة في قاعدة البيانات. راجع إعداد إنشاء profile في Supabase."
+          : "Signed in, but the profile row is missing in the database. Check your Supabase profile setup.";
+      } else if (!message) {
+        message = language === "ar" ? "حصل خطأ غير متوقع. جرّب تاني." : "Something went wrong. Please try again.";
+      }
+
+      showAuthMessage(message);
+    } finally {
+      window.ironxAuthBusy = false;
+      if (button) {
+        button.disabled = false;
+        button.style.opacity = "1";
+        button.removeAttribute("aria-busy");
+      }
+    }
+  }, true);
 }
+
 /* =========================================================
    PASSWORD BUTTON
    ========================================================= */
@@ -4624,20 +4519,14 @@ const passwordToggle =
     "passwordToggle"
   );
 
-if (passwordToggle) {
-
-  passwordToggle.addEventListener(
-    "click",
-    function(event) {
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      togglePassword();
-
-    }
-  );
-
+if (passwordToggle && !passwordToggle.dataset.ironxPasswordBound) {
+  passwordToggle.dataset.ironxPasswordBound = "true";
+  passwordToggle.type = "button";
+  passwordToggle.addEventListener("click", function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    togglePassword();
+  });
 }
 /* =========================================================
    AUTH MESSAGE
@@ -4648,14 +4537,10 @@ function showAuthMessage(
   type = "error"
 ) {
 
-  const box =
-    document.getElementById(
-      "authMessage"
-    );
+  const box = document.getElementById("authMessage");
+  if (!box) return;
 
-
-  box.textContent =
-    message;
+  box.textContent = message;
 
 
   box.style.color =
@@ -4803,15 +4688,7 @@ async function loadUser() {
   }
 
 
-  currentUser =
-    data.user;
-
-  await ensureProfile();
-
-  updateCurrentUserUI();
-  applyRoleUI();
-  await loadClientPlans();
-
+  currentUser = data.user || null;
   return currentUser;
 
 }
@@ -5025,48 +4902,18 @@ async function checkSession() {
 
 
 /* =========================================================
-   AUTH STATE
+   AUTH STATE — SIGN OUT ONLY
+   The login form opens the app itself. Re-opening on SIGNED_IN caused
+   duplicate profile/plan loads and race conditions.
    ========================================================= */
 
-supabaseClient.auth.onAuthStateChange(
-  function(event, session) {
-
-    if (
-      event === "SIGNED_IN" &&
-      session
-    ) {
-
-      setTimeout(
-        function() {
-
-          loadUser().then(
-            function() {
-
-              openApp();
-
-            }
-          );
-
-        },
-        0
-      );
-
-    }
-
-
-    if (
-      event === "SIGNED_OUT"
-    ) {
-
-      currentUser = null;
-
-      closeApp();
-
-    }
-
+supabaseClient.auth.onAuthStateChange(function(event) {
+  if (event === "SIGNED_OUT") {
+    currentUser = null;
+    currentProfile = null;
+    closeApp();
   }
-);
-
+});
 
 
 /* =========================================================
