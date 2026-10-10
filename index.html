@@ -2477,6 +2477,12 @@ button{
 
 </style>
 
+
+<style id="ironx-complete-upgrade-css">
+.ix-section{margin:18px 0}.ix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:14px}.ix-card{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px;backdrop-filter:blur(22px)}.ix-muted{color:var(--muted,#9299a5);font-size:13px;line-height:1.55}.ix-btn{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--text,#f8f9fb);border-radius:12px;padding:11px 14px;cursor:pointer;font-weight:700}.ix-btn.primary{background:var(--green,#83ffb4);color:#041009;border-color:transparent}.ix-btn:disabled{opacity:.55;cursor:not-allowed}.ix-input{width:100%;min-width:0;background:rgba(0,0,0,.28);border:1px solid var(--border,rgba(255,255,255,.12));color:var(--text,#fff);border-radius:12px;padding:12px;margin:6px 0 12px}.ix-badge{display:inline-flex;padding:5px 9px;border-radius:99px;background:rgba(131,255,180,.12);border:1px solid rgba(131,255,180,.24);color:var(--green,#83ffb4);font-size:11px;font-weight:800;letter-spacing:.04em}.ix-price{font-size:30px;font-weight:900;margin:10px 0}.ix-list{padding-left:18px;line-height:1.8;color:var(--muted,#9299a5)}.ix-idcard{position:relative;overflow:hidden;max-width:560px;min-height:235px;background:radial-gradient(circle at 90% 10%,rgba(131,255,180,.22),transparent 35%),linear-gradient(135deg,#111820,#030405 70%);border:1px solid rgba(131,255,180,.38);border-radius:24px;padding:22px;box-shadow:0 20px 70px #0007}.ix-idcard:after{content:"X";position:absolute;right:12px;bottom:-62px;font-size:190px;font-weight:1000;color:#ffffff08;pointer-events:none}.ix-food-result{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border,rgba(255,255,255,.1))}.ix-food-result:last-child{border-bottom:0}.ix-photo{width:100%;max-width:220px;aspect-ratio:4/5;object-fit:cover;border-radius:14px;border:1px solid var(--border,rgba(255,255,255,.15))}.ix-note{font-size:13px;margin-top:8px;color:var(--muted,#9299a5);white-space:pre-wrap}.ix-status{min-height:20px;font-size:13px;margin-top:8px}.ix-selected{border-color:var(--green,#83ffb4);box-shadow:0 0 0 1px var(--green,#83ffb4)}
+@media(max-width:600px){.ix-card{padding:15px}.ix-idcard{padding:17px;min-height:215px}.ix-price{font-size:26px}}
+</style>
+
 </head>
 
 
@@ -2770,6 +2776,8 @@ button{
   <span class="nav-icon">◇</span>
   <span>Client Chat</span>
 </button>
+
+    <button class="nav-button client-only" data-page="membership" id="membershipNavButton" type="button"><span class="nav-icon">✦</span><span>Membership & ID</span></button>
 
     <button
       class="nav-button"
@@ -3941,7 +3949,7 @@ button{
     <span data-i18n="profileShortcut">Profile</span>
   </button>
 
-  <button data-page="account">
+  <button class="nav-button client-only" data-page="membership" id="membershipNavButtonMobile" type="button"><span class="nav-icon">✦</span><span>Membership & ID</span></button><button data-page="account">
 
     <span class="mobile-icon">
       ◉
@@ -7430,6 +7438,100 @@ function(page){
 
 }
   </script>
+
+
+<section id="page-membership" class="page hidden">
+  <div class="section-head"><h2>IRONX Membership</h2><p>Your membership, unique client ID card, weekly progress photos and food finder.</p></div>
+  <div class="ix-section ix-card">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap"><div><span class="ix-badge">PERSONAL CLIENT ID</span><h3 style="margin:12px 0 5px">Your IRONX ID Card</h3><p class="ix-muted">Generated from your account ID. It stays unique to your account.</p></div><button class="ix-btn" id="ixDownloadCard" type="button">Download ID Card</button></div>
+    <div class="ix-idcard" id="ixIdCard" style="margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:start;gap:10px"><div><div style="font-size:11px;letter-spacing:.22em;color:#83ffb4;font-weight:900">IRONX COACHING</div><div style="font-size:25px;font-weight:950;margin-top:10px" id="ixCardName">CLIENT NAME</div><div class="ix-muted" id="ixCardEmail">member@ironx</div></div><div style="width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:#83ffb421;border:1px solid #83ffb45c;font-size:28px;font-weight:1000;color:#83ffb4">X</div></div><div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-top:26px;position:relative;z-index:1"><div><div class="ix-muted">MEMBER ID</div><div id="ixCardId" style="font-weight:900;letter-spacing:.08em;font-size:17px">IRONX-XXXXXXXX</div><div class="ix-muted" style="margin-top:9px">PACKAGE: <b id="ixCardPackage">NOT SELECTED</b></div></div><div style="text-align:right"><div class="ix-muted">STATUS</div><b id="ixCardStatus" style="color:#83ffb4">REGISTERED</b></div></div></div>
+    <div id="ixCardStatusMessage" class="ix-status" role="status"></div>
+  </div>
+  <div class="ix-section ix-card"><h3>Trial access</h3><p class="ix-muted">Trial access is available by a unique invitation code issued by the coach to the registered account email. Each account and each code can be used only once. Trial duration is set by the coach and cannot exceed 90 days.</p><label for="ixTrialCode">Trial code</label><input class="ix-input" id="ixTrialCode" maxlength="80" autocomplete="one-time-code" placeholder="Enter your one-time trial code"><button class="ix-btn primary" id="ixRedeemTrial" type="button">Redeem trial code</button><div id="ixTrialStatus" class="ix-status" role="status"></div><div id="ixTrialDetails" class="ix-note"></div></div>
+  <div class="ix-section"><div class="section-head"><h2>Choose your package</h2><p>Paid subscriptions are currently closed. Prices and package details are shown for reference only; selection and payment requests are disabled until the coach opens subscriptions.</p></div>
+    <div class="ix-grid" id="ixPackages">
+      <article class="ix-card" data-package="A7HA"><span class="ix-badge">✨️ A7HA PACKAGE ✨️</span><div class="ix-price">250 EGP <small style="font-size:12px;color:var(--muted)">/ month</small></div><ul class="ix-list"><li>No regular follow-up</li><li>No chat or calls except to request a plan change</li><li>Training and nutrition plan tailored to your budget</li></ul><button class="ix-btn primary" data-choose-package="A7HA" type="button" disabled aria-disabled="true">Currently unavailable</button></article>
+      <article class="ix-card" data-package="3ANTEL ALMA7ALA"><span class="ix-badge">💪🥵 3ANTEL ALMA7ALA</span><div class="ix-price">550 EGP <small style="font-size:12px;color:var(--muted)">/ month</small></div><ul class="ix-list"><li>Weekly follow-up</li><li>Chat only</li><li>Training and nutrition plan tailored to your budget</li></ul><button class="ix-btn primary" data-choose-package="3ANTEL ALMA7ALA" type="button" disabled aria-disabled="true">Currently unavailable</button></article>
+      <article class="ix-card" data-package="GORILLA"><span class="ix-badge">🦍 GORILLA PACKAGE</span><div class="ix-price">800 EGP <small style="font-size:12px;color:var(--muted)">/ month</small></div><ul class="ix-list"><li>Follow-up whenever needed</li><li>Chat and calls</li><li>Training and nutrition plan tailored to your budget</li></ul><button class="ix-btn primary" data-choose-package="GORILLA" type="button" disabled aria-disabled="true">Currently unavailable</button></article>
+    </div><div id="ixSubscriptionStatus" class="ix-status" role="status"></div>
+    <div class="ix-card" style="margin-top:14px"><h3>Payment / activation</h3><p class="ix-muted">Paid packages are disabled until the coach opens subscriptions. No payment or paid subscription can be activated right now.</p><div id="ixCurrentSubscription" class="ix-note">Loading your subscription status…</div></div>
+  </div>
+  <div class="ix-section ix-card"><h3>Payment and contact</h3><p class="ix-muted">Paid subscriptions are currently closed. When they open, use the payment details below and contact the coach to confirm activation.</p><p><b>InstaPay:</b> <span dir="ltr">01004876868</span></p><p><b>Contact:</b> <a href="https://wa.me/201112492372" target="_blank" rel="noopener noreferrer" style="color:var(--green)">01112492372</a></p></div>
+  <div class="ix-section ix-card"><h3>Weekly progress photo</h3><p class="ix-muted">For male clients, one photo is required each week before recording the weekly check-in. For female clients, it is optional. Photos are stored privately in Supabase Storage, not in a public folder.</p><label for="ixProgressPhoto">Progress photo</label><input class="ix-input" id="ixProgressPhoto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment"><label for="ixPhotoNote">Optional note</label><textarea class="ix-input" id="ixPhotoNote" rows="2" maxlength="300" placeholder="How was this week?"></textarea><button class="ix-btn primary" id="ixUploadPhoto" type="button">Save this week's check-in</button><div id="ixPhotoStatus" class="ix-status" role="status"></div><div id="ixPhotoHistory" class="ix-grid" style="margin-top:14px"></div></div>
+  <div class="ix-section ix-card"><h3>Food Finder</h3><p class="ix-muted">Search packaged foods and see nutrition values per 100 g. Results come from Open Food Facts; always check labels and serving sizes.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="ix-input" id="ixFoodQuery" style="flex:1;min-width:180px" placeholder="Search food, e.g. Greek yogurt" autocomplete="off"><button class="ix-btn primary" id="ixFoodSearch" type="button">Search food</button></div><div id="ixFoodStatus" class="ix-status" role="status"></div><div id="ixFoodResults"></div></div>
+</section>
+
+
+<script id="ironx-complete-upgrade-js">
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SUBSCRIPTIONS_OPEN=false; // Keep paid packages closed until the owner explicitly opens them.
+const PACKAGES={
+ 'A7HA':{price:250,label:'✨️ A7HA PACKAGE ✨️',features:['No regular follow-up','No chat or calls except requests to change your plan','Training and nutrition plan tailored to your budget']},
+ '3ANTEL ALMA7ALA':{price:550,label:'3ANTEL ALMA7ALA PACKAGE 💪🥵',features:['Weekly follow-up','Chat only','Training and nutrition plan tailored to your budget']},
+ 'GORILLA':{price:800,label:'GORILLA PACKAGE 🦍',features:['Follow-up whenever needed','Chat and calls','Training and nutrition plan tailored to your budget']}
+};
+function getGender(){const g=String($('cpGender')?.value||currentProfile?.gender||currentProfile?.sex||'').toLowerCase();if(['male','man','ذكر','ولد'].includes(g))return 'male';if(['female','woman','أنثى','انثى','بنت'].includes(g))return 'female';return g;}
+function memberId(){const id=(typeof currentUser!=='undefined' ? currentUser?.id : '')||'';return id?'IRONX-'+id.replace(/-/g,'').slice(-10).toUpperCase():'IRONX-PENDING';}
+function activePackage(){return localStorage.getItem('ironx-selected-package')||currentProfile?.subscription_package||'';}
+function setStatus(id,msg,error=false){const e=$(id);if(e){e.textContent=msg;e.style.color=error?'#ff8791':'var(--green,#83ffb4)';}}
+async function db(){return supabaseClient;}
+async function loadMembership(){
+ if(!(typeof currentUser!=='undefined' && currentUser))return;
+ const u=currentUser;
+ const profile=currentProfile||{};
+ $('ixCardName').textContent=profile.full_name||profile.name||u.user_metadata?.full_name||u.email?.split('@')[0]||'IRONX MEMBER';
+ $('ixCardEmail').textContent=u.email||'';
+ $('ixCardId').textContent=memberId();
+ let pkg=activePackage();
+ $('ixCardPackage').textContent=pkg?(PACKAGES[pkg]?.label||pkg):'NOT SELECTED';
+ try{
+   const c=await db();
+   const {data:trial,error:trialError}=await c.from('trial_redemptions').select('starts_at,expires_at,status').eq('user_id',u.id).maybeSingle();
+   const trialActive=!trialError&&!!trial&&trial.status==='active'&&new Date(trial.expires_at).getTime()>Date.now();
+   if(!trialError&&trial){
+     const expiry=new Date(trial.expires_at);
+     $('ixCardStatus').textContent=trialActive?'TRIAL ACTIVE':'TRIAL EXPIRED';
+     $('ixTrialDetails').textContent=trialActive?`Trial active until ${expiry.toLocaleDateString()}. Trial access can only be redeemed once per account.`:`Your trial expired on ${expiry.toLocaleDateString()}. Trial access cannot be redeemed again on this account.`;
+     if(trialActive)$('ixCurrentSubscription').textContent=`Trial access active until ${expiry.toLocaleDateString()}.`;
+   }else if(trialError){
+     $('ixTrialDetails').textContent='Trial status could not be loaded. Check the Supabase setup and connection.';
+   }else{
+     $('ixTrialDetails').textContent='No trial has been redeemed on this account.';
+   }
+   const {data:request,error:requestError}=await c.from('subscription_requests').select('package_code,price_egp,status,created_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+   if(!requestError&&request){
+     pkg=request.package_code;
+     $('ixCardPackage').textContent=PACKAGES[pkg]?.label||pkg;
+     if(!trialActive)$('ixCardStatus').textContent=String(request.status||'pending').toUpperCase();
+     if(!trialActive)$('ixCurrentSubscription').textContent=`Latest request: ${PACKAGES[pkg]?.label||pkg} · ${request.price_egp} EGP/month · ${request.status}.`;
+   }else if(!trialActive){
+     $('ixCurrentSubscription').textContent='No active trial or subscription. Paid subscriptions are currently closed.';
+     if(!requestError)$('ixCardStatus').textContent='REGISTERED';
+   }
+ }catch(e){
+   $('ixCurrentSubscription').textContent='Membership database is not configured. Run IRONX-supabase-setup.sql in Supabase SQL Editor.';
+   console.error('IRONX membership load error:',e);
+ }
+}
+
+async function choosePackage(code){if(!SUBSCRIPTIONS_OPEN){setStatus('ixSubscriptionStatus','Paid subscriptions are currently closed. Trial codes are available by invitation only.',true);return;}if(!(typeof currentUser!=='undefined' && currentUser)){setStatus('ixSubscriptionStatus','Please sign in first.',true);return;}const p=PACKAGES[code];if(!p)return;const c=await db();setStatus('ixSubscriptionStatus','Saving package request…');try{const {error}=await c.from('subscription_requests').insert({user_id:currentUser.id,package_code:code,price_egp:p.price,status:'pending',billing_period:'monthly'});if(error)throw error;localStorage.setItem('ironx-selected-package',code);setStatus('ixSubscriptionStatus',`Request saved: ${p.label}. Status: pending. No payment was taken.`);await loadMembership();}catch(e){setStatus('ixSubscriptionStatus',`Could not save request: ${e.message||'database unavailable'}. Run supabase-setup.sql and check RLS.`,true);}}
+async function redeemTrial(){if(!(typeof currentUser!=='undefined' && currentUser)){setStatus('ixTrialStatus','Please sign in to redeem a trial code.',true);return;}const code=$('ixTrialCode')?.value.trim();if(!code){setStatus('ixTrialStatus','Enter the trial code sent to your registered email.',true);return;}const btn=$('ixRedeemTrial');if(btn)btn.disabled=true;setStatus('ixTrialStatus','Checking your trial code…');try{const {data,error}=await supabaseClient.rpc('redeem_ironx_trial_code',{p_code:code});if(error)throw error;const result=Array.isArray(data)?data[0]:data;if(!result||result.ok!==true)throw new Error(result?.message||'This code could not be redeemed.');const expiry=new Date(result.expires_at);setStatus('ixTrialStatus',`Trial activated until ${expiry.toLocaleDateString()}.`);$('ixTrialCode').value='';await loadMembership();}catch(e){const raw=String(e?.message||'');const msg=raw.toLowerCase().includes('already used')||raw.toLowerCase().includes('already redeemed')?'This account has already used its one-time trial.':raw.toLowerCase().includes('invalid')||raw.toLowerCase().includes('expired')?'The code is invalid, expired, or already used.':'Could not redeem code. Run the latest IRONX-supabase-setup.sql and check the connection.';setStatus('ixTrialStatus',msg,true);console.error('IRONX trial redemption error:',e);}finally{if(btn)btn.disabled=false;}}
+async function loadPhotos(){if(!(typeof currentUser!=='undefined' && currentUser))return;const c=await db();const el=$('ixPhotoHistory');if(!el)return;el.innerHTML='<p class="ix-muted">Loading photo history…</p>';try{const {data,error}=await c.from('progress_photos').select('id,storage_path,week_start,note,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(8);if(error)throw error;if(!data?.length){el.innerHTML='<p class="ix-muted">No weekly photos saved yet.</p>';return;}const cards=await Promise.all(data.map(async p=>{const {data:signed,error:se}=await c.storage.from('progress-photos').createSignedUrl(p.storage_path,1800);const url=!se?signed?.signedUrl:'';return `<article class="ix-card"><div class="ix-muted">Week of ${esc(p.week_start||p.created_at?.slice(0,10)||'')}</div>${url?`<img class="ix-photo" src="${url}" alt="Private progress photo" loading="lazy">`:'<p class="ix-muted">Photo is saved privately.</p>'}<p class="ix-muted">${esc(p.note||'')}</p></article>`;}));el.innerHTML=cards.join('');}catch(e){el.innerHTML='<p class="ix-muted">Photo history needs the progress_photos table and private progress-photos bucket. Run supabase-setup.sql.</p>';}}
+function weekStartISO(){const d=new Date();const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
+async function uploadWeeklyPhoto(){if(!(typeof currentUser!=='undefined' && currentUser)){setStatus('ixPhotoStatus','Please sign in first.',true);return;}const file=$('ixProgressPhoto')?.files?.[0];const gender=getGender();if(gender==='male'&&!file){setStatus('ixPhotoStatus','Weekly progress photo is required for male clients. Select a photo before saving this week’s check-in.',true);return;}if(!file){setStatus('ixPhotoStatus','No photo selected. Since photos are optional for female clients, no photo was uploaded.',false);return;}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){setStatus('ixPhotoStatus','Use JPG, PNG or WebP.',true);return;}if(file.size>8*1024*1024){setStatus('ixPhotoStatus','Photo must be 8 MB or smaller.',true);return;}const c=await db();const u=currentUser;const week=weekStartISO();setStatus('ixPhotoStatus','Uploading privately…');try{const path=`${u.id}/${week}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upError}=await c.storage.from('progress-photos').upload(path,file,{contentType:file.type,upsert:false});if(upError)throw upError;const {error:dbError}=await c.from('progress_photos').insert({user_id:u.id,storage_path:path,week_start:week,note:$('ixPhotoNote')?.value.trim()||null});if(dbError){await c.storage.from('progress-photos').remove([path]);throw dbError;}setStatus('ixPhotoStatus','Weekly check-in saved. Your photo is private.');$('ixProgressPhoto').value='';$('ixPhotoNote').value='';await loadPhotos();}catch(e){setStatus('ixPhotoStatus',`Upload failed: ${e.message||'check Supabase storage policies and SQL setup'}`,true);}}
+async function searchFood(){const q=$('ixFoodQuery')?.value.trim();if(!q)return;const status=$('ixFoodStatus'),results=$('ixFoodResults');status.textContent='Searching Open Food Facts…';results.innerHTML='';try{const url='https://world.openfoodfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,quantity,nutriments,image_front_small_url';const r=await fetch(url,{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('Food database is temporarily unavailable.');const data=await r.json();const products=(data.products||[]).filter(p=>p.product_name);if(!products.length){status.textContent='No matching foods found. Try a different search.';return;}status.textContent=`Found ${products.length} foods. Nutrition values are per 100 g when available.`;results.innerHTML=products.map(p=>{const n=p.nutriments||{};const kcal=n['energy-kcal_100g']??(n['energy-kj_100g']?Math.round(n['energy-kj_100g']/4.184):null);return `<div class="ix-food-result">${p.image_front_small_url?`<img src="${esc(p.image_front_small_url)}" alt="" style="width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff">`:''}<div style="flex:1;min-width:0"><b>${esc(p.product_name)}</b><div class="ix-muted">${esc(p.brands||'Brand not listed')} · ${esc(p.quantity||'')}</div><div class="ix-muted">${kcal==null?'Calories n/a':Math.round(kcal)+' kcal'} · P ${Math.round(n.proteins_100g||0)} g · C ${Math.round(n.carbohydrates_100g||0)} g · F ${Math.round(n.fat_100g||0)} g / 100 g</div></div><button class="ix-btn" type="button" data-add-food="${esc(p.product_name)}">Use name</button></div>`;}).join('');}catch(e){status.textContent=e.message||'Food search failed.';}}
+function downloadCard(){const card=$('ixIdCard');if(!card)return;const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500"><defs><linearGradient id="g"><stop stop-color="#111820"/><stop offset="1" stop-color="#030405"/></linearGradient></defs><rect width="1000" height="500" rx="42" fill="url(#g)"/><circle cx="900" cy="40" r="220" fill="#83ffb4" opacity=".08"/><text x="65" y="70" fill="#83ffb4" font-family="Arial" font-size="26" font-weight="bold" letter-spacing="7">IRONX COACHING</text><text x="65" y="155" fill="white" font-family="Arial" font-size="54" font-weight="bold">${esc($('ixCardName').textContent)}</text><text x="65" y="200" fill="#9299a5" font-family="Arial" font-size="25">${esc($('ixCardEmail').textContent)}</text><text x="65" y="315" fill="#9299a5" font-family="Arial" font-size="20">MEMBER ID</text><text x="65" y="360" fill="#83ffb4" font-family="Arial" font-size="34" font-weight="bold">${esc($('ixCardId').textContent)}</text><text x="65" y="420" fill="white" font-family="Arial" font-size="23">PACKAGE: ${esc($('ixCardPackage').textContent)}</text><text x="930" y="435" fill="#83ffb4" font-family="Arial" font-size="65" font-weight="bold" text-anchor="middle">X</text></svg>`;const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='IRONX-ID-Card.svg';a.click();URL.revokeObjectURL(a.href);}
+function bind(){$('ixRedeemTrial')?.addEventListener('click',redeemTrial);$('ixTrialCode')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();redeemTrial();}});document.querySelectorAll('[data-choose-package]').forEach(b=>{if(b.dataset.ixBound)return;b.dataset.ixBound='1';b.addEventListener('click',()=>choosePackage(b.dataset.choosePackage));});$('ixUploadPhoto')?.addEventListener('click',uploadWeeklyPhoto);$('ixFoodSearch')?.addEventListener('click',searchFood);$('ixFoodQuery')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchFood();}});$('ixDownloadCard')?.addEventListener('click',downloadCard);$('ixFoodResults')?.addEventListener('click',e=>{const b=e.target.closest('[data-add-food]');if(!b)return;const n=b.dataset.addFood;const target=$('nutritionMeals')||$('nutritionMealEditor');if(target){const row=document.createElement('div');row.className='ix-food-result';row.textContent=n;target.appendChild(row);setStatus('ixFoodStatus','Food name added to the visible meal area. Check quantities and macros before saving.');}else{setStatus('ixFoodStatus','Food name: '+n);}});}
+function maybeShowPage(page){if(page!=='membership')return;if(!(typeof currentUser!=='undefined' && currentUser)){setStatus('ixCardStatusMessage','Sign in to generate your member card and manage your package.',true);return;}loadMembership();loadPhotos();}
+function installNavigation(){const old=window.showPage;if(typeof old==='function'&&!old.__ixMembershipWrapped){const wrapped=function(page){const out=old.apply(this,arguments);setTimeout(()=>maybeShowPage(page),60);return out;};wrapped.__ixMembershipWrapped=true;window.showPage=wrapped;}}
+function addWeeklyPhotoReminder(){if(!(typeof currentUser!=='undefined' && currentUser)||getGender()!=='male')return;const c=supabaseClient;if(!c)return;c.from('progress_photos').select('id').eq('user_id',currentUser.id).eq('week_start',weekStartISO()).limit(1).then(({data,error})=>{if(error)return;const box=$('page-progress');if(!box||data?.length)return;let notice=$('ixWeeklyReminder');if(!notice){notice=document.createElement('div');notice.id='ixWeeklyReminder';notice.className='ix-card';notice.style.marginTop='14px';notice.innerHTML='<b>Weekly photo required</b><p class="ix-muted">Your weekly progress photo is not saved yet. Open Membership & ID to complete this week’s check-in.</p><button class="ix-btn primary" type="button">Upload weekly photo</button>';box.appendChild(notice);notice.querySelector('button').addEventListener('click',()=>window.showPage?.('membership'));}});}
+function boot(){bind();installNavigation();if(currentUser){loadMembership();loadPhotos();addWeeklyPhotoReminder();}document.addEventListener('ironx:auth-ready',()=>{loadMembership();loadPhotos();addWeeklyPhotoReminder();});const auth=supabaseClient?.auth;if(auth?.onAuthStateChange)auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session?.user){setTimeout(()=>{loadMembership();loadPhotos();addWeeklyPhotoReminder();},200);}if(event==='SIGNED_OUT'){['ixCardName','ixCardEmail','ixCardId','ixCardPackage'].forEach(id=>{if($(id))$(id).textContent='—';});}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 
 </body>
 </html>
