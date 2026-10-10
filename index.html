@@ -4401,6 +4401,39 @@ function updateAuthLanguage() {
 
 }
 
+  
+function toggleAuthMode() {
+  authMode = authMode === "login" ? "register" : "login";
+
+  const nameField = document.getElementById("nameField");
+  const nameInput = document.getElementById("nameInput");
+  const passwordInput = document.getElementById("passwordInput");
+
+  nameField?.classList.toggle("hidden", authMode !== "register");
+
+  if (nameInput) {
+    nameInput.required = authMode === "register";
+    nameInput.autocomplete = "name";
+  }
+
+  if (passwordInput) {
+    passwordInput.autocomplete =
+      authMode === "register"
+        ? "new-password"
+        : "current-password";
+  }
+
+  showAuthMessage("");
+  updateAuthLanguage();
+
+  if (authMode === "register") {
+    nameInput?.focus();
+  } else {
+    document.getElementById("emailInput")?.focus();
+  }
+}
+
+  
 /* =========================================================
    AUTH FORM — SINGLE, REFRESH-SAFE HANDLER
    ========================================================= */
