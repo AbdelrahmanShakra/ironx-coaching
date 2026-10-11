@@ -1,529 +1,121 @@
-const SUPABASE_URL =
-process.env.SUPABASE_URL ||
-"https://uibzmqioeumuhczljolu.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-process.env.SUPABASE_PUBLISHABLE_KEY || "";
-
-const GEMINI_API_KEY =
-process.env.GEMINI_API_KEY || "";
-
-const GEMINI_MODEL =
-process.env.GEMINI_MODEL || "gemini-3.8-flash";
-
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://uibzmqioeumuhczljolu.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_rSRn52GyErhIZbjGicxfYw_3myRbrbx';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const rateLimits = new Map();
 
 function send(res, status, body) {
-return res.status(status).json(body);
+  res.setHeader('Cache-Control', 'no-store');
+  return res.status(status).json(body);
 }
 
 function allowed(userId) {
-const now = Date.now();
-
-const old =
-rateLimits.get(userId) || {
-time: now,
-count: 0
-};
-
-if (now - old.time > 60000) {
-old.time = now;
-old.count = 0;
-}
-
-old.count++;
-
-rateLimits.set(userId, old);
-
-return old.count <= 15;
+  const now = Date.now();
+  let entry = rateLimits.get(userId);
+  if (!entry || now - entry.time > 60000) entry = { time: now, count: 0 };
+  entry.count += 1;
+  rateLimits.set(userId, entry);
+  return entry.count <= 15;
 }
 
 async function getUser(token) {
-if (!token || !SUPABASE_PUBLISHABLE_KEY) {
-return null;
+  if (!token || !SUPABASE_KEY) return null;
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) return null;
+  return response.json();
 }
 
-const response = await fetch(
-"${SUPABASE_URL}/auth/v1/user",
-{
-headers: {
-apikey: SUPABASE_PUBLISHABLE_KEY,
-Authorization: "Bearer ${token}"
-}
-}
-);
-
-if (!response.ok) {
-return null;
-}
-
-return response.json();
+function cleanObject(value, maxLength = 12000) {
+  try { return JSON.stringify(value ?? null).slice(0, maxLength); }
+  catch { return 'null'; }
 }
 
 function buildHistory(history) {
-if (!Array.isArray(history)) {
-return [];
-}
-
-return history
-.filter(item =>
-item &&
-typeof item.content === "string" &&
-(item.role === "user" || item.role === "assistant")
-)
-.slice(-24)
-.map(item => ({
-role:
-item.role === "assistant"
-? "model"
-: "user",
-parts: [
-{
-text: item.content.slice(0, 4000)
-}
-]
-}));
-}
-
-function cleanPlan(plan) {
-if (!plan || typeof plan !== "object") {
-return null;
-}
-
-return {
-id: plan.id || null,
-title: plan.title || "",
-description: plan.description || "",
-calories:
-plan.calories ??
-plan.daily_calories ??
-null,
-protein:
-plan.protein ??
-plan.protein_g ??
-null,
-carbs:
-plan.carbs ??
-plan.carbs_g ??
-null,
-fats:
-plan.fats ??
-plan.fats_g ??
-null,
-meals_per_day:
-plan.meals_per_day ??
-null,
-water_liters:
-plan.water_liters ??
-null,
-goal:
-plan.goal ||
-"",
-notes:
-plan.notes ||
-"",
-meals:
-Array.isArray(plan.meals)
-? plan.meals.slice(0, 20).map(meal => ({
-meal_number:
-meal.meal_number ??
-null,
-name:
-meal.name ||
-"",
-time:
-meal.time ||
-"",
-foods:
-meal.foods ||
-"",
-calories:
-meal.calories ??
-null,
-protein_g:
-meal.protein_g ??
-null,
-carbs_g:
-meal.carbs_g ??
-null,
-fat_g:
-meal.fat_g ??
-null,
-fiber_g:
-meal.fiber_g ??
-null,
-notes:
-meal.notes ||
-""
-}))
-: []
-};
-}
-
-function cleanTrainingPlan(plan) {
-if (!plan || typeof plan !== "object") {
-return null;
-}
-
-return {
-id:
-plan.id ||
-null,
-
-title:
-  plan.title ||
-  "",
-
-description:
-  plan.description ||
-  "",
-
-workouts:
-  Array.isArray(plan.workouts)
-    ? plan.workouts.slice(0, 100).map(workout => ({
-        day_number:
-          workout.day_number ??
-          null,
-
-        exercise:
-          workout.exercise ||
-          "",
-
-        sets:
-          workout.sets ||
-          "",
-
-        reps:
-          workout.reps ||
-          "",
-
-        rest:
-          workout.rest ||
-          "",
-
-        notes:
-          workout.notes ||
-          ""
-      }))
-    : []
-
-};
+  if (!Array.isArray(history)) return [];
+  return history
+    .filter(item => item && typeof item.content === 'string' && (item.role === 'user' || item.role === 'assistant'))
+    .slice(-20)
+    .map(item => ({
+      role: item.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: item.content.slice(0, 3000) }]
+    }));
 }
 
 module.exports = async function handler(req, res) {
-
-if (req.method !== "POST") {
-return send(res, 405, {
-error: "METHOD_NOT_ALLOWED"
-});
-}
-
-if (!GEMINI_API_KEY) {
-
-console.error(
-  "GEMINI_API_KEY is missing from the server environment."
-);
-
-return send(res, 503, {
-  error: "AI_NOT_CONFIGURED"
-});
-
-}
-
-try {
-
-const auth =
-  req.headers.authorization || "";
-
-const token =
-  auth.startsWith("Bearer ")
-    ? auth.substring(7)
-    : "";
-
-
-const user =
-  await getUser(token);
-
-
-if (!user?.id) {
-
-  return send(res, 401, {
-    error: "UNAUTHORIZED"
-  });
-}
-
-
-if (!allowed(user.id)) {
-
-  return send(res, 429, {
-    error: "RATE_LIMITED"
-  });
-}
-
-
-const body =
-  req.body || {};
-
-
-const message =
-  typeof body.message === "string"
-    ? body.message.trim()
-    : "";
-
-
-if (!message) {
-
-  return send(res, 400, {
-    error: "MESSAGE_REQUIRED"
-  });
-}
-
-
-if (message.length > 4000) {
-
-  return send(res, 400, {
-    error: "MESSAGE_TOO_LONG"
-  });
-}
-
-
-const profile =
-  body.profile || {};
-
-const language =
-  body.language || "en";
-
-const history =
-  buildHistory(body.history);
-
-const nutritionPlan =
-  cleanPlan(body.nutritionPlan);
-
-const trainingPlan =
-  cleanTrainingPlan(body.trainingPlan);
-
-
-const systemInstruction = `
-
-You are IRONX AI Coach.
-
-You are an AI fitness assistant for the IRONX coaching platform.
-
-Help users with:
-
-- workout planning
-- exercise technique
-- training progression
-- nutrition
-- calories and macros
-- recovery
-- sleep
-- general fitness questions
-
-Give practical, clear, concise answers.
-
-IMPORTANT:
-
-You have access to the user's current IRONX profile,
-training plan, and nutrition plan when provided.
-
-Use those plans as the primary context when answering
-questions about the user's current training or nutrition.
-
-Do NOT invent exercises, meals, calories, macros,
-or plan details that are not present in the supplied data.
-
-If the user asks about something not contained
-in the current plan, give general fitness guidance
-and clearly distinguish it from their actual IRONX plan.
-
-Do not diagnose medical conditions.
-Do not pretend to be a doctor.
-Do not replace a qualified medical professional.
-
-If the user reports serious pain,
-significant injury,
-chest pain,
-fainting,
-severe dizziness,
-difficulty breathing,
-or another dangerous symptom,
-recommend professional medical care.
-
-Never pretend to be a human coach.
-Always be honest that you are an AI assistant.
-
-Answer in the user's requested language.
-
-User language:
-${language}
-
-User profile:
-${JSON.stringify(profile)}
-
-Current IRONX training plan:
-${JSON.stringify(trainingPlan)}
-
-Current IRONX nutrition plan:
-${JSON.stringify(nutritionPlan)}
-`;
-
-const contents = [
-  ...history,
-
-  {
-    role: "user",
-    parts: [
-      {
-        text: message
-      }
-    ]
+  if (req.method !== 'POST') return send(res, 405, { error: 'METHOD_NOT_ALLOWED' });
+  if (!GEMINI_API_KEY) {
+    console.error('GEMINI_API_KEY is missing in Vercel Environment Variables.');
+    return send(res, 503, { error: 'AI_NOT_CONFIGURED', details: 'Add GEMINI_API_KEY in Vercel Environment Variables, then redeploy.' });
   }
-];
 
+  try {
+    const authorization = req.headers.authorization || '';
+    const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    const user = await getUser(token);
+    if (!user?.id) return send(res, 401, { error: 'UNAUTHORIZED' });
+    if (!allowed(user.id)) return send(res, 429, { error: 'RATE_LIMITED', details: 'Too many messages. Wait one minute and try again.' });
 
-const apiUrl =
-  `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
-    GEMINI_MODEL
-  )}:generateContent?key=${encodeURIComponent(
-    GEMINI_API_KEY
-  )}`;
+    const body = req.body || {};
+    const message = typeof body.message === 'string' ? body.message.trim() : '';
+    if (!message) return send(res, 400, { error: 'MESSAGE_REQUIRED' });
+    if (message.length > 4000) return send(res, 400, { error: 'MESSAGE_TOO_LONG' });
 
+    const language = body.language === 'ar' ? 'ar' : 'en';
+    const systemInstruction = [
+      'You are IRONX AI Coach, an AI fitness assistant.',
+      'Give practical, clear advice about training, exercise technique, nutrition, calories, recovery, sleep, and general fitness.',
+      'Use the supplied profile and plans as context, but never claim that missing data exists. Distinguish general advice from the user’s actual plan.',
+      'Do not diagnose injuries or diseases. For serious pain, chest pain, fainting, breathing difficulty, or dangerous symptoms, recommend prompt medical care.',
+      'Never claim to be a human coach. Keep answers concise and useful.',
+      `Reply in ${language === 'ar' ? 'Arabic (Egyptian Arabic when natural)' : 'English'}.`,
+      `User profile: ${cleanObject(body.profile, 5000)}`,
+      `Current training plan: ${cleanObject(body.trainingPlan, 8000)}`,
+      `Current nutrition plan: ${cleanObject(body.nutritionPlan, 8000)}`
+    ].join('\n\n');
 
-console.log("Gemini request:", {
-  model: GEMINI_MODEL,
-  historyLength:
-    history.length,
-  messageLength:
-    message.length,
-  hasTrainingPlan:
-    !!trainingPlan,
-  hasNutritionPlan:
-    !!nutritionPlan
-});
-
-
-const aiResponse =
-  await fetch(
-    apiUrl,
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-
-        systemInstruction: {
-          parts: [
-            {
-              text:
-                systemInstruction
-            }
-          ]
-        },
-
-        contents,
-
-        generationConfig: {
-          maxOutputTokens: 700
-        }
-
-      })
+    const contents = buildHistory(body.history);
+    // Avoid duplicating the current message if the browser already included it in history.
+    if (contents.length && contents[contents.length - 1].role === 'user' && contents[contents.length - 1].parts?.[0]?.text === message) {
+      contents.pop();
     }
-  );
+    contents.push({ role: 'user', parts: [{ text: message }] });
 
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`;
+    const upstream = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemInstruction }] },
+        contents,
+        generationConfig: { maxOutputTokens: 800, temperature: 0.7 }
+      })
+    });
 
-const data =
-  await aiResponse.json();
+    const data = await upstream.json().catch(() => ({}));
+    if (!upstream.ok) {
+      const providerMessage = data?.error?.message || 'The AI provider rejected the request.';
+      console.error('Gemini provider error:', upstream.status, data?.error?.status, providerMessage);
+      return send(res, 502, {
+        error: 'AI_PROVIDER_ERROR',
+        details: providerMessage.slice(0, 500),
+        status: data?.error?.status || 'PROVIDER_ERROR',
+        code: data?.error?.code || upstream.status
+      });
+    }
 
-
-if (!aiResponse.ok) {
-
-  console.error(
-    "Gemini Error:",
-    JSON.stringify(
-      data,
-      null,
-      2
-    )
-  );
-
-
-  return send(res, 502, {
-    error:
-      "AI_PROVIDER_ERROR",
-
-    details:
-      data?.error?.message ||
-      "Gemini rejected the request.",
-
-    status:
-      data?.error?.status ||
-      "UNKNOWN",
-
-    code:
-      data?.error?.code ||
-      aiResponse.status
-  });
-}
-
-
-const reply =
-  data?.candidates?.[0]?.content?.parts
-    ?.map(
-      part =>
-        part?.text ||
-        ""
-    )
-    .join("")
-    .trim();
-
-
-if (!reply) {
-
-  console.error(
-    "Gemini returned no usable response:",
-    JSON.stringify(
-      data,
-      null,
-      2
-    )
-  );
-
-
-  return send(res, 502, {
-    error:
-      "AI_EMPTY_RESPONSE",
-
-    details:
-      "Gemini returned no usable response."
-  });
-}
-
-
-return send(res, 200, {
-  reply
-});
-
-} catch (error) {
-
-console.error(
-  "AI SERVER ERROR:",
-  error
-);
-
-
-return send(res, 500, {
-  error:
-    "AI_SERVER_ERROR",
-
-  details:
-    error?.message ||
-    "Unknown server error."
-});
-
-}
-
+    const reply = (data?.candidates?.[0]?.content?.parts || [])
+      .map(part => typeof part?.text === 'string' ? part.text : '')
+      .join('')
+      .trim();
+    if (!reply) {
+      console.error('Gemini returned no text. Finish reason:', data?.candidates?.[0]?.finishReason || 'unknown');
+      return send(res, 502, { error: 'AI_EMPTY_RESPONSE', details: 'The AI provider returned an empty response. Try a shorter message.' });
+    }
+    return send(res, 200, { reply });
+  } catch (error) {
+    console.error('AI server error:', error?.message || error);
+    return send(res, 500, { error: 'AI_SERVER_ERROR', details: 'The AI request failed on the server. Check the Vercel function logs.' });
+  }
 };
