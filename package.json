@@ -6,8 +6,8 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=20"
-  },
+  "node": "22.x"
+}
   "dependencies": {
     "express": "^5.1.0",
     "helmet": "^8.1.0",
