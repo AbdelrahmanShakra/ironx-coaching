@@ -3088,6 +3088,7 @@ button{
     <p data-i18n="planSub">
       This week's sessions.
     </p>
+    <button class="secondary-button" type="button" onclick="ironxPrintPlanPDF('page-plan','IRONX-Training-Plan')">Download training plan PDF</button>
 
   </div>
 
@@ -3114,6 +3115,7 @@ button{
     <p data-i18n="nutritionPlanSub">
       Your daily calories, macros and meals.
     </p>
+    <button class="secondary-button" type="button" onclick="ironxPrintPlanPDF('page-nutrition','IRONX-Nutrition-Plan')">Download nutrition plan PDF</button>
 
   </div>
 
@@ -4401,39 +4403,6 @@ function updateAuthLanguage() {
 
 }
 
-  
-function toggleAuthMode() {
-  authMode = authMode === "login" ? "register" : "login";
-
-  const nameField = document.getElementById("nameField");
-  const nameInput = document.getElementById("nameInput");
-  const passwordInput = document.getElementById("passwordInput");
-
-  nameField?.classList.toggle("hidden", authMode !== "register");
-
-  if (nameInput) {
-    nameInput.required = authMode === "register";
-    nameInput.autocomplete = "name";
-  }
-
-  if (passwordInput) {
-    passwordInput.autocomplete =
-      authMode === "register"
-        ? "new-password"
-        : "current-password";
-  }
-
-  showAuthMessage("");
-  updateAuthLanguage();
-
-  if (authMode === "register") {
-    nameInput?.focus();
-  } else {
-    document.getElementById("emailInput")?.focus();
-  }
-}
-
-  
 /* =========================================================
    AUTH FORM — SINGLE, REFRESH-SAFE HANDLER
    ========================================================= */
@@ -4966,10 +4935,27 @@ let selectedClient = null;
 
 async function ensureProfile() {
   if (!currentUser) return null;
-  const { data, error } = await supabaseClient.from("profiles").select("id, full_name, role").eq("id", currentUser.id).maybeSingle();
-  if (error) { console.error("Profile read error:", error); throw new Error(error.message || "Could not read your profile"); }
+  const client = supabaseClient;
+  const { data, error } = await client.from("profiles")
+    .select("id, full_name, role").eq("id", currentUser.id).maybeSingle();
+  if (error) {
+    console.error("Profile read error:", error);
+    throw new Error(error.message || "Could not read your profile");
+  }
   if (data) { currentProfile = data; return data; }
-  throw new Error("Your profile was not created yet. Please sign out and sign in again.");
+
+  // Recovery path: the SQL auth trigger normally creates this row. If it did
+  // not, create a client-only profile under the user's own RLS permissions.
+  const fullName = String(currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "IRONX Member").slice(0, 120);
+  const { data: created, error: insertError } = await client.from("profiles")
+    .insert({ id: currentUser.id, full_name: fullName, role: "client" })
+    .select("id, full_name, role").single();
+  if (insertError) {
+    console.error("Profile creation recovery failed:", insertError);
+    throw new Error("Your profile is missing and could not be created. Check the profiles table and RLS policies, then sign in again.");
+  }
+  currentProfile = created;
+  return created;
 }
 
 function applyRoleUI() {
@@ -7502,7 +7488,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const SUBSCRIPTIONS_OPEN=false; // Keep paid packages closed until the owner explicitly opens them.
 const PACKAGES={
- 'A7HA':{price:250,label:'✨️ A7A PACKAGE ✨️',features:['No regular follow-up','No chat or calls except requests to change your plan','Training and nutrition plan tailored to your budget']},
+ 'A7HA':{price:250,label:'✨️ A7HA PACKAGE ✨️',features:['No regular follow-up','No chat or calls except requests to change your plan','Training and nutrition plan tailored to your budget']},
  '3ANTEL ALMA7ALA':{price:550,label:'3ANTEL ALMA7ALA PACKAGE 💪🥵',features:['Weekly follow-up','Chat only','Training and nutrition plan tailored to your budget']},
  'GORILLA':{price:800,label:'GORILLA PACKAGE 🦍',features:['Follow-up whenever needed','Chat and calls','Training and nutrition plan tailored to your budget']}
 };
@@ -7556,7 +7542,42 @@ async function loadPhotos(){if(!(typeof currentUser!=='undefined' && currentUser
 function weekStartISO(){const d=new Date();const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
 async function uploadWeeklyPhoto(){if(!(typeof currentUser!=='undefined' && currentUser)){setStatus('ixPhotoStatus','Please sign in first.',true);return;}const file=$('ixProgressPhoto')?.files?.[0];const gender=getGender();if(gender==='male'&&!file){setStatus('ixPhotoStatus','Weekly progress photo is required for male clients. Select a photo before saving this week’s check-in.',true);return;}if(!file){setStatus('ixPhotoStatus','No photo selected. Since photos are optional for female clients, no photo was uploaded.',false);return;}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){setStatus('ixPhotoStatus','Use JPG, PNG or WebP.',true);return;}if(file.size>8*1024*1024){setStatus('ixPhotoStatus','Photo must be 8 MB or smaller.',true);return;}const c=await db();const u=currentUser;const week=weekStartISO();setStatus('ixPhotoStatus','Uploading privately…');try{const path=`${u.id}/${week}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:upError}=await c.storage.from('progress-photos').upload(path,file,{contentType:file.type,upsert:false});if(upError)throw upError;const {error:dbError}=await c.from('progress_photos').insert({user_id:u.id,storage_path:path,week_start:week,note:$('ixPhotoNote')?.value.trim()||null});if(dbError){await c.storage.from('progress-photos').remove([path]);throw dbError;}setStatus('ixPhotoStatus','Weekly check-in saved. Your photo is private.');$('ixProgressPhoto').value='';$('ixPhotoNote').value='';await loadPhotos();}catch(e){setStatus('ixPhotoStatus',`Upload failed: ${e.message||'check Supabase storage policies and SQL setup'}`,true);}}
 async function searchFood(){const q=$('ixFoodQuery')?.value.trim();if(!q)return;const status=$('ixFoodStatus'),results=$('ixFoodResults');status.textContent='Searching Open Food Facts…';results.innerHTML='';try{const url='https://world.openfoodfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,quantity,nutriments,image_front_small_url';const r=await fetch(url,{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('Food database is temporarily unavailable.');const data=await r.json();const products=(data.products||[]).filter(p=>p.product_name);if(!products.length){status.textContent='No matching foods found. Try a different search.';return;}status.textContent=`Found ${products.length} foods. Nutrition values are per 100 g when available.`;results.innerHTML=products.map(p=>{const n=p.nutriments||{};const kcal=n['energy-kcal_100g']??(n['energy-kj_100g']?Math.round(n['energy-kj_100g']/4.184):null);return `<div class="ix-food-result">${p.image_front_small_url?`<img src="${esc(p.image_front_small_url)}" alt="" style="width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff">`:''}<div style="flex:1;min-width:0"><b>${esc(p.product_name)}</b><div class="ix-muted">${esc(p.brands||'Brand not listed')} · ${esc(p.quantity||'')}</div><div class="ix-muted">${kcal==null?'Calories n/a':Math.round(kcal)+' kcal'} · P ${Math.round(n.proteins_100g||0)} g · C ${Math.round(n.carbohydrates_100g||0)} g · F ${Math.round(n.fat_100g||0)} g / 100 g</div></div><button class="ix-btn" type="button" data-add-food="${esc(p.product_name)}">Use name</button></div>`;}).join('');}catch(e){status.textContent=e.message||'Food search failed.';}}
-function downloadCard(){const card=$('ixIdCard');if(!card)return;const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500"><defs><linearGradient id="g"><stop stop-color="#111820"/><stop offset="1" stop-color="#030405"/></linearGradient></defs><rect width="1000" height="500" rx="42" fill="url(#g)"/><circle cx="900" cy="40" r="220" fill="#83ffb4" opacity=".08"/><text x="65" y="70" fill="#83ffb4" font-family="Arial" font-size="26" font-weight="bold" letter-spacing="7">IRONX COACHING</text><text x="65" y="155" fill="white" font-family="Arial" font-size="54" font-weight="bold">${esc($('ixCardName').textContent)}</text><text x="65" y="200" fill="#9299a5" font-family="Arial" font-size="25">${esc($('ixCardEmail').textContent)}</text><text x="65" y="315" fill="#9299a5" font-family="Arial" font-size="20">MEMBER ID</text><text x="65" y="360" fill="#83ffb4" font-family="Arial" font-size="34" font-weight="bold">${esc($('ixCardId').textContent)}</text><text x="65" y="420" fill="white" font-family="Arial" font-size="23">PACKAGE: ${esc($('ixCardPackage').textContent)}</text><text x="930" y="435" fill="#83ffb4" font-family="Arial" font-size="65" font-weight="bold" text-anchor="middle">X</text></svg>`;const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='IRONX-ID-Card.svg';a.click();URL.revokeObjectURL(a.href);}
+function downloadCard(){
+  const name=$('ixCardName')?.textContent||'IRONX Member';
+  const email=$('ixCardEmail')?.textContent||'';
+  const id=$('ixCardId')?.textContent||'';
+  const pkg=$('ixCardPackage')?.textContent||'NOT SELECTED';
+  const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=600;
+  const ctx=canvas.getContext('2d');if(!ctx){setStatus('ixCardStatusMessage','Your browser could not create the JPG card.',true);return;}
+  const grad=ctx.createLinearGradient(0,0,1200,600);grad.addColorStop(0,'#111820');grad.addColorStop(1,'#030405');ctx.fillStyle=grad;ctx.fillRect(0,0,1200,600);
+  ctx.fillStyle='rgba(131,255,180,.08)';ctx.beginPath();ctx.arc(1080,70,250,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#83ffb4';ctx.font='bold 30px Arial';ctx.fillText('IRONX COACHING',70,85);
+  ctx.fillStyle='#ffffff';ctx.font='bold 58px Arial';ctx.fillText(name.slice(0,28),70,190);
+  ctx.fillStyle='#9299a5';ctx.font='30px Arial';ctx.fillText(email.slice(0,42),70,245);
+  ctx.fillStyle='#9299a5';ctx.font='24px Arial';ctx.fillText('MEMBER ID',70,365);
+  ctx.fillStyle='#83ffb4';ctx.font='bold 38px Arial';ctx.fillText(id.slice(0,30),70,415);
+  ctx.fillStyle='#ffffff';ctx.font='28px Arial';ctx.fillText('PACKAGE: '+pkg.slice(0,28),70,500);
+  ctx.fillStyle='#83ffb4';ctx.font='bold 88px Arial';ctx.fillText('X',1080,515);
+  canvas.toBlob(blob=>{if(!blob){setStatus('ixCardStatusMessage','JPG export failed. Try another browser.',true);return;}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='IRONX-ID-Card.jpg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);},'image/jpeg',0.94);
+}
+
+// Opens a clean print view for the selected plan. On mobile, choose "Save as PDF"
+// in the browser's print sheet to save a PDF copy without an external PDF service.
+function ironxPrintPlanPDF(sectionId,fileName){
+  const section=document.getElementById(sectionId);
+  if(!section){alert('Plan section is unavailable.');return;}
+  const printWindow=window.open('','_blank');
+  if(!printWindow){alert('Allow pop-ups for this site, then tap Download PDF again.');return;}
+  const clone=section.cloneNode(true);
+  clone.querySelectorAll('button,input,textarea,select,[data-no-print]').forEach(el=>el.remove());
+  const styles=Array.from(document.querySelectorAll('style,link[rel="stylesheet"]')).map(el=>el.outerHTML).join('\n');
+  const title=sectionId==='page-nutrition'?'IRONX Nutrition Plan':'IRONX Training Plan';
+  printWindow.document.open();
+  printWindow.document.write('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+title.replace(/[<>]/g,'')+'</title>'+styles+'<style>body{background:#fff!important;color:#111!important;padding:24px!important}*{color:#111!important;box-shadow:none!important;text-shadow:none!important}.glass,.plan-card,.nutrition-stat{background:#fff!important;border:1px solid #ddd!important;break-inside:avoid}.hidden{display:none!important}button{display:none!important}a{color:#111!important}@page{margin:14mm}</style></head><body></body></html>');
+  printWindow.document.body.appendChild(clone);
+  printWindow.document.close();
+  setTimeout(()=>{printWindow.focus();printWindow.print();},500);
+}
 function bind(){$('ixRedeemTrial')?.addEventListener('click',redeemTrial);$('ixTrialCode')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();redeemTrial();}});document.querySelectorAll('[data-choose-package]').forEach(b=>{if(b.dataset.ixBound)return;b.dataset.ixBound='1';b.addEventListener('click',()=>choosePackage(b.dataset.choosePackage));});$('ixUploadPhoto')?.addEventListener('click',uploadWeeklyPhoto);$('ixFoodSearch')?.addEventListener('click',searchFood);$('ixFoodQuery')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchFood();}});$('ixDownloadCard')?.addEventListener('click',downloadCard);$('ixFoodResults')?.addEventListener('click',e=>{const b=e.target.closest('[data-add-food]');if(!b)return;const n=b.dataset.addFood;const target=$('nutritionMeals')||$('nutritionMealEditor');if(target){const row=document.createElement('div');row.className='ix-food-result';row.textContent=n;target.appendChild(row);setStatus('ixFoodStatus','Food name added to the visible meal area. Check quantities and macros before saving.');}else{setStatus('ixFoodStatus','Food name: '+n);}});}
 function maybeShowPage(page){if(page!=='membership')return;if(!(typeof currentUser!=='undefined' && currentUser)){setStatus('ixCardStatusMessage','Sign in to generate your member card and manage your package.',true);return;}loadMembership();loadPhotos();}
 function installNavigation(){const old=window.showPage;if(typeof old==='function'&&!old.__ixMembershipWrapped){const wrapped=function(page){const out=old.apply(this,arguments);setTimeout(()=>maybeShowPage(page),60);return out;};wrapped.__ixMembershipWrapped=true;window.showPage=wrapped;}}
@@ -7566,8 +7587,5 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
-  <script src="/ironx-fix.js"></script>
-   <script src="/ironx-ui-fixes.js"></script>
-  
 </body>
 </html>
