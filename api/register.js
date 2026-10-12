@@ -1,6 +1,29 @@
-const URL=process.env.SUPABASE_URL||'https://uibzmqioeumuhczljolu.supabase.co';
-const KEY=process.env.SUPABASE_SERVICE_ROLE_KEY||process.env.SUPABASE_SECRET_KEY;
-const PUB=process.env.SUPABASE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||'sb_publishable_rSRn52GyErhIZbjGicxfYw_3myRbrbx';
-const out=(res,n,v)=>res.status(n).setHeader('Cache-Control','no-store').json(v);
-async function sb(path,opts={}){if(!KEY)throw Error('Missing SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables.');const r=await fetch(URL+path,{...opts,headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',...(opts.headers||{})}});const j=await r.json().catch(()=>null);if(!r.ok){const e=Error(j?.msg||j?.message||j?.error_description||j?.error||'Supabase request failed');e.status=r.status;throw e;}return j;}
-module.exports=async(req,res)=>{if(req.method!=='POST')return out(res,405,{error:'Method not allowed'});let uid=null;try{const b=req.body||{},name=String(b.name||'').trim().slice(0,100),email=String(b.email||'').trim().toLowerCase(),password=b.password,code=String(b.code||'').trim().toUpperCase();if(name.length<2)return out(res,400,{error:'Enter your full name.'});if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return out(res,400,{error:'Enter a valid email.'});if(typeof password!=='string'||password.length<8)return out(res,400,{error:'Password must be at least 8 characters.'});if(!/^IX-[A-Z0-9]{5}-[A-Z0-9]{5}$/.test(code))return out(res,400,{error:'Enter a valid activation code.'});const now=new Date().toISOString();const found=await sb('/rest/v1/ironx_verification_codes?code=eq.'+encodeURIComponent(code)+'&used_at=is.null&expires_at=gt.'+encodeURIComponent(now)+'&select=id&limit=1');const row=Array.isArray(found)?found[0]:null;if(!row)return out(res,400,{error:'Code invalid, expired, or already used. Ask the coach for a fresh code.'});const user=await sb('/auth/v1/admin/users',{method:'POST',body:JSON.stringify({email,password,email_confirm:true,user_metadata:{full_name:name}})});uid=user.id;if(!uid)throw Error('Supabase did not return a user id.');await sb('/rest/v1/profiles?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({id:uid,full_name:name,role:'client'})});const login=await fetch(URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:PUB,Authorization:'Bearer '+PUB,'Content-Type':'application/json'},body:JSON.stringify({email,password})});const session=await login.json().catch(()=>null);if(!login.ok)throw Error(session?.msg||session?.message||session?.error_description||'Could not start the new session.');const claim=await sb('/rest/v1/ironx_verification_codes?id=eq.'+row.id+'&used_at=is.null&expires_at=gt.'+encodeURIComponent(new Date().toISOString()),{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({used_at:new Date().toISOString(),used_email:email})});if(!Array.isArray(claim)||!claim.length)throw Object.assign(Error('Code was just used by another signup. Ask the coach for a new code.'),{status:409});return out(res,200,{access_token:session.access_token,refresh_token:session.refresh_token,user:session.user});}catch(e){if(uid){try{await sb('/auth/v1/admin/users/'+encodeURIComponent(uid),{method:'DELETE'});}catch(_){}}const m=String(e.message||'Registration failed.');return out(res,e.status&&e.status<500?e.status:500,{error:/already registered|already been registered/i.test(m)?'This email already has an account. Sign in instead.':m});}};
+const { URL, PUB, send, admin } = require('../lib/supabase-admin');
+module.exports = async (req,res) => {
+  if (req.method !== 'POST') return send(res,405,{error:'METHOD_NOT_ALLOWED'});
+  let createdId = null;
+  try {
+    const b=req.body||{}, name=String(b.name||'').trim().slice(0,100), email=String(b.email||'').trim().toLowerCase(), password=b.password, code=String(b.code||'').trim().toUpperCase();
+    if(name.length<2) return send(res,400,{error:'اكتب اسمك الكامل.'});
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return send(res,400,{error:'البريد الإلكتروني غير صحيح.'});
+    if(typeof password!=='string'||password.length<8) return send(res,400,{error:'كلمة المرور لازم تكون 8 أحرف على الأقل.'});
+    if(!/^IX-[A-Z0-9]{5}-[A-Z0-9]{5}$/.test(code)) return send(res,400,{error:'اكتب كود التفعيل الذي أعطاه لك الكوتش.'});
+    const now=new Date().toISOString();
+    const found=await admin('/rest/v1/ironx_verification_codes?code=eq.'+encodeURIComponent(code)+'&used_at=is.null&expires_at=gt.'+encodeURIComponent(now)+'&select=id&limit=1');
+    const row=Array.isArray(found)?found[0]:null;
+    if(!row) return send(res,400,{error:'كود التفعيل غير صحيح أو انتهت صلاحيته أو استُخدم من قبل.'});
+    const user=await admin('/auth/v1/admin/users',{method:'POST',body:JSON.stringify({email,password,email_confirm:true,user_metadata:{full_name:name}})});
+    createdId=user.id; if(!createdId) throw new Error('Supabase did not return a user id.');
+    await admin('/rest/v1/profiles?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({id:createdId,full_name:name,role:'client'})});
+    const login=await fetch(URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:PUB,Authorization:'Bearer '+PUB,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const session=await login.json().catch(()=>null);
+    if(!login.ok) throw new Error(session?.msg||session?.message||session?.error_description||'تم إنشاء الحساب لكن تعذر بدء الجلسة. جرّب تسجيل الدخول.');
+    const claimed=await admin('/rest/v1/ironx_verification_codes?id=eq.'+row.id+'&used_at=is.null&expires_at=gt.'+encodeURIComponent(new Date().toISOString()),{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({used_at:new Date().toISOString(),used_email:email})});
+    if(!Array.isArray(claimed)||!claimed.length) throw Object.assign(new Error('كود التفعيل اتستخدم في نفس اللحظة. اطلب كودًا جديدًا.'),{status:409});
+    return send(res,200,{access_token:session.access_token,refresh_token:session.refresh_token,user:session.user});
+  } catch(e) {
+    if(createdId) { try { await admin('/auth/v1/admin/users/'+encodeURIComponent(createdId),{method:'DELETE'}); } catch(_){} }
+    const m=String(e.message||'Registration failed');
+    return send(res,e.status&&e.status<500?e.status:500,{error:/already registered|already been registered/i.test(m)?'البريد ده عليه حساب بالفعل. سجّل دخول بدل إنشاء حساب جديد.':m});
+  }
+};
