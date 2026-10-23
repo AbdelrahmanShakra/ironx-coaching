@@ -1,0 +1,9 @@
+{
+  "name": "ironx-memberships-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static bilingual IRONX memberships, WhatsApp contact and InstaPay information site.",
+  "scripts": {
+    "test": "node --test tests/site.test.cjs"
+  }
+}
