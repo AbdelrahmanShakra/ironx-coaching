@@ -1,9 +1,0 @@
-{
-  "name": "ironx-whatsapp-site",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Mobile-first bilingual IRONX fitness coaching landing page. All contact happens via WhatsApp.",
-  "scripts": {
-    "test": "node --test tests/site.test.cjs"
-  }
-}
