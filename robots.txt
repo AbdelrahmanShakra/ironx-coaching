@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://ironx-coaching.vercel.app/sitemap.xml
