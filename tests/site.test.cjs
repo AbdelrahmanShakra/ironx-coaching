@@ -1,0 +1,12 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.join(__dirname, '..');
+const read = p => fs.readFileSync(path.join(root, p), 'utf8');
+test('static site required files exist', () => { for (const p of ['index.html','assets/styles.css','assets/app.js','assets/favicon.svg','vercel.json']) assert.ok(fs.existsSync(path.join(root,p)), `${p} exists`); });
+test('membership page includes training, combined and nutrition plans', () => { const html=read('index.html'); for(const s of ['trainingTitle','completeTitle','nutritionTitle','plans']) assert.ok(html.includes(s), `${s} exists`); });
+test('WhatsApp number and wa.me links use international number', () => { const html=read('index.html'); assert.ok(html.includes('wa.me/201112492372')); assert.ok(html.includes('01112492372')); });
+test('InstaPay number and copy control exist', () => { const html=read('index.html'), js=read('assets/app.js'); assert.ok(html.includes('01004876868')); assert.ok(html.includes('id="copyInsta"')); assert.ok(js.includes("const number = '01004876868'")); });
+test('bilingual toggle and responsive/mobile CSS exist', () => { const html=read('index.html'), css=read('assets/styles.css'), js=read('assets/app.js'); assert.ok(html.includes('id="lang"')); assert.ok(js.includes("currentLang === 'ar' ? 'en' : 'ar'")); assert.ok(css.includes('@media(max-width:680px)')); });
+test('no backend or database dependencies are included', () => { const pkg=JSON.parse(read('package.json')); assert.deepEqual(Object.keys(pkg).sort(), ['description','name','private','scripts','version'].sort()); assert.ok(!fs.existsSync(path.join(root,'server.js'))); assert.ok(!fs.existsSync(path.join(root,'api'))); assert.ok(!read('vercel.json').includes('/api/')); });
