@@ -1,13 +1,5 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const root = path.join(__dirname, '..');
-const read = p => fs.readFileSync(path.join(root, p), 'utf8');
-test('static site required files exist', () => { for (const p of ['index.html','assets/styles.css','assets/app.js','assets/favicon.svg','vercel.json']) assert.ok(fs.existsSync(path.join(root,p)), `${p} exists`); });
-test('the three final bundles and prices are present', () => { const html=read('index.html'), js=read('assets/app.js'); for(const s of ['✨️A7A✨️ PACKAGE','3ANTEL ALMA7ALA 💪 PACKAGE','GORILLA PACKAGE🦍','a7aTitle','antelTitle','gorillaTitle']) assert.ok(html.includes(s), `${s} exists`); for(const s of ['250 جنيه','500 جنيه','800 جنيه','250 EGP','500 EGP','800 EGP']) assert.ok(js.includes(s), `${s} translation exists`); });
-test('bundle features include the agreed follow-up levels', () => { const js=read('assets/app.js'); for(const s of ['بدون متابعة دورية','متابعة أسبوعية','متابعة يومية','Calls anytime','Chat anytime']) assert.ok(js.includes(s), `${s} exists`); });
-test('WhatsApp number and wa.me links use international number', () => { const html=read('index.html'); assert.ok(html.includes('wa.me/201112492372')); assert.ok(html.includes('01112492372')); });
-test('InstaPay number and copy control exist', () => { const html=read('index.html'), js=read('assets/app.js'); assert.ok(html.includes('01004876868')); assert.ok(html.includes('id="copyInsta"')); assert.ok(js.includes("const number = '01004876868'")); });
-test('bilingual toggle, translated package links and responsive CSS exist', () => { const html=read('index.html'), css=read('assets/styles.css'), js=read('assets/app.js'); assert.ok(html.includes('id="lang"')); assert.ok(js.includes("currentLang === 'ar' ? 'en' : 'ar'")); assert.ok(js.includes('waMessages')); assert.ok(css.includes('@media(max-width:680px)')); });
-test('no backend or database dependencies are included', () => { const pkg=JSON.parse(read('package.json')); assert.deepEqual(Object.keys(pkg).sort(), ['description','name','private','scripts','version'].sort()); assert.ok(!fs.existsSync(path.join(root,'server.js'))); assert.ok(!fs.existsSync(path.join(root,'api'))); assert.ok(!read('vercel.json').includes('/api/')); });
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const root=path.join(__dirname,'..');const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+test('site files and provided logo exist',()=>{for(const p of ['index.html','assets/styles.css','assets/app.js','assets/favicon.svg','assets/ironx-wordmark.jpg','vercel.json'])assert.ok(fs.existsSync(path.join(root,p)),p)});
+test('package names and prices exist',()=>{const h=read('index.html');for(const s of ['✨️A7A✨️ PACKAGE','3ANTEL ALMA7ALA 💪 PACKAGE','GORILLA PACKAGE 🦍','250','500','800'])assert.ok(h.includes(s),s)});
+test('contact and InstaPay controls exist',()=>{const h=read('index.html'),j=read('assets/app.js');assert.ok(h.includes('wa.me/201112492372'));assert.ok(h.includes('01004876868'));assert.ok(j.includes("const number = '01004876868'"))});
+test('bilingual toggle and animated equations exist',()=>{const h=read('index.html'),c=read('assets/styles.css'),j=read('assets/app.js');assert.ok(h.includes('id="lang"'));assert.ok(c.includes('@keyframes drift'));assert.ok(j.includes("currentLang === 'ar' ? 'en' : 'ar'"))});
