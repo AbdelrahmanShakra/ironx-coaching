@@ -1,49 +1,25 @@
 (() => {
-  const langButton = document.getElementById('lang');
-  let currentLang = 'ar';
-  const waMessages = {
-    A7A: { ar: 'أهلاً IRONX، عايز أعرف تفاصيل باقة A7A PACKAGE.', en: 'Hi IRONX, I would like details about the A7A PACKAGE.' },
-    '3ANTEL ALMA7ALA': { ar: 'أهلاً IRONX، عايز أعرف تفاصيل باقة 3ANTEL ALMA7ALA PACKAGE.', en: 'Hi IRONX, I would like details about the 3ANTEL ALMA7ALA PACKAGE.' },
-    GORILLA: { ar: 'أهلاً IRONX، عايز أعرف تفاصيل باقة GORILLA PACKAGE.', en: 'Hi IRONX, I would like details about the GORILLA PACKAGE.' }
+  const langBtn=document.getElementById('lang');
+  let lang='en';
+  const messages={
+    'A7A':{en:'Hi IRONX, I want to ask about the A7A PACKAGE.',ar:'أهلاً IRONX، عايز أستفسر عن باقة A7A.'},
+    '3ANTEL ALMA7ALA':{en:'Hi IRONX, I want to ask about the 3ANTEL ALMA7ALA PACKAGE.',ar:'أهلاً IRONX، عايز أستفسر عن باقة 3ANTEL ALMA7ALA.'},
+    'GORILLA':{en:'Hi IRONX, I want to ask about the GORILLA PACKAGE.',ar:'أهلاً IRONX، عايز أستفسر عن باقة GORILLA.'}
   };
-  function setLanguage(lang) {
-    currentLang = lang;
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.querySelectorAll('[data-ar][data-en]').forEach(el => {
-      const val = el.dataset[lang];
-      if (val !== undefined) el.innerHTML = val;
-    });
-    langButton.textContent = lang === 'ar' ? 'EN' : 'عربي';
-    document.title = lang === 'ar' ? 'IRONX | الاشتراكات' : 'IRONX | Memberships';
-    document.querySelectorAll('.plan-link').forEach(link => {
-      const plan = link.dataset.plan;
-      const message = encodeURIComponent(waMessages[plan][lang]);
-      link.href = `https://wa.me/201112492372?text=${message}`;
-    });
+  function setLang(next){
+    lang=next;document.documentElement.lang=next;document.documentElement.dir=next==='ar'?'rtl':'ltr';
+    document.querySelectorAll('[data-en][data-ar]').forEach(el=>{el.innerHTML=el.dataset[next]});
+    langBtn.textContent=next==='en'?'عربي':'EN';
+    document.querySelectorAll('[data-plan]').forEach(a=>{a.href='https://wa.me/201112492372?text='+encodeURIComponent(messages[a.dataset.plan][next])});
+    document.title=next==='en'?'IRONX — Built With Intent':'IRONX — بهدف واضح';
   }
-  langButton.addEventListener('click', () => setLanguage(currentLang === 'ar' ? 'en' : 'ar'));
-  document.getElementById('copyInsta').addEventListener('click', async () => {
-    const number = '01004876868';
-    const button = document.getElementById('copyInsta');
-    try {
-      await navigator.clipboard.writeText(number);
-      button.textContent = currentLang === 'ar' ? 'تم نسخ الرقم' : 'Number copied';
-    } catch {
-      const field = document.createElement('textarea');
-      field.value = number;
-      field.style.position = 'fixed';
-      field.style.opacity = '0';
-      document.body.appendChild(field);
-      field.select();
-      document.execCommand('copy');
-      field.remove();
-      button.textContent = currentLang === 'ar' ? 'تم نسخ الرقم' : 'Number copied';
-    }
-    setTimeout(() => {
-      button.textContent = currentLang === 'ar' ? 'انسخ الرقم' : 'Copy number';
-    }, 1800);
+  langBtn.addEventListener('click',()=>setLang(lang==='en'?'ar':'en'));
+  document.getElementById('copyInsta').addEventListener('click',async()=>{
+    const btn=document.getElementById('copyInsta');
+    try{await navigator.clipboard.writeText('01004876868')}catch(e){const x=document.createElement('textarea');x.value='01004876868';document.body.appendChild(x);x.select();document.execCommand('copy');x.remove()}
+    btn.textContent=lang==='en'?'Copied':'تم النسخ';
+    setTimeout(()=>btn.textContent=lang==='en'?'Copy number':'انسخ الرقم',1500);
   });
-  document.getElementById('year').textContent = new Date().getFullYear();
-  setLanguage('ar');
+  document.getElementById('year').textContent=new Date().getFullYear();
+  setLang('en');
 })();
