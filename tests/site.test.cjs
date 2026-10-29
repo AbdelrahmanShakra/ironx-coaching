@@ -1,5 +1,5 @@
 const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const r=path.join(__dirname,'..');const read=p=>fs.readFileSync(path.join(r,p),'utf8');
-test('main assets exist',()=>{for(const p of ['index.html','assets/styles.css','assets/app.js','assets/favicon.svg','vercel.json'])assert.ok(fs.existsSync(path.join(r,p)),p)});
-test('membership prices and contact details are present',()=>{const h=read('index.html');for(const s of ['A7A PACKAGE','3ANTEL ALMA7ALA','GORILLA PACKAGE','250','500','800','01004876868','wa.me/201112492372'])assert.ok(h.includes(s),s)});
+test('main assets exist',()=>{for(const p of ['index.html','assets/styles.css','assets/app.js','assets/favicon.svg','vercel.json','assets/ironx-space-background.mp4'])assert.ok(fs.existsSync(path.join(r,p)),p)});
+test('membership prices and contact details are present',()=>{const h=read('index.html');for(const s of ['A7A PACKAGE','3ANTEL ALMA7ALA','GORILLA PACKAGE','250','500','800','01004876868','wa.me/201112492372','HOW IT WORKS','GOOD TO KNOW','EARN YOUR'])assert.ok(h.includes(s),s)});
 test('glass design and mobile responsive rules exist',()=>{const c=read('assets/styles.css');assert.ok(c.includes('backdrop-filter:blur'));assert.ok(c.includes('@media(max-width:680px)'));assert.ok(c.includes('prefers-reduced-motion'))});
 test('language and interaction logic exist',()=>{const j=read('assets/app.js');assert.ok(j.includes('setLang'));assert.ok(j.includes('clipboard.writeText'));assert.ok(j.includes('data-plan'))});
