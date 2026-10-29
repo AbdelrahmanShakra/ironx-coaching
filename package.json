@@ -1,8 +1,7 @@
 {
-  "name": "ironx-memberships-static",
-  "version": "1.1.0",
+  "name": "ironx-liquid-glass-refresh",
+  "version": "1.0.0",
   "private": true,
-  "description": "Static bilingual IRONX membership landing page",
   "scripts": {
     "test": "node --test tests/site.test.cjs"
   }

@@ -1,72 +1,59 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#050806">
-  <meta name="description" content="IRONX اشتراكات التدريب والتغذية والمتابعة. تواصل واطلب اشتراكك عبر واتساب.">
-  <title>IRONX | Strength Coaching</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/styles.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060907"><meta name="description" content="IRONX online strength coaching memberships.">
+<title>IRONX — Built With Intent</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <div class="video-background" aria-hidden="true">
-    <video id="ironx-video-bg" autoplay muted loop playsinline preload="metadata" poster="assets/ironx-equations-background.png">
-      <source src="assets/ironx-space-background.mp4" type="video/mp4">
-    </video>
+<div class="ambient" aria-hidden="true"></div>
+<div class="equation-layer" aria-hidden="true"></div>
+<video class="space-bg" autoplay muted loop playsinline preload="metadata" poster="assets/ironx-equations-background.png">
+  <source src="assets/ironx-space-background.mp4" type="video/mp4">
+</video>
+<div class="page-shade" aria-hidden="true"></div>
+<header class="nav glass">
+  <a class="brand" href="#home" aria-label="IRONX home"><span class="brand-x">X</span><span class="brand-word">IRON<span>X</span><small>STRENGTH COACHING</small></span></a>
+  <nav><a href="#plans" data-en="Memberships" data-ar="الباقات">Memberships</a><a href="#method" data-en="The method" data-ar="المنهج">The method</a><a href="#payment" data-en="Payment" data-ar="الدفع">Payment</a></nav>
+  <div class="nav-actions"><button id="lang" class="lang glass-inset" type="button">عربي</button><a class="button button-solid" href="https://wa.me/201112492372" data-en="Join IRONX ↗" data-ar="اشترك مع IRONX ↗">Join IRONX ↗</a></div>
+</header>
+<main>
+<section class="hero wrap" id="home">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="status-dot"></span> ONLINE COACHING / EST. IRONX</div>
+    <p class="hero-overline" data-en="Training is a system. Not a guess." data-ar="التدريب نظام. مش تخمين.">Training is a system. Not a guess.</p>
+    <h1>BUILT WITH<br><span>INTENT.</span></h1>
+    <p class="hero-desc" data-en="A focused approach to training, nutrition and accountability. Choose your level, define your goal, and take the next step." data-ar="طريقة منظمة للتدريب والتغذية والمتابعة. اختار مستوى الخدمة، وحدد هدفك، وخد خطوتك الجاية.">A focused approach to training, nutrition and accountability. Choose your level, define your goal, and take the next step.</p>
+    <div class="hero-actions"><a class="button button-solid large" href="#plans" data-en="Explore memberships ↘" data-ar="اكتشف الباقات ↘">Explore memberships ↘</a><a class="button button-glass large" href="https://wa.me/201112492372" data-en="Talk on WhatsApp" data-ar="تواصل على واتساب">Talk on WhatsApp</a></div>
+    <div class="hero-foot"><span class="live-pill"><i></i> BUILT AROUND YOUR GOAL</span><span class="foot-line"></span><span>01 — 03</span></div>
   </div>
-  <div class="equations" aria-hidden="true">
-    <span>f(x) = ax² + bx + c</span><span>Σ F = ma</span><span>∫ f(x) dx</span>
-    <span>√(a² + b²)</span><span>Δx / Δt</span><span>1RM = weight × reps</span>
-    <span>RPE = effort / capacity</span><span>∑ volume = sets × reps</span>
+  <div class="hero-art">
+    <div class="art-halo"></div><div class="art-glass glass">
+      <div class="art-top"><span>IRONX / SYSTEM 001</span><span>FIG. 01</span></div>
+      <div class="art-logo-wrap"><img src="assets/ironx-wordmark.jpg" alt="IRONX metallic wordmark"></div>
+      <div class="art-bottom"><div><small>THE PRINCIPLE</small><b>CONSISTENCY<br>OVER CHAOS.</b></div><span class="art-axis">IX—01</span></div>
+    </div>
+    <div class="floating-chip chip-a glass"><span class="chip-dot"></span><span>PLAN WITH PURPOSE</span></div>
+    <div class="floating-chip chip-b glass"><span class="chip-number">X</span><span>STRENGTH<br>IS A PRACTICE</span></div>
   </div>
-  <header class="topbar glass">
-    <a class="brand" href="#home" aria-label="IRONX home">
-      <span class="brand-mark">X</span><span class="brand-name">IRON<span>X</span><small>STRENGTH COACHING</small></span>
-    </a>
-    <nav><a href="#plans" data-ar="الاشتراكات" data-en="Memberships">الاشتراكات</a><a href="#details" data-ar="مميزات الاشتراك" data-en="What's included">مميزات الاشتراك</a><a href="#payment" data-ar="الدفع" data-en="Payment">الدفع</a></nav>
-    <div class="actions"><button id="lang" class="lang" type="button">EN</button><a class="button button-main" href="https://wa.me/201112492372" data-ar="اشترك الآن" data-en="Join now">اشترك الآن</a></div>
-  </header>
-
-  <main id="home">
-    <section class="hero wrap">
-      <div class="hero-copy">
-        <p class="eyebrow"><i></i> IRONX MEMBERSHIPS</p>
-        <p class="kicker" data-ar="خطة واضحة. متابعة مباشرة. بدون تعقيد." data-en="A clear plan. Direct coaching. No noise.">خطة واضحة. متابعة مباشرة. بدون تعقيد.</p>
-        <h1 data-ar="اختار اشتراكك.<br><em>وابدأ تبني مستواك.</em>" data-en="Choose your plan.<br><em>Build your strength.</em>">اختار اشتراكك.<br><em>وابدأ تبني مستواك.</em></h1>
-        <p class="hero-desc" data-ar="تدريب وتغذية ومتابعة حسب هدفك واحتياجاتك. تفاصيل الباقة والسعر بتتأكد مباشرة معانا على واتساب قبل الاشتراك." data-en="Training, nutrition and follow-up tailored to your goals. Confirm plan details and pricing with us on WhatsApp before joining.">تدريب وتغذية ومتابعة حسب هدفك واحتياجاتك. تفاصيل الباقة والسعر بتتأكد مباشرة معانا على واتساب قبل الاشتراك.</p>
-        <div class="hero-buttons"><a class="button button-main button-large" href="https://wa.me/201112492372" data-ar="اعرف الباقات على واتساب ↗" data-en="Ask about plans on WhatsApp ↗">اعرف الباقات على واتساب ↗</a><a class="text-link" href="#plans" data-ar="شوف الاشتراكات ↓" data-en="Explore memberships ↓">شوف الاشتراكات ↓</a></div>
-        <p class="hero-note"><span class="pulse"></span><span data-ar="التواصل والاشتراك من خلال واتساب فقط" data-en="Contact and membership through WhatsApp only">التواصل والاشتراك من خلال واتساب فقط</span></p>
-      </div>
-      <div class="hero-visual">
-        <div class="logo-frame"><img src="assets/ironx-wordmark.jpg" alt="IRONX wordmark" class="wordmark"></div>
-        <div class="visual-caption"><b>IRONX</b><span>BUILT WITH INTENT</span></div>
-      </div>
-    </section>
-
-    <div class="quick wrap"><div><b>01</b><span data-ar="تدريب منظم" data-en="Structured training">تدريب منظم</span></div><div><b>02</b><span data-ar="تغذية مناسبة" data-en="Goal-based nutrition">تغذية مناسبة</span></div><div><b>03</b><span data-ar="متابعة حسب الباقة" data-en="Follow-up by plan">متابعة حسب الباقة</span></div></div>
-
-    <section id="plans" class="section wrap">
-      <div class="section-head"><div><p class="eyebrow"><i></i> MEMBERSHIPS</p><h2 data-ar="اختار مستوى <em>متابعتك</em>" data-en="Choose your <em>coaching level</em>">اختار مستوى <em>متابعتك</em></h2></div><p data-ar="قارن بين الباقات، وبعدها تواصل معانا لتأكيد التفاصيل قبل الدفع." data-en="Compare the plans, then contact us to confirm details before payment.">قارن بين الباقات، وبعدها تواصل معانا لتأكيد التفاصيل قبل الدفع.</p></div>
-      <div class="plans-grid">
-        <article class="plan glass"><div class="plan-top"><span>01 / START</span><span class="plan-icon">↗</span></div><div class="plan-symbol barbell"><i></i><b></b><i></i></div><h3>✨️A7A✨️ PACKAGE</h3><p class="plan-desc" data-ar="بداية منظمة بخطة تدريب وتغذية." data-en="A structured starting point for training and nutrition.">بداية منظمة بخطة تدريب وتغذية.</p><div class="price"><strong>250 <small>EGP</small></strong><span data-ar="السعر النهائي يتأكد على واتساب" data-en="Confirm final price on WhatsApp">السعر النهائي يتأكد على واتساب</span></div><ul><li data-ar="خطة تدريب مناسبة لهدفك" data-en="Goal-based training plan">خطة تدريب مناسبة لهدفك</li><li data-ar="توجيهات تغذية" data-en="Nutrition guidance">توجيهات تغذية</li><li data-ar="بدون متابعة دورية" data-en="No routine follow-up">بدون متابعة دورية</li></ul><a class="button button-outline plan-link" data-plan="A7A" href="https://wa.me/201112492372">اطلب الباقة على واتساب</a></article>
-        <article class="plan glass featured"><div class="featured-label" data-ar="اختيار متوازن" data-en="Balanced choice">اختيار متوازن</div><div class="plan-top"><span>02 / PROGRESS</span><span class="plan-icon">↗</span></div><div class="plan-symbol rings"><i></i><i></i><i></i></div><h3>3ANTEL ALMA7ALA 💪 PACKAGE</h3><p class="plan-desc" data-ar="خطة مع متابعة أسبوعية لتقييم تقدمك." data-en="A plan with weekly check-ins to review progress.">خطة مع متابعة أسبوعية لتقييم تقدمك.</p><div class="price"><strong>500 <small>EGP</small></strong><span data-ar="السعر النهائي يتأكد على واتساب" data-en="Confirm final price on WhatsApp">السعر النهائي يتأكد على واتساب</span></div><ul><li data-ar="خطة تدريب وتغذية" data-en="Training and nutrition plan">خطة تدريب وتغذية</li><li data-ar="متابعة أسبوعية" data-en="Weekly follow-up">متابعة أسبوعية</li><li data-ar="تعديلات حسب التقدم" data-en="Adjustments based on progress">تعديلات حسب التقدم</li></ul><a class="button button-main plan-link" data-plan="3ANTEL ALMA7ALA" href="https://wa.me/201112492372">اطلب الباقة على واتساب</a></article>
-        <article class="plan glass"><div class="plan-top"><span>03 / ELITE</span><span class="plan-icon">↗</span></div><div class="plan-symbol orbit"><i></i><i></i></div><h3>GORILLA PACKAGE 🦍</h3><p class="plan-desc" data-ar="متابعة أقرب وتواصل مستمر حسب الاتفاق." data-en="Closer follow-up and ongoing contact as agreed.">متابعة أقرب وتواصل مستمر حسب الاتفاق.</p><div class="price"><strong>800 <small>EGP</small></strong><span data-ar="السعر النهائي يتأكد على واتساب" data-en="Confirm final price on WhatsApp">السعر النهائي يتأكد على واتساب</span></div><ul><li data-ar="خطة تدريب وتغذية" data-en="Training and nutrition plan">خطة تدريب وتغذية</li><li data-ar="متابعة يومية" data-en="Daily follow-up">متابعة يومية</li><li data-ar="تواصل مباشر حسب الاتفاق" data-en="Direct contact as agreed">تواصل مباشر حسب الاتفاق</li></ul><a class="button button-outline plan-link" data-plan="GORILLA" href="https://wa.me/201112492372">اطلب الباقة على واتساب</a></article>
-      </div>
-      <p class="fine-print" data-ar="الأسعار والتفاصيل المعروضة قابلة للتأكيد قبل الاشتراك. تواصل على واتساب لمعرفة كل الشروط." data-en="Prices and details should be confirmed before subscribing. Contact us on WhatsApp for full terms.">الأسعار والتفاصيل المعروضة قابلة للتأكيد قبل الاشتراك. تواصل على واتساب لمعرفة كل الشروط.</p>
-    </section>
-
-    <section id="details" class="section wrap">
-      <div class="details-panel glass"><div><p class="eyebrow"><i></i> THE IRONX METHOD</p><h2 data-ar="شغل محسوب.<br><em>وتقدم تقدر تتابعه.</em>" data-en="Training with intent.<br><em>Progress you can track.</em>">شغل محسوب.<br><em>وتقدم تقدر تتابعه.</em></h2><p data-ar="كل باقة بتوضح لك مستوى الخطة والمتابعة. اتفق على تفاصيل هدفك وجدولك قبل بدء الاشتراك." data-en="Each plan defines its level of planning and follow-up. Discuss your goals and schedule before starting.">كل باقة بتوضح لك مستوى الخطة والمتابعة. اتفق على تفاصيل هدفك وجدولك قبل بدء الاشتراك.</p></div><div class="check-list"><div><b>01</b><span data-ar="تحديد الهدف ومستوى التدريب" data-en="Define goals and training level">تحديد الهدف ومستوى التدريب</span></div><div><b>02</b><span data-ar="اختيار الباقة المناسبة" data-en="Choose the right plan">اختيار الباقة المناسبة</span></div><div><b>03</b><span data-ar="تأكيد التفاصيل على واتساب" data-en="Confirm details on WhatsApp">تأكيد التفاصيل على واتساب</span></div></div></div>
-    </section>
-
-    <section id="payment" class="section wrap">
-      <div class="section-head"><div><p class="eyebrow"><i></i> PAYMENT</p><h2 data-ar="الدفع <em>والتأكيد</em>" data-en="Payment & <em>confirmation</em>">الدفع <em>والتأكيد</em></h2></div><p data-ar="تواصل الأول لتأكيد الباقة، وبعدها استخدم بيانات InstaPay." data-en="Confirm your plan first, then use the InstaPay details below.">تواصل الأول لتأكيد الباقة، وبعدها استخدم بيانات InstaPay.</p></div>
-      <div class="payment-card glass"><div><span class="payment-label">INSTAPAY</span><h3>01004876868</h3><p data-ar="حوّل بعد تأكيد الاشتراك على واتساب." data-en="Transfer only after confirming your subscription on WhatsApp.">حوّل بعد تأكيد الاشتراك على واتساب.</p></div><button class="button button-outline" id="copyInsta" type="button" data-ar="انسخ الرقم" data-en="Copy number">انسخ الرقم</button></div>
-    </section>
-    <section class="bottom-cta wrap"><div class="cta-inner"><p class="eyebrow"><i></i> START WITH IRONX</p><h2 data-ar="جاهز تبدأ؟ <em>اختار خطتك.</em>" data-en="Ready to start? <em>Choose your plan.</em>">جاهز تبدأ؟ <em>اختار خطتك.</em></h2><a class="button button-main button-large" href="https://wa.me/201112492372" data-ar="تواصل على واتساب ↗" data-en="Contact on WhatsApp ↗">تواصل على واتساب ↗</a></div></section>
-  </main>
-  <footer class="footer wrap"><a class="brand" href="#home"><span class="brand-mark">X</span><span class="brand-name">IRON<span>X</span><small>STRENGTH COACHING</small></span></a><span>© <span id="year"></span> IRONX. <span data-ar="كل الحقوق محفوظة." data-en="All rights reserved.">كل الحقوق محفوظة.</span></span></footer>
-  <script src="assets/app.js"></script>
-</body>
-</html>
+</section>
+<div class="ticker"><div class="ticker-track"><span>DISCIPLINE / DIRECTION / PROGRESS /</span><span>DISCIPLINE / DIRECTION / PROGRESS /</span><span>DISCIPLINE / DIRECTION / PROGRESS /</span></div></div>
+<section class="manifesto wrap" id="method">
+  <div class="section-index"><span>01</span><i></i><span data-en="THE METHOD" data-ar="المنهج">THE METHOD</span></div>
+  <div class="manifesto-grid"><h2 data-en="Less noise.<br><em>More intent.</em>" data-ar="ضوضاء أقل.<br><em>هدف أوضح.</em>">Less noise.<br><em>More intent.</em></h2><div class="manifesto-copy"><p data-en="Your training should have a reason behind it. IRONX brings training structure, nutrition guidance and follow-up together in a clear plan." data-ar="كل خطوة في تدريبك لازم يكون ليها سبب. IRONX بيجمع تنظيم التدريب وتوجيهات التغذية والمتابعة في خطة واضحة.">Your training should have a reason behind it. IRONX brings training structure, nutrition guidance and follow-up together in a clear plan.</p><div class="principles"><div><b>01</b><span data-en="A plan built around your goal" data-ar="خطة مناسبة لهدفك">A plan built around your goal</span><i>↗</i></div><div><b>02</b><span data-en="Nutrition guidance" data-ar="توجيهات تغذية">Nutrition guidance</span><i>↗</i></div><div><b>03</b><span data-en="Follow-up that fits your plan" data-ar="متابعة حسب باقتك">Follow-up that fits your plan</span><i>↗</i></div></div></div></div>
+</section>
+<section id="plans" class="plans-section">
+  <div class="wrap"><div class="section-heading"><div><div class="section-index"><span>02</span><i></i><span data-en="MEMBERSHIPS" data-ar="الباقات">MEMBERSHIPS</span></div><h2 data-en="Choose your <em>level.</em>" data-ar="اختار <em>مستواك.</em>">Choose your <em>level.</em></h2></div><p data-en="Three ways to get started. Compare the level of planning and follow-up, then confirm the details with us." data-ar="تلات طرق تبدأ بيهم. قارن مستوى التخطيط والمتابعة، وبعدها أكد التفاصيل معانا.">Three ways to get started. Compare the level of planning and follow-up, then confirm the details with us.</p></div>
+  <div class="plans-grid">
+    <article class="plan glass"><div class="plan-head"><span>PLAN / 01</span><span class="plan-mark">↗</span></div><div class="plan-graphic graphic-a"><span></span><i></i><span></span></div><div class="plan-name-row"><h3>A7A PACKAGE</h3><span>START</span></div><p class="plan-desc" data-en="A clear starting point for your training and nutrition." data-ar="بداية واضحة لتنظيم التدريب والتغذية.">A clear starting point for your training and nutrition.</p><div class="price"><strong>250</strong><span>EGP</span><small data-en="Confirm details on WhatsApp" data-ar="أكد التفاصيل على واتساب">Confirm details on WhatsApp</small></div><ul><li data-en="Training plan" data-ar="خطة تدريب">Training plan</li><li data-en="Nutrition guidance" data-ar="توجيهات تغذية">Nutrition guidance</li><li data-en="No routine follow-up" data-ar="بدون متابعة دورية">No routine follow-up</li></ul><a class="button button-glass plan-cta" data-plan="A7A" href="https://wa.me/201112492372" data-en="Ask about this plan ↗" data-ar="استفسر عن الباقة ↗">Ask about this plan ↗</a></article>
+    <article class="plan featured glass"><div class="popular" data-en="MOST BALANCED" data-ar="متابعة متوازنة">MOST BALANCED</div><div class="plan-head"><span>PLAN / 02</span><span class="plan-mark">↗</span></div><div class="plan-graphic graphic-b"><i></i><i></i><i></i></div><div class="plan-name-row"><h3>3ANTEL ALMA7ALA</h3><span>PROGRESS</span></div><p class="plan-desc" data-en="A plan with weekly check-ins to review progress." data-ar="خطة مع متابعة أسبوعية لمراجعة التقدم.">A plan with weekly check-ins to review progress.</p><div class="price"><strong>500</strong><span>EGP</span><small data-en="Confirm details on WhatsApp" data-ar="أكد التفاصيل على واتساب">Confirm details on WhatsApp</small></div><ul><li data-en="Training and nutrition plan" data-ar="خطة تدريب وتغذية">Training and nutrition plan</li><li data-en="Weekly follow-up" data-ar="متابعة أسبوعية">Weekly follow-up</li><li data-en="Adjustments based on progress" data-ar="تعديلات حسب التقدم">Adjustments based on progress</li></ul><a class="button button-solid plan-cta" data-plan="3ANTEL ALMA7ALA" href="https://wa.me/201112492372" data-en="Ask about this plan ↗" data-ar="استفسر عن الباقة ↗">Ask about this plan ↗</a></article>
+    <article class="plan glass"><div class="plan-head"><span>PLAN / 03</span><span class="plan-mark">↗</span></div><div class="plan-graphic graphic-c"><span>X</span><i></i></div><div class="plan-name-row"><h3>GORILLA PACKAGE</h3><span>ELITE</span></div><p class="plan-desc" data-en="Closer follow-up and direct contact as agreed." data-ar="متابعة أقرب وتواصل مباشر حسب الاتفاق.">Closer follow-up and direct contact as agreed.</p><div class="price"><strong>800</strong><span>EGP</span><small data-en="Confirm details on WhatsApp" data-ar="أكد التفاصيل على واتساب">Confirm details on WhatsApp</small></div><ul><li data-en="Training and nutrition plan" data-ar="خطة تدريب وتغذية">Training and nutrition plan</li><li data-en="Daily follow-up" data-ar="متابعة يومية">Daily follow-up</li><li data-en="Direct contact as agreed" data-ar="تواصل مباشر حسب الاتفاق">Direct contact as agreed</li></ul><a class="button button-glass plan-cta" data-plan="GORILLA" href="https://wa.me/201112492372" data-en="Ask about this plan ↗" data-ar="استفسر عن الباقة ↗">Ask about this plan ↗</a></article>
+  </div><p class="fineprint" data-en="Plan details and prices should be confirmed before payment." data-ar="يتم تأكيد تفاصيل الباقة والسعر قبل الدفع.">Plan details and prices should be confirmed before payment.</p></div>
+</section>
+<section class="contact-section wrap" id="payment"><div class="contact-panel glass"><div><div class="section-index"><span>03</span><i></i><span data-en="NEXT STEP" data-ar="الخطوة الجاية">NEXT STEP</span></div><h2 data-en="Your next move<br><em>starts here.</em>" data-ar="خطوتك الجاية<br><em>بتبدأ هنا.</em>">Your next move<br><em>starts here.</em></h2><p data-en="Ask your questions, confirm the plan details, then complete payment after agreement." data-ar="اسأل عن التفاصيل، أكد الباقة المناسبة، وبعد الاتفاق كمّل الدفع.">Ask your questions, confirm the plan details, then complete payment after agreement.</p><a class="button button-solid large" href="https://wa.me/201112492372" data-en="Contact on WhatsApp ↗" data-ar="تواصل على واتساب ↗">Contact on WhatsApp ↗</a></div><div class="payment-glass glass-inset"><span>INSTAPAY / TRANSFER</span><b>01004876868</b><small data-en="Confirm your subscription first" data-ar="أكد اشتراكك الأول">Confirm your subscription first</small><button id="copyInsta" class="button button-glass" type="button" data-en="Copy number" data-ar="انسخ الرقم">Copy number</button></div></div></section>
+<section class="last-line wrap"><span>IRONX</span><p data-en="BUILT WITH INTENT. MADE TO MOVE." data-ar="بهدف واضح. وخطوة محسوبة.">BUILT WITH INTENT. MADE TO MOVE.</p><a href="https://wa.me/201112492372">WHATSAPP ↗</a></section>
+</main>
+<footer class="footer wrap"><a class="brand" href="#home"><span class="brand-x">X</span><span class="brand-word">IRON<span>X</span><small>STRENGTH COACHING</small></span></a><span>© <span id="year"></span> IRONX. <span data-en="All rights reserved." data-ar="كل الحقوق محفوظة.">All rights reserved.</span></span></footer>
+<script src="assets/app.js"></script>
+</body></html>
